@@ -32,3 +32,4 @@ int main(int argc, char *argv[]) {
   printf("Prumer: %.1f\n", avg);
   return 0;
 }
+
