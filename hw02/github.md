@@ -1,0 +1,2 @@
+Github authentication
+- https://code.visualstudio.com/docs/sourcecontrol/github
