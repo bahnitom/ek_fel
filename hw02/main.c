@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//macros
 enum { BORDER_LEFT = -10000, BORDER_RIGHT = 10000 };
 
 /* The main program */
