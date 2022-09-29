@@ -1,0 +1,13 @@
+COMPILER = C:\MinGW\bin\gcc.exe
+CFLAGS+= -pedantic -Wall -Werror -std=c99 -O3
+
+program: main.c 
+	${COMPILER} ${CFLAGS} main.c -o program
+	
+zip:
+	zip hw03-us.zip main.c
+	
+clean:
+	del -f *.o
+	del -f program
+	del -f hw03-us.zip

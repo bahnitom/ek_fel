@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
   }
   // printing rows
   printf("Desitkova soustava: %d %d\n", x, y);
-  printf("Sesnactkova soustava: %x %x\n", x, y);
+  printf("Sestnactkova soustava: %x %x\n", x, y);
   printf("Soucet: %d + %d = %d\n", x, y, x + y);
   printf("Rozdil: %d - %d = %d\n", x, y, x - y);
   printf("Soucin: %d * %d = %d\n", x, y, x * y);
