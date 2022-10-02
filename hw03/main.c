@@ -2,56 +2,44 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+// error
 #define ERROR_INPUT 100
+
+// borders
 enum
 {
   BORDER_LEFT = -10000,
   BORDER_RIGHT = 10000
 };
 
+// functions
+int read_numbers(void);
+
 /* The main program */
 int main(int argc, char *argv[])
 {
   int x;
   int ret = EXIT_SUCCESS;
-  int sc;
-  while ((sc = scanf("%d", &x)) != EOF)
+  int count = 0;
+   while (scanf("%d", &x) != EOF)
   {
+    count += 1;
+    // check if input is out of interval
     if (x < BORDER_LEFT || x > BORDER_RIGHT)
     {
-      // sc = false;
       printf("\n");
-      printf("Vstup je mimo interval!\n");
+      fprintf(stderr, "Vstup je mimo interval!\n");
       return ERROR_INPUT;
     }
     else
     {
-      printf("%d", x);
-      if (sc != EOF) //while cyclus does not reach last value + 1 ---> that value giv us EOS
+      if (count != 1)
         printf(", ");
-      else
-        printf("\n");
     }
+    printf("%d", x);
   };
-
-  // printing rows
-  /* printf("Desitkova soustava: %d %d\n", x, y);
-  printf("Sestnactkova soustava: %x %x\n", x, y);
-  printf("Soucet: %d + %d = %d\n", x, y, x + y);
-  printf("Rozdil: %d - %d = %d\n", x, y, x - y);
-  printf("Soucin: %d * %d = %d\n", x, y, x * y);
-  if (y == 0) {
-    printf("Nedefinovany vysledek!\n");
-  } else
-    printf("Podil: %d / %d = %d\n", x, y, x / y);
-  printf("Prumer: %.1f\n", avg);
-   */
+  printf("\n");
+  printf("pocet: %d\n", count);
 
   return ret;
-}
-
-int read_numbers(int x)
-{
-
-  return x;
 };
