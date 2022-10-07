@@ -1,3 +1,4 @@
+#!/home/toba/miniconda3/envs/pycpt/bin/python
 import os
 import subprocess
 import sys
