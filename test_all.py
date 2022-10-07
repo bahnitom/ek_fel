@@ -48,13 +48,31 @@ if __name__ == "__main__":
         typer.echo(f"remove {compile_file}")
         os.remove(compile_file)
     in_files: List[Path] = []
+    out_files: List[Path] = []
+    err_files: List[Path] = []
     if folder.exists() and folder.is_dir():
         in_files: List[Path] = list_files(folder, ends_with='.in')
+        out_files: List[Path] = list_files(folder, ends_with='.out')
+        err_files: List[Path] = list_files(folder, ends_with='.err')
         typer.echo(f"{len(in_files)} in files")
 
-    s_o = compile_project([Path(folder, 'main.c')], output_file=compile_file)
+    compile_project([Path(folder, 'main.c')], output_file=compile_file)
     # typer.echo(s_o)
     for in_file in in_files:
         test_cmd = [f"./{compile_file}"]
-        s_o = run_cmd(test_cmd, stdin_path=in_file)
-        typer.echo(s_o)
+        # out files contain new line
+        t_o = run_cmd(test_cmd, stdin_path=in_file) + "\n"
+        o_f = str(in_file).replace('in', 'out')
+        o_f_path = Path(o_f)
+        if o_f_path.is_file():
+            f = open(o_f_path)
+            out_content = f.read()
+            test_passed = t_o == out_content
+            if not test_passed:
+                typer.echo(f"FAILED")
+                typer.echo(f"out file bytes:\n{out_content.encode('utf-8')}")
+                typer.echo(f"test output bytes:\n{t_o.encode('utf-8')}")
+            else:
+                typer.echo(f"PASSED")
+        else:
+            typer.echo(f"out file {o_f_path} does not exist")
