@@ -7,8 +7,6 @@ from typing import List
 
 import typer
 
-OUTPUT_FILE = 'hw03/data/hw_03'
-
 
 def list_files(folder: Path, ends_with: str = '.txt') -> List[Path]:
     # traverse root directory, and list directories as dirs and files as files
@@ -24,8 +22,8 @@ def list_files(folder: Path, ends_with: str = '.txt') -> List[Path]:
 def run_cmd(cmd: List[str], stdin_path: Path = None, msg: str = None) -> str:
     m = f"Running {cmd} < {stdin_path}"
     typer.echo(m)
-    f = open(stdin_path) if stdin_path else subprocess.DEVNULL
-    p = subprocess.run(cmd, stdin=f, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    test_data = open(stdin_path) if stdin_path else subprocess.DEVNULL
+    p = subprocess.run(cmd, stdin=test_data, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     std_out = p.stdout.decode('utf-8').strip()
     std_err = p.stderr.decode('utf-8').strip()
     m = msg if msg else str(cmd)
@@ -42,38 +40,41 @@ def compile_project(compile_files: List[Path], output_file: Path):
     return run_cmd(cmd=cmd)
 
 
-if __name__ == "__main__":
-    folder: Path = Path(sys.argv[1])
-    compile_file = Path(folder, 'data', f"main_{folder}")
-    if compile_file.is_file():
-        typer.echo(f"remove {compile_file}")
-        os.remove(compile_file)
-    in_files: List[Path] = []
-    out_files: List[Path] = []
-    err_files: List[Path] = []
-    if folder.exists() and folder.is_dir():
-        in_files: List[Path] = list_files(folder, ends_with='.in')
-        out_files: List[Path] = list_files(folder, ends_with='.out')
-        err_files: List[Path] = list_files(folder, ends_with='.err')
-        typer.echo(f"{len(in_files)} in files")
+def read_test_files(folder: Path):
+    in_files: List[Path] = list_files(folder, ends_with='.in')
+    out_files: List[Path] = list_files(folder, ends_with='.out')
+    err_files: List[Path] = list_files(folder, ends_with='.err')
+    typer.echo(f"{len(in_files)} in files, {len(out_files)} out files, {len(err_files)} err files")
+    return in_files, out_files, err_files
 
-    compile_project([Path(folder, 'main.c')], output_file=compile_file)
+
+hw03_files = ['main.c']
+
+if __name__ == "__main__":
+    project_folder: Path = Path(sys.argv[1])
+    project_bin_file = Path(project_folder, 'data', f"main_{project_folder}")
+    if project_bin_file.is_file():
+        typer.echo(f"remove {project_bin_file}")
+        os.remove(project_bin_file)
+    in_f, out_f, err_f = read_test_files(project_folder)
+    project_files = [Path(project_folder, f) for f in hw03_files]
+    compile_project(project_files, output_file=project_bin_file)
     # typer.echo(s_o)
-    for in_file in in_files:
-        test_cmd = [f"./{compile_file}"]
+    for in_file in sorted(in_f):
+        test_cmd = [f"./{project_bin_file}"]
         # out files contain new line
-        t_o = run_cmd(test_cmd, stdin_path=in_file) + "\n"
+        test_out = run_cmd(test_cmd, stdin_path=in_file) + "\n"
         o_f = str(in_file).replace('in', 'out')
         o_f_path = Path(o_f)
         if o_f_path.is_file():
             f = open(o_f_path)
-            out_content = f.read()
-            test_passed = t_o == out_content
+            expected_out = f.read()
+            test_passed = test_out == expected_out
             if not test_passed:
                 typer.echo(f"FAILED")
-                typer.echo(f"out file bytes:\n{out_content.encode('utf-8')}")
-                typer.echo(f"test output bytes:\n{t_o.encode('utf-8')}")
+                typer.echo(f"actual output:\n{test_out.encode('utf-8')}")
+                typer.echo(f"expected output:\n{expected_out.encode('utf-8')}")
             else:
                 typer.echo(f"PASSED")
         else:
-            typer.echo(f"out file {o_f_path} does not exist")
+            typer.echo(f"expected output file {o_f_path} does not exist")
