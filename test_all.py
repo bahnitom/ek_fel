@@ -85,5 +85,8 @@ if __name__ == "__main__":
         typer.echo(f"remove {project_bin_file}")
         os.remove(project_bin_file)
     compile_project(folder=project_folder, files=hw_files, output_file=project_bin_file)
+    if not project_bin_file.is_file():
+        typer.echo(f"{project_bin_file} does not exist")
+        sys.exit(2)
     in_f, out_f, err_f = read_test_files(project_folder)
     run_tests(test_files=in_f, bin_file=project_bin_file)
