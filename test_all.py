@@ -32,9 +32,11 @@ def run_cmd(cmd: List[str], stdin_path: Path = None, msg: str = None) -> str:
     return std_out
 
 
-def compile_project(compile_files: List[Path], output_file: Path):
+def compile_project(folder: Path, files: List[str], output_file: Path):
     # clang -pedantic -Wall -Werror -std=c99 -O3 -lm $COMPILE_FILES -o $OUTPUT_FILE
-    compile_files_list: List[str] = [str(file) for file in compile_files]
+    project_files = [Path(folder, f) for f in files]
+    # get correct paths
+    compile_files_list: List[str] = [str(file) for file in project_files]
     clang_cmd = ['clang', '-pedantic', '-Wall', '-Werror', '-std=c99', '-O3', '-lm']
     cmd: List[str] = clang_cmd + compile_files_list + ['-o', output_file]
     return run_cmd(cmd=cmd)
@@ -48,27 +50,17 @@ def read_test_files(folder: Path):
     return in_files, out_files, err_files
 
 
-hw03_files = ['main.c']
-
-if __name__ == "__main__":
-    project_folder: Path = Path(sys.argv[1])
-    project_bin_file = Path(project_folder, 'data', f"main_{project_folder}")
-    if project_bin_file.is_file():
-        typer.echo(f"remove {project_bin_file}")
-        os.remove(project_bin_file)
-    in_f, out_f, err_f = read_test_files(project_folder)
-    project_files = [Path(project_folder, f) for f in hw03_files]
-    compile_project(project_files, output_file=project_bin_file)
-    # typer.echo(s_o)
-    for in_file in sorted(in_f):
-        test_cmd = [f"./{project_bin_file}"]
+def run_tests(test_files, bin_file: Path):
+    for in_file in sorted(test_files):
+        test_cmd = [f"./{bin_file}"]
         # out files contain new line
         test_out = run_cmd(test_cmd, stdin_path=in_file) + "\n"
+        # get name of out file
         o_f = str(in_file).replace('in', 'out')
         o_f_path = Path(o_f)
         if o_f_path.is_file():
-            f = open(o_f_path)
-            expected_out = f.read()
+            out_file_stream = open(o_f_path)
+            expected_out = out_file_stream.read()
             test_passed = test_out == expected_out
             if not test_passed:
                 typer.echo(f"FAILED")
@@ -78,3 +70,20 @@ if __name__ == "__main__":
                 typer.echo(f"PASSED")
         else:
             typer.echo(f"expected output file {o_f_path} does not exist")
+
+
+MAIN_C = ['main.c']
+
+if __name__ == "__main__":
+    # folder with main.c and data sub folder
+    project_folder: Path = Path(sys.argv[1])
+    hw_files: List[str] = sys.argv[2:] if len(sys.argv) > 2 else MAIN_C
+    # path to complied bin file
+    project_bin_file = Path(project_folder, 'data', f"main_{project_folder}")
+    if project_bin_file.is_file():
+        # delete binary file
+        typer.echo(f"remove {project_bin_file}")
+        os.remove(project_bin_file)
+    compile_project(folder=project_folder, files=hw_files, output_file=project_bin_file)
+    in_f, out_f, err_f = read_test_files(project_folder)
+    run_tests(test_files=in_f, bin_file=project_bin_file)
