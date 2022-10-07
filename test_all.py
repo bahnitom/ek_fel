@@ -75,18 +75,21 @@ def run_tests(test_files, bin_file: Path):
 MAIN_C = ['main.c']
 
 if __name__ == "__main__":
-    # folder with main.c and data sub folder
+    # folder with main.c and other project files
+    # and data sub folder with in/out/err test files
     project_folder: Path = Path(sys.argv[1])
-    hw_files: List[str] = sys.argv[2:] if len(sys.argv) > 2 else MAIN_C
+    # all project file, if there is only one main.c is default
+    project_files: List[str] = sys.argv[2:] if len(sys.argv) > 2 else MAIN_C
     # path to complied bin file
     project_bin_file = Path(project_folder, 'data', f"main_{project_folder}")
     if project_bin_file.is_file():
         # delete binary file
         typer.echo(f"remove {project_bin_file}")
         os.remove(project_bin_file)
-    compile_project(folder=project_folder, files=hw_files, output_file=project_bin_file)
+    compile_project(folder=project_folder, files=project_files, output_file=project_bin_file)
     if not project_bin_file.is_file():
-        typer.echo(f"{project_bin_file} does not exist")
+        # compilation error
+        typer.echo(f"compilation error. {project_bin_file} does not exist")
         sys.exit(2)
     in_f, out_f, err_f = read_test_files(project_folder)
     run_tests(test_files=in_f, bin_file=project_bin_file)
