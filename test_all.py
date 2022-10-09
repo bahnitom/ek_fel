@@ -29,11 +29,10 @@ def run_cmd(cmd: List[str], stdin_path: Path = None, msg: str = None) -> CmdOutp
     m = f"Running cmd line: {cmd} < {stdin_path}"
     typer.echo(m)
     test_data = open(stdin_path) if stdin_path else subprocess.DEVNULL
-    p = subprocess.Popen(cmd, stdin=test_data, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    p.wait()
+    p = subprocess.run(cmd, stdin=test_data, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     return_code = p.returncode
-    std_out = p.stdout.read().decode('utf-8').strip()
-    std_err = p.stderr.read().decode('utf-8').strip()
+    std_out = p.stdout.decode('utf-8').strip()
+    std_err = p.stderr.decode('utf-8').strip()
     if std_err and len(std_err) > 0:
         typer.echo(f"{'=' * 5} std err {'=' * 5}")
         sys.stderr.write(std_err)
@@ -41,12 +40,10 @@ def run_cmd(cmd: List[str], stdin_path: Path = None, msg: str = None) -> CmdOutp
 
 
 def compile_project(folder: Path, files: List[str], output_file: Path) -> CmdOutput:
-    # clang -pedantic -Wall -Werror -std=c99 -O3 -lm $COMPILE_FILES -o $OUTPUT_FILE
-    project_files = [Path(folder, f) for f in files]
-    # get correct paths
-    compile_files_list: List[str] = [str(file) for file in project_files]
+    # project files as list of strings
+    prj_files: List[str] = [str(Path(folder, f)) for f in files]
     clang_cmd = ['clang'] + CLANG_OPTIONS
-    cmd: List[str] = clang_cmd + compile_files_list + ['-o', output_file]
+    cmd: List[str] = clang_cmd + prj_files + ['-o', output_file]
     return run_cmd(cmd=cmd)
 
 
