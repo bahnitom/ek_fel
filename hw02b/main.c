@@ -11,6 +11,9 @@ enum
   ROOT_IMG = 3
 };
 
+// function
+void print_output(int a, int b, int c, int dis, int root);
+
 int main()
 {
   int a, b, c;
@@ -30,13 +33,19 @@ int main()
     return 0;
   }
   // discriminant assort
-  if (dis > 0)       /*condition for real and different roots*/
+  if (dis > 0) /*condition for real and different roots*/
     root = 2;
   else if (dis == 0) /*condition for real and equal roots*/
     root = 1;
-  else               /*if roots are not real*/ 
+  else /*if roots are not real*/
     root = 3;
 
+  print_output(a, b, c, dis, root);
+  return 0;
+}
+
+void print_output(int a, int b, int c, int dis, int root)
+{
   printf("+-----+-----+-----+-----+\n");
   printf("|%4d |%4d |%4d |%4d |\n", a, b, c, dis);
   printf("+-----+-----+-----+-----+\n");
@@ -47,5 +56,4 @@ int main()
   else
     printf("| Dva imaginarni koreny |\n");
   printf("+-----------------------+\n");
-  return 0;
 }
