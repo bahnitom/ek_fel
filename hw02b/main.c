@@ -1,24 +1,26 @@
 #include <stdio.h>
 #include <math.h>
 
-// define borders
+// define borders and root characteristics
 enum
 {
   BORDER_LEFT = -999,
-  BORDER_RIGHT = 999
+  BORDER_RIGHT = 999,
+  ROOT_1 = 1,
+  ROOT_2 = 2,
+  ROOT_IMG = 3
 };
 
-/* The main program */
 int main()
 {
   int a, b, c;
   int dis = 0;
-  float root_1, root_2, img_part, real_part;
-  
+  int root = 0;
+
   // load input
   scanf("%d %d %d", &a, &b, &c);
 
-  // count discriminant
+  // root discriminant
   dis = (b * b) - (4 * a * c);
 
   // check borders
@@ -27,37 +29,23 @@ int main()
     printf("Diskriminant mimo povoleny interval!\n");
     return 0;
   }
-  // condition for real and different roots
-  if (dis >= 0)
-  {
-    root_1 = (-b + sqrt(dis)) / (2 * a);
-    root_2 = (-b - sqrt(dis)) / (2 * a);
-    /* if (root_1 == root_2)
-      count = 'Jeden';
-    else
-      count = 'Dva'; */
-  }
-
-  // condition for real and equal roots
-  else if (dis == 0)
-  {
-    root_1 = root_2 = -b / (2 * a);
-    printf("root_1 = root_2 = %.2lf;", root_1);
-  }
-
-  // if roots are not real
-  else
-  {
-    real_part = -b / (2 * a);
-    img_part = sqrt(-dis) / (2 * a);
-    printf("root_1 = %.2lf+%.2lfi and root_2 = %.2f-%.2fi", real_part, img_part, real_part, img_part);
-  }
+  // discriminant assort
+  if (dis > 0)       /*condition for real and different roots*/
+    root = 2;
+  else if (dis == 0) /*condition for real and equal roots*/
+    root = 1;
+  else               /*if roots are not real*/ 
+    root = 3;
 
   printf("+-----+-----+-----+-----+\n");
   printf("|%4d |%4d |%4d |%4d |\n", a, b, c, dis);
   printf("+-----+-----+-----+-----+\n");
-  //printf("|%c %c|", count, type);
+  if (root == 1)
+    printf("|           Jeden koren |\n");
+  else if (root == 2)
+    printf("|     Dva realne koreny |\n");
+  else
+    printf("| Dva imaginarni koreny |\n");
   printf("+-----------------------+\n");
-
   return 0;
 }
