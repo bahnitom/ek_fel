@@ -38,6 +38,7 @@ def run_cmd(cmd: List[str], stdin_path: Path = None) -> CmdOutput:
 
 
 def compile_project(folder: Path, files: List[str], output_file: Path) -> CmdOutput:
+    print(f"\n{'=' * 5} Compile project {'=' * 5}")
     # project files as list of strings
     prj_files: List[str] = [str(Path(folder, f)) for f in files]
     clang_cmd = ['clang'] + CLANG_OPTIONS
@@ -46,6 +47,7 @@ def compile_project(folder: Path, files: List[str], output_file: Path) -> CmdOut
 
 
 def read_test_files(folder: Path):
+    print(f"\n{'=' * 5} Read test files {'=' * 5}")
     in_files: List[Path] = list_files(folder, ends_with='.in')
     out_files: List[Path] = list_files(folder, ends_with='.out')
     err_files: List[Path] = list_files(folder, ends_with='.err')
@@ -54,6 +56,7 @@ def read_test_files(folder: Path):
 
 
 def run_tests(test_files, bin_file: Path):
+    print(f"\n{'=' * 5} Functional test {'=' * 5}")
     for in_file in sorted(test_files):
         test_cmd = [f"./{bin_file}"]
         cmd_out: CmdOutput = run_cmd(test_cmd, stdin_path=in_file)
@@ -78,11 +81,11 @@ def run_tests(test_files, bin_file: Path):
 
 def run_mem_test(test_files, bin_file):
     # valgrind $VALGRIND_OPTIONS ./$OUTPUT_FILE < $test_file
+    print(f"\n{'=' * 5} Memory test {'=' * 5}")
     valgrind_cmd = ['valgrind'] + VALGRIND_OPTIONS + [f"./{bin_file}"]
     for test_file in sorted(test_files):
-        print(f"\n")
         cmd_out: CmdOutput = run_cmd(cmd=valgrind_cmd, stdin_path=test_file)
-        # print(f"Valgrind std out:\n {cmd_out.s_out}")
+        print(f"\n")
 
 
 MAIN_C = ['main.c']
