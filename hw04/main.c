@@ -10,7 +10,6 @@ int main(int argc, char *argv[])
   char ch, tmp;
   while (((ch = getchar()) != EOF && ch != '\n'))
   {
-
     count_in++;
 
     // only once
@@ -19,34 +18,25 @@ int main(int argc, char *argv[])
 
     if (ch == tmp)
       counter++;
-    if (ch != tmp && counter != 0)
+    if (ch != tmp && counter > 2)
     {
       printf("%c%d", tmp, counter);
       count_enc++;
-      counter = 0;
+      counter = 1;
     }
-    else if(ch != tmp && counter == 0)
+
+    if (ch != tmp && counter == 1)
     {
       printf("%c", tmp);
-      //counter = 0;
+      counter = 1;
     }
-    /* else if (tmp != ch && counter == 2)
+
+    if (ch != tmp && counter == 2)
     {
       printf("%c%c", tmp, tmp);
-      count_enc += 2;
-      counter = 0;
+      counter = 1;
     }
-    else if (tmp != ch && counter == 1)
-    {
-      printf("%c", tmp);
-      count_enc += 1;
-      counter = 0;
-    }
-    else
-    {
-      printf("%c%d", ch, counter);
-      counter = 0;
-    } */
+
     tmp = ch;
     if (ch < 'A' || ch > 'Z')
     {
@@ -55,6 +45,19 @@ int main(int argc, char *argv[])
       return ERROR_INPUT;
     }
   }
+  switch (counter)
+  {
+  case 1:
+    printf("%c", tmp);
+    break;
+  case 2:
+    printf("%c%c", tmp, tmp);
+    break;
+  default:
+    printf("%c%d", tmp, counter);
+    break;
+  }
+
   printf("\n");
   fprintf(stderr, "Pocet vstupnich symbolu: %d\n", count_in);
   fprintf(stderr, "Pocet zakodovanych symbolu: %d\n", counter);
