@@ -109,4 +109,4 @@ if __name__ == "__main__":
         sys.exit(2)
     in_f, out_f, err_f = read_test_files(project_folder)
     run_tests(test_files=in_f, bin_file=project_bin_file)
-    run_mem_test(test_files=in_f, bin_file=project_bin_file)
+    #run_mem_test(test_files=in_f, bin_file=project_bin_file)
