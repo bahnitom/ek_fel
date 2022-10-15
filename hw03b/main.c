@@ -16,6 +16,7 @@ int main()
   int count_in = 0, counter = 0;
   while (scanf("%d", &x) != EOF)
   {
+
     // only once
     if (count_in == 0)
       tmp = x;
@@ -25,12 +26,20 @@ int main()
       counter++;
     count_in++;
 
-    if (x != tmp)
-      printf("%dx %d\n", counter, x);
-
-    x = tmp;
+    if (x != tmp && counter != 1)
+    {
+      printf("%dx %d\n", counter, tmp);
+      counter = 1;
+    }
+    tmp = x;
+    // check if input is out of interval
+    if (x < BORDER_LEFT || x > BORDER_RIGHT)
+    {
+      printf("Error: Vstup je mimo interval!\n");
+      return ERROR_INPUT;
+    }
   }
-  printf("\n");
-
+  if (counter != 1)
+    printf("%dx %d\n", counter, tmp);
   return ret;
 }
