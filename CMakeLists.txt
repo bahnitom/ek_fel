@@ -9,13 +9,23 @@ set(CMAKE_CXX_STANDARD 14)
 add_executable(hw02b
         hw02b/main.c)
 
-project(hw03)
+project(hw03a)
 set(CMAKE_CXX_STANDARD 14)
-add_executable(hw03
-        hw03/main.c)
+add_executable(hw03a
+        hw03a/main.c)
+
+project(hw03b)
+set(CMAKE_CXX_STANDARD 14)
+add_executable(hw03b
+        hw03b/main.c)
 
 project(hw04)
 set(CMAKE_CXX_STANDARD 14)
 add_executable(hw04
         hw04/main.c)
+
+project(hw05)
+set(CMAKE_CXX_STANDARD 14)
+add_executable(hw05
+        hw05/main.c)
 
