@@ -61,7 +61,8 @@ def run_tests(test_files, bin_file: Path):
         test_cmd = [f"./{bin_file}"]
         cmd_out: CmdOutput = run_cmd(test_cmd, stdin_path=in_file)
         # out files contain new line
-        test_out = cmd_out.s_out + "\n"
+        # but DO MOT modify actual output - rather change/check the out file(s)
+        test_out = cmd_out.s_out
         # get name of out file
         o_f = str(in_file).replace('in', 'out')
         o_f_path = Path(o_f)
@@ -69,12 +70,20 @@ def run_tests(test_files, bin_file: Path):
             out_file_stream = open(o_f_path)
             expected_out = out_file_stream.read()
             test_passed = test_out == expected_out
+            print(f"return code = {cmd_out.ret_code}, std_err:{cmd_out.s_err}")
             if not test_passed:
-                print(f"FAILED return code = {cmd_out.ret_code}, std_err:{cmd_out.s_err}")
-                print(f"actual output:\n{test_out.encode('utf-8')}")
-                print(f"expected output:\n{expected_out.encode('utf-8')}")
+                print(f"FAILED")
+                print(f"{'=' * 5} str comparison {'=' * 5}")
+                print(f"actual:\n{test_out}")
+                print(f"expected:\n{expected_out}")
+                # compare bytes - incl. white space
+                actual_bytes = test_out.encode('utf-8')
+                expected_bytes = expected_out.encode('utf-8')
+                print(f"{'=' * 5} bytes comparison {'=' * 5}")
+                print(f"actual:\n{actual_bytes}")
+                print(f"expected:\n{expected_bytes}")
             else:
-                print(f"PASSED, return code = {cmd_out.ret_code}, std_err:{cmd_out.s_err}")
+                print(f"PASSED")
         else:
             print(f"expected output file {o_f_path} does not exist")
 
@@ -109,4 +118,4 @@ if __name__ == "__main__":
         sys.exit(2)
     in_f, out_f, err_f = read_test_files(project_folder)
     run_tests(test_files=in_f, bin_file=project_bin_file)
-    #run_mem_test(test_files=in_f, bin_file=project_bin_file)
+    # run_mem_test(test_files=in_f, bin_file=project_bin_file)
