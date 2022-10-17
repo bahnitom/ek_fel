@@ -14,3 +14,8 @@ set(CMAKE_CXX_STANDARD 14)
 add_executable(hw03
         hw03/main.c)
 
+project(hw04)
+set(CMAKE_CXX_STANDARD 14)
+add_executable(hw04
+        hw04/main.c)
+
