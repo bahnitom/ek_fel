@@ -29,11 +29,8 @@ def run_cmd(cmd: List[str], stdin_path: Path = None) -> CmdOutput:
     test_data = open(stdin_path) if stdin_path else subprocess.DEVNULL
     p = subprocess.run(cmd, stdin=test_data, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     return_code = p.returncode
-    std_out = p.stdout.decode('utf-8').strip()
-    std_err = p.stderr.decode('utf-8').strip()
-    if std_err and len(std_err) > 0:
-        print(f"{'=' * 5} std err {'=' * 5}")
-        sys.stderr.write(std_err)
+    std_out = p.stdout.decode('utf-8')
+    std_err = p.stderr.decode('utf-8')
     return CmdOutput(ret_code=return_code, s_out=std_out, s_err=std_err)
 
 
@@ -55,7 +52,8 @@ def read_test_files(folder: Path):
     return in_files, out_files, err_files
 
 
-def print_comparison(actual: str = None, expected: str = None, compare_format: str = 'str'):
+def print_comparison(actual: str = None, expected: str = None,
+                     compare_format: str = 'str', test_type: str = 'std_out'):
     if compare_format == 'str':
         actual_out = actual
         expected_out = expected
@@ -69,7 +67,7 @@ def print_comparison(actual: str = None, expected: str = None, compare_format: s
         print(f"Error : Unknown format {compare_format}")
         return
 
-    print(f"{'=' * 5} {compare_format} comparison {'=' * 5}")
+    print(f"{'=' * 5} {compare_format} {test_type} comparison {'=' * 5}")
     print(f"actual  : \n{actual_out}")
     print(f"expected: \n{expected_out}")
 
@@ -82,19 +80,26 @@ def run_tests(test_files, bin_file: Path):
         # out files contain new line
         # but DO MOT modify actual output - rather change/check the out file(s)
         test_out = cmd_out.s_out
+        test_err = cmd_out.s_err
         # get name of out file
         o_f = str(in_file).replace('in', 'out')
+        error_f = str(in_file).replace('in', 'err')
         o_f_path = Path(o_f)
         if o_f_path.is_file():
             out_file_stream = open(o_f_path)
+            err_file_stream = open(Path(error_f)) if Path(error_f).is_file() else None
             expected_out = out_file_stream.read()
-            test_passed = test_out == expected_out
-            print(f"return code = {cmd_out.ret_code}, std_err:{cmd_out.s_err}")
+            expected_err = err_file_stream.read() if err_file_stream else None
+            test_output_passed = test_out == expected_out
+            test_error_passed = cmd_out.s_err == expected_err
+            test_passed = test_output_passed and test_error_passed
             if not test_passed:
                 print(f"FAILED")
+                print(f"return code = {cmd_out.ret_code}, std_err:{cmd_out.s_err}")
                 print_comparison(actual=test_out, expected=expected_out, compare_format='str')
-                print_comparison(actual=test_out, expected=expected_out, compare_format='bytes')
-                print_comparison(actual=test_out, expected=expected_out, compare_format='hex')
+                print_comparison(actual=test_err, expected=expected_err, compare_format='str', test_type='std_err')
+                # print_comparison(actual=test_out, expected=expected_out, compare_format='bytes')
+                # print_comparison(actual=test_out, expected=expected_out, compare_format='hex')
             else:
                 print(f"PASSED")
         else:
