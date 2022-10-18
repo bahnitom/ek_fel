@@ -55,6 +55,25 @@ def read_test_files(folder: Path):
     return in_files, out_files, err_files
 
 
+def print_comparison(actual: str = None, expected: str = None, compare_format: str = 'str'):
+    if compare_format == 'str':
+        actual_out = actual
+        expected_out = expected
+    elif compare_format == 'bytes':
+        actual_out = actual.encode('utf-8')
+        expected_out = expected.encode('utf-8')
+    elif compare_format == 'hex':
+        actual_out = actual.encode('utf-8').hex(sep=' ')
+        expected_out = expected.encode('utf-8').hex(sep=' ')
+    else:
+        print(f"Error : Unknown format {compare_format}")
+        return
+
+    print(f"{'=' * 5} {compare_format} comparison {'=' * 5}")
+    print(f"actual  : \n{actual_out}")
+    print(f"expected: \n{expected_out}")
+
+
 def run_tests(test_files, bin_file: Path):
     print(f"\n{'=' * 5} Functional test {'=' * 5}")
     for in_file in sorted(test_files):
@@ -73,15 +92,9 @@ def run_tests(test_files, bin_file: Path):
             print(f"return code = {cmd_out.ret_code}, std_err:{cmd_out.s_err}")
             if not test_passed:
                 print(f"FAILED")
-                print(f"{'=' * 5} str comparison {'=' * 5}")
-                print(f"actual:\n{test_out}")
-                print(f"expected:\n{expected_out}")
-                # compare bytes - incl. white space
-                actual_bytes = test_out.encode('utf-8')
-                expected_bytes = expected_out.encode('utf-8')
-                print(f"{'=' * 5} bytes comparison {'=' * 5}")
-                print(f"actual:\n{actual_bytes}")
-                print(f"expected:\n{expected_bytes}")
+                print_comparison(actual=test_out, expected=expected_out, compare_format='str')
+                print_comparison(actual=test_out, expected=expected_out, compare_format='bytes')
+                print_comparison(actual=test_out, expected=expected_out, compare_format='hex')
             else:
                 print(f"PASSED")
         else:
