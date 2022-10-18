@@ -91,7 +91,7 @@ def run_tests(test_files, bin_file: Path):
             expected_out = out_file_stream.read()
             expected_err = err_file_stream.read() if err_file_stream else None
             test_output_passed = test_out == expected_out
-            test_error_passed = cmd_out.s_err == expected_err
+            test_error_passed = test_err == expected_err
             test_passed = test_output_passed and test_error_passed
             if not test_passed:
                 print(f"FAILED")
