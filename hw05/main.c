@@ -17,8 +17,9 @@ const int house_dim_max = 69;
 
 enum
 {
-  MANDATORY,
-  OPTIONAL
+  HOUSE,
+  ROOF,
+  FENCE
 };
 
 int test_house_dim(int w, int h);
@@ -36,6 +37,8 @@ int main(int argc, char *argv[])
   int ret = NO_ERROR;
   int w, h, f_w;
   ret = read_input(&w, &h, &f_w);
+  printf("sirka1 %d\n", w);
+  printf("vyska1 %d\n", h);
   switch (ret)
   {
   case ERROR_WRONG_INPUT:
@@ -56,19 +59,13 @@ int main(int argc, char *argv[])
     break;
     // end switch
 
-  /*
-   * All errors handled => only printing.
-   * MANDATORY is value 0 same as NO_ERROR
-   * OPTIONAL is value 1
-   * It would be better to use some defined constants
-   * But in previous cases 0 (NO_ERROR) and 1 are not checked so this the
-   * only place where 0 and 1 can fall
-   */
-  case MANDATORY: // occurs if input has 2 numbers
-    print_roof(w, h);
+  case HOUSE: // occurs if input has 1 numbers
     ret = print_house(w, h, f_w);
     break;
-  case OPTIONAL: // occurs if input has 3 numbers
+  case ROOF: // occurs if input has 2 numbers
+    print_roof(w, h);
+    ret = print_house(w, h, f_w);
+  case FENCE: // occurs if input has 3 numbers
     print_roof(w, h);
     ret = print_house(w, h, f_w);
     break;
@@ -87,33 +84,45 @@ int read_input(int *w, int *h, int *f_w)
 {
   int ret = ERROR_WRONG_INPUT;
   int test_dims_code = NO_ERROR;
-  if (scanf("%i %i", w, h) == 2)
+  if (scanf("%i", w) == 1) // read width
   {
+    *h = *w;
+    printf("sirka %d\n", *w);
+    printf("vyska %d\n", *h);
     test_dims_code = test_house_dim(*w, *h);
     if (test_dims_code != NO_ERROR)
     {
       return test_dims_code;
     }
     // width and height are OK
-    ret = MANDATORY;
+    ret = HOUSE;
+  }
+  if (scanf("%i", h) == 1)  // read height
+  {
+    printf("vyska kunda %d\n", *h);
+    test_dims_code = test_house_dim(*w, *h);
+    if (test_dims_code != NO_ERROR)
+    {
+      return test_dims_code;
+    }
+    ret = ROOF;
   }
   // decides if read also fence width
-  bool read_fence_width = ret == MANDATORY;
-  if (read_fence_width)
+  /* if (scanf("%i", f_w) == 1)
   {
-    bool fence_width_value_ok = scanf("%i", f_w) == 1;
+     bool fence_width_value_ok = scanf("%i", f_w) == 1;
     if (!fence_width_value_ok)
     {
       // wrong fence width return immediately
       return ERROR_WRONG_INPUT;
-    }
+    } 
     test_dims_code = test_fence_dim(*h, *f_w);
     if (test_dims_code != NO_ERROR)
     {
       return test_dims_code;
     }
-    ret = OPTIONAL;
-  }
+    ret = FENCE;
+  } */
   return ret;
 }
 
@@ -150,7 +159,7 @@ int print_house(int w, int h, int f_w)
         printf("X");
       if (((j == 0) || (j == w - 1)) && (i >= 1) && (i < h - 1))
         printf("X");
-      if (w > 3)
+      if ((w > 3) && w == h)
         fill_house(w, h, f_w, i, j);
       else
       {
@@ -217,15 +226,14 @@ int print_fence(int w, int h, int f_w, int i, int j)
 int test_house_dim(int w, int h)
 {
   int ret = NO_ERROR;
-  int dim_ok = (house_dim_min <= w) && (w <= house_dim_max) &&
-               (house_dim_min <= h) && (h <= house_dim_max);
+  int dim_ok = ((house_dim_min <= w) && (w <= house_dim_max)) || ((house_dim_min <= h) && (h <= house_dim_max));
   if (!dim_ok)
   {
     ret = ERROR_HOUSE_DIM_OUT_OF_RANGE;
     // test on invalid dimension goes before test of width
     return ret;
   }
-  if (w % 2 == 0)
+  if (!HOUSE && w % 2 == 0)
   {
     ret = ERROR_HOUSE_WITH_IS_NOT_ODD;
     return ret;
