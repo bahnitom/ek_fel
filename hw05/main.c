@@ -26,19 +26,18 @@ int test_house_dim(int w, int h);
 int test_fence_dim(int h, int f_w);
 
 int print_roof(int w, int h);
-int print_house(int w, int h, int f_w);
+int print_house(int w, int h, int f_w, int switcher);
 int fill_house(int w, int h, int f_w, int i, int j);
 int print_fence(int w, int h, int f_w, int i, int j);
 
-int read_input(int *w, int *h, int *f_w);
+int read_input(int *w, int *h, int *f_w, int *switcher);
 
 int main(int argc, char *argv[])
 {
   int ret = NO_ERROR;
   int w, h, f_w;
-  ret = read_input(&w, &h, &f_w);
-  printf("sirka1 %d\n", w);
-  printf("vyska1 %d\n", h);
+  int switcher = 0; // 0 = neutral, 1 = house, 2 = house + roof, 3 = house + roof + fence
+  ret = read_input(&w, &h, &f_w, &switcher);
   switch (ret)
   {
   case ERROR_WRONG_INPUT:
@@ -60,14 +59,15 @@ int main(int argc, char *argv[])
     // end switch
 
   case HOUSE: // occurs if input has 1 numbers
-    ret = print_house(w, h, f_w);
+    ret = print_house(w, h, f_w, switcher);
     break;
   case ROOF: // occurs if input has 2 numbers
     print_roof(w, h);
-    ret = print_house(w, h, f_w);
+    ret = print_house(w, h, f_w, switcher);
+    break;
   case FENCE: // occurs if input has 3 numbers
     print_roof(w, h);
-    ret = print_house(w, h, f_w);
+    ret = print_house(w, h, f_w, switcher);
     break;
   // Just for sure
   default:
@@ -80,49 +80,45 @@ int main(int argc, char *argv[])
 /*
  * Validate input before plotting anything
  */
-int read_input(int *w, int *h, int *f_w)
+int read_input(int *w, int *h, int *f_w, int *switcher)
 {
   int ret = ERROR_WRONG_INPUT;
   int test_dims_code = NO_ERROR;
   if (scanf("%i", w) == 1) // read width
   {
     *h = *w;
-    printf("sirka %d\n", *w);
-    printf("vyska %d\n", *h);
     test_dims_code = test_house_dim(*w, *h);
     if (test_dims_code != NO_ERROR)
     {
       return test_dims_code;
     }
-    // width and height are OK
+    // width is OK
+    *switcher = 1;
     ret = HOUSE;
   }
-  if (scanf("%i", h) == 1)  // read height
+  if (scanf("%i", h) == 1) // read height
   {
-    printf("vyska kunda %d\n", *h);
     test_dims_code = test_house_dim(*w, *h);
     if (test_dims_code != NO_ERROR)
     {
       return test_dims_code;
     }
+    // height is OK
+    *switcher = 2;
     ret = ROOF;
   }
   // decides if read also fence width
-  /* if (scanf("%i", f_w) == 1)
+  if (scanf("%i", f_w) == 1)
   {
-     bool fence_width_value_ok = scanf("%i", f_w) == 1;
-    if (!fence_width_value_ok)
-    {
-      // wrong fence width return immediately
-      return ERROR_WRONG_INPUT;
-    } 
     test_dims_code = test_fence_dim(*h, *f_w);
     if (test_dims_code != NO_ERROR)
     {
       return test_dims_code;
     }
+    // fence is OK
+    *switcher = 3;
     ret = FENCE;
-  } */
+  }
   return ret;
 }
 
@@ -149,7 +145,7 @@ int print_roof(int w, int h)
 /*
  * Only printing, no validity checks
  */
-int print_house(int w, int h, int f_w)
+int print_house(int w, int h, int f_w, int switcher)
 {
   for (int i = 0; i < h; ++i)
   {
@@ -159,15 +155,17 @@ int print_house(int w, int h, int f_w)
         printf("X");
       if (((j == 0) || (j == w - 1)) && (i >= 1) && (i < h - 1))
         printf("X");
-      if ((w > 3) && w == h)
+      if ((w > 3) && w == h && switcher != 1)
         fill_house(w, h, f_w, i, j);
       else
       {
         if ((j < w - 2) && (i >= 1) && (i < h - 1))
           printf(" ");
       }
-      if ((i > (h - f_w - 1)) && (j == w - 1))
+      if (switcher == 3 && (i > (h - f_w - 1)) && (j == w - 1))
+      {
         print_fence(w, h, f_w, i, j);
+      }
     }
     printf("\n");
   }
