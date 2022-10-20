@@ -22,7 +22,7 @@ enum
   FENCE
 };
 
-int test_house_dim(int w, int h);
+int test_house_dim(int w, int h,int f_w, int switcher);
 int test_fence_dim(int h, int f_w);
 
 int print_roof(int w, int h);
@@ -89,47 +89,47 @@ int read_input(int *w, int *h, int *f_w, int *switcher)
   if (scanf("%d", w) == 1) // read width
   {
     *h = *w;
-    test_dims_code = test_house_dim(*w, *h);
+    *switcher = 1;
+    test_dims_code = test_house_dim(*w, *h,*f_w, *switcher);
     if (test_dims_code != NO_ERROR)
     {
       return test_dims_code;
     }
     // width is OK
-    *switcher = 1;
     ret = HOUSE;
   }
   /*HEIGHT*/
-  test_readed_val = scanf("%d", h); // read height
+  test_readed_val = scanf("%d", h);                   // read height
   if (test_readed_val != 1 && test_readed_val != EOF) // check if value isn't another type than int && no end of file
   {
     ret = ERROR_WRONG_INPUT;
   }
   else if (test_readed_val == 1)
   {
-    test_dims_code = test_house_dim(*w, *h);
+    *switcher = 2;
+    test_dims_code = test_house_dim(*w, *h,*f_w, *switcher);
     if (test_dims_code != NO_ERROR)
     {
       return test_dims_code;
     }
     // height is OK
-    *switcher = 2;
     ret = ROOF;
   }
   /*FENCE*/
-  test_readed_val = scanf("%d", f_w); // read fence
+  test_readed_val = scanf("%d", f_w);                 // read fence
   if (test_readed_val != 1 && test_readed_val != EOF) // check if value isn't another type than int && no end of file
   {
     ret = ERROR_WRONG_INPUT;
   }
   else if (test_readed_val == 1)
   {
+    *switcher = 3;
     test_dims_code = test_fence_dim(*h, *f_w);
     if (test_dims_code != NO_ERROR)
     {
       return test_dims_code;
     }
     // fence is OK
-    *switcher = 3;
     ret = FENCE;
   }
   return ret;
@@ -234,17 +234,18 @@ int print_fence(int w, int h, int f_w, int i, int j)
 
 // testing if input is in range
 // testing if first input is odd number
-int test_house_dim(int w, int h)
+int test_house_dim(int w, int h, int f_w, int switcher)
 {
   int ret = NO_ERROR;
-  bool dim_ok = ((house_dim_min <= w) && (w <= house_dim_max)) && ((house_dim_min <= h) && (h <= house_dim_max));
+  bool dim_ok = ((house_dim_min <= w) && (w <= house_dim_max)) && 
+                ((house_dim_min <= h) && (h <= house_dim_max));
   if (!dim_ok)
   {
     ret = ERROR_HOUSE_DIM_OUT_OF_RANGE;
     // test on invalid dimension goes before test of width
     return ret;
   }
-  if (w % 2 == 0)
+  if (switcher != 1 && w % 2 == 0)
   {
     ret = ERROR_HOUSE_WITH_IS_NOT_ODD;
     return ret;
@@ -255,12 +256,16 @@ int test_house_dim(int w, int h)
 // testing if third input is smaller than high of house
 int test_fence_dim(int h, int f_w)
 {
+  int ret = NO_ERROR;
+  bool fence_ok = ((house_dim_min <= f_w) && (f_w <= house_dim_max));
+  if (!fence_ok)
+  {
+    ret = ERROR_HOUSE_DIM_OUT_OF_RANGE;
+    return ret;
+  }
+
   if (f_w > 0 && f_w < h)
-  {
     return NO_ERROR;
-  }
   else
-  {
     return ERROR_FENCE_WIDTH_INVALID;
-  }
 }
