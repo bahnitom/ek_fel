@@ -84,7 +84,9 @@ int read_input(int *w, int *h, int *f_w, int *switcher)
 {
   int ret = ERROR_WRONG_INPUT;
   int test_dims_code = NO_ERROR;
-  if (scanf("%i", w) == 1) // read width
+  int test_readed_val;
+  /*WIDTH*/
+  if (scanf("%d", w) == 1) // read width
   {
     *h = *w;
     test_dims_code = test_house_dim(*w, *h);
@@ -96,7 +98,13 @@ int read_input(int *w, int *h, int *f_w, int *switcher)
     *switcher = 1;
     ret = HOUSE;
   }
-  if (scanf("%i", h) == 1) // read height
+  /*HEIGHT*/
+  test_readed_val = scanf("%d", h); // read height
+  if (test_readed_val != 1 && test_readed_val != EOF) // check if value isn't another type than int && no end of file
+  {
+    ret = ERROR_WRONG_INPUT;
+  }
+  else if (test_readed_val == 1)
   {
     test_dims_code = test_house_dim(*w, *h);
     if (test_dims_code != NO_ERROR)
@@ -107,8 +115,13 @@ int read_input(int *w, int *h, int *f_w, int *switcher)
     *switcher = 2;
     ret = ROOF;
   }
-  // decides if read also fence width
-  if (scanf("%i", f_w) == 1)
+  /*FENCE*/
+  test_readed_val = scanf("%d", f_w); // read fence
+  if (test_readed_val != 1 && test_readed_val != EOF) // check if value isn't another type than int && no end of file
+  {
+    ret = ERROR_WRONG_INPUT;
+  }
+  else if (test_readed_val == 1)
   {
     test_dims_code = test_fence_dim(*h, *f_w);
     if (test_dims_code != NO_ERROR)
@@ -224,14 +237,14 @@ int print_fence(int w, int h, int f_w, int i, int j)
 int test_house_dim(int w, int h)
 {
   int ret = NO_ERROR;
-  int dim_ok = ((house_dim_min <= w) && (w <= house_dim_max)) || ((house_dim_min <= h) && (h <= house_dim_max));
+  bool dim_ok = ((house_dim_min <= w) && (w <= house_dim_max)) && ((house_dim_min <= h) && (h <= house_dim_max));
   if (!dim_ok)
   {
     ret = ERROR_HOUSE_DIM_OUT_OF_RANGE;
     // test on invalid dimension goes before test of width
     return ret;
   }
-  if (!HOUSE && w % 2 == 0)
+  if (w % 2 == 0)
   {
     ret = ERROR_HOUSE_WITH_IS_NOT_ODD;
     return ret;
