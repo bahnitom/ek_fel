@@ -26,8 +26,8 @@ int main(int argc, char *argv[])
     str_enc = str = str_rot = NULL;
     str_enc_len = str_len = str_tmp_len = 0;
     int capacity;
-    scanf("%d", &capacity); /*scan capacity for first row (encoded str)*/
-    scanf("%d", &capacity); /*scan capacity for second row*/
+    scanf("%d", &capacity);                                /*scan capacity for first row (encoded str)*/
+    scanf("%d", &capacity);                                /*scan capacity for second row*/
     str_enc = read_input_message(&str_enc_len, &capacity); // read first row
     if (str_enc)
     {
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     {
         ret = ERROR_INPUT; // exit if input is char from [a-z_A-Z]
     }
-    else if (str_enc_len != str_len)
+    else if ((str_enc_len != capacity) || (str_len != capacity))
     {
         ret = ERROR_LENGHT; // exit if first and second row doesn't have same
                             // lenght
@@ -55,7 +55,6 @@ int main(int argc, char *argv[])
 
 char *read_input_message(int *str_len, int *capacity)
 {
-    // printf("%d\n", *capacity);
     int len = 0;
     char *str = malloc(*capacity * sizeof(char));
     if (str == NULL)
@@ -75,21 +74,6 @@ char *read_input_message(int *str_len, int *capacity)
                 str = NULL;
                 len = 0;
                 break;
-            }
-
-            if (*capacity == len)
-            { // reallocate
-                char *tmp = realloc(str, *capacity * 2);
-                if (tmp == NULL)
-                {
-                    fprintf(stderr, "ERROR REALLOC\n");
-                    free(str);
-                    str = NULL;
-                    len = 0;
-                    break;
-                }
-                *capacity *= 2;
-                str = tmp;
             }
             str[len++] = a;
         }
