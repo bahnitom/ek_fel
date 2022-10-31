@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 // [a-z_A-Z]
 char *read_input_message(int *str_len, int *capacity);
 void rotate(char original[], int len_org);
@@ -27,17 +26,13 @@ int main(int argc, char *argv[])
     str_enc = str = str_rot = NULL;
     str_enc_len = str_len = str_tmp_len = 0;
     int capacity;
-    scanf("%d", &capacity);
-    /*str_enc doesnt read ---> PROBLEM*/
-    str_enc = read_input_message(&str_enc_len, &capacity); // read first row 
+    scanf("%d", &capacity); /*scan capacity for first row (encoded str)*/
+    scanf("%d", &capacity); /*scan capacity for second row*/
+    str_enc = read_input_message(&str_enc_len, &capacity); // read first row
     if (str_enc)
     {
         str = read_input_message(&str_len, &capacity); // read second row
     }
-    
-    /*just for me*/
-    printf("%d %d\n", str_enc_len, str_len);
-    printf("%s\n", str);
 
     if (str_enc == NULL || str == NULL)
     {
@@ -59,8 +54,8 @@ int main(int argc, char *argv[])
 }
 
 char *read_input_message(int *str_len, int *capacity)
-{   
-    //printf("%d\n", *capacity);
+{
+    // printf("%d\n", *capacity);
     int len = 0;
     char *str = malloc(*capacity * sizeof(char));
     if (str == NULL)
@@ -177,11 +172,11 @@ void print_error(int error)
     switch (error)
     {
     case ERROR_INPUT:
-        fprintf(stderr, "%s\n", error_str_input);
+        fprintf(stderr, "%s", error_str_input);
         break;
 
     case ERROR_LENGHT:
-        fprintf(stderr, "%s\n", error_str_lenght);
+        fprintf(stderr, "%s", error_str_lenght);
         break;
         // end switch
     }
