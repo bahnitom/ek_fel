@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/hw02b.dir/hw02b/main.c.o  -o hw02b 

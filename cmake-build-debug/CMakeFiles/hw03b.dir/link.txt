@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/hw03b.dir/hw03b/main.c.o  -o hw03b 
