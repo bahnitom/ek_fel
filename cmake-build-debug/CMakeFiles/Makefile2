@@ -53,6 +53,7 @@ CMAKE_BINARY_DIR = /home/bahnitom/ek_fel/cmake-build-debug
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
+all: CMakeFiles/my_codes_working.dir/all
 all: CMakeFiles/hw05.dir/all
 all: CMakeFiles/hw04.dir/all
 all: CMakeFiles/hw03b.dir/all
@@ -68,6 +69,7 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
+clean: CMakeFiles/my_codes_working.dir/clean
 clean: CMakeFiles/hw05.dir/clean
 clean: CMakeFiles/hw04.dir/clean
 clean: CMakeFiles/hw03b.dir/clean
@@ -76,6 +78,33 @@ clean: CMakeFiles/hw02b.dir/clean
 clean: CMakeFiles/hw02a.dir/clean
 
 .PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/my_codes_working.dir
+
+# All Build rule for target.
+CMakeFiles/my_codes_working.dir/all:
+	$(MAKE) -f CMakeFiles/my_codes_working.dir/build.make CMakeFiles/my_codes_working.dir/depend
+	$(MAKE) -f CMakeFiles/my_codes_working.dir/build.make CMakeFiles/my_codes_working.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/bahnitom/ek_fel/cmake-build-debug/CMakeFiles --progress-num=13,14 "Built target my_codes_working"
+.PHONY : CMakeFiles/my_codes_working.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/my_codes_working.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/bahnitom/ek_fel/cmake-build-debug/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/my_codes_working.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/bahnitom/ek_fel/cmake-build-debug/CMakeFiles 0
+.PHONY : CMakeFiles/my_codes_working.dir/rule
+
+# Convenience name for target.
+my_codes_working: CMakeFiles/my_codes_working.dir/rule
+
+.PHONY : my_codes_working
+
+# clean rule for target.
+CMakeFiles/my_codes_working.dir/clean:
+	$(MAKE) -f CMakeFiles/my_codes_working.dir/build.make CMakeFiles/my_codes_working.dir/clean
+.PHONY : CMakeFiles/my_codes_working.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/hw05.dir

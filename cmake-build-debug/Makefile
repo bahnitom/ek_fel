@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named my_codes_working
+
+# Build rule for target.
+my_codes_working: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 my_codes_working
+.PHONY : my_codes_working
+
+# fast build rule for target.
+my_codes_working/fast:
+	$(MAKE) -f CMakeFiles/my_codes_working.dir/build.make CMakeFiles/my_codes_working.dir/build
+.PHONY : my_codes_working/fast
+
+#=============================================================================
 # Target rules for targets named hw05
 
 # Build rule for target.
@@ -350,6 +363,33 @@ hw05/main.c.s:
 	$(MAKE) -f CMakeFiles/hw05.dir/build.make CMakeFiles/hw05.dir/hw05/main.c.s
 .PHONY : hw05/main.c.s
 
+my_codes_working/main.o: my_codes_working/main.c.o
+
+.PHONY : my_codes_working/main.o
+
+# target to build an object file
+my_codes_working/main.c.o:
+	$(MAKE) -f CMakeFiles/my_codes_working.dir/build.make CMakeFiles/my_codes_working.dir/my_codes_working/main.c.o
+.PHONY : my_codes_working/main.c.o
+
+my_codes_working/main.i: my_codes_working/main.c.i
+
+.PHONY : my_codes_working/main.i
+
+# target to preprocess a source file
+my_codes_working/main.c.i:
+	$(MAKE) -f CMakeFiles/my_codes_working.dir/build.make CMakeFiles/my_codes_working.dir/my_codes_working/main.c.i
+.PHONY : my_codes_working/main.c.i
+
+my_codes_working/main.s: my_codes_working/main.c.s
+
+.PHONY : my_codes_working/main.s
+
+# target to generate assembly for a file
+my_codes_working/main.c.s:
+	$(MAKE) -f CMakeFiles/my_codes_working.dir/build.make CMakeFiles/my_codes_working.dir/my_codes_working/main.c.s
+.PHONY : my_codes_working/main.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -357,6 +397,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... my_codes_working"
 	@echo "... hw05"
 	@echo "... hw04"
 	@echo "... hw03b"
@@ -382,6 +423,9 @@ help:
 	@echo "... hw05/main.o"
 	@echo "... hw05/main.i"
 	@echo "... hw05/main.s"
+	@echo "... my_codes_working/main.o"
+	@echo "... my_codes_working/main.i"
+	@echo "... my_codes_working/main.s"
 .PHONY : help
 
 
