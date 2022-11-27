@@ -29,6 +29,11 @@ set(CMAKE_CXX_STANDARD 14)
 add_executable(hw05
         hw05/main.c)
 
+project(hw07)
+set(CMAKE_CXX_STANDARD 14)
+add_executable(hw07
+        hw07/main.c)
+
 project(my_codes_working)
 set(CMAKE_CXX_STANDARD 14)
 add_executable(my_codes_working
