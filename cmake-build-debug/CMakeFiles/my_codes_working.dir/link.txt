@@ -1,1 +1,0 @@
-/usr/bin/cc -g   CMakeFiles/my_codes_working.dir/my_codes_working/main.c.o  -o my_codes_working 
