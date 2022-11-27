@@ -38,3 +38,8 @@ project(my_codes_working)
 set(CMAKE_CXX_STANDARD 14)
 add_executable(my_codes_working
         my_codes_working/main.c)
+
+project(hw08)
+set(CMAKE_CXX_STANDARD 14)
+add_executable(hw08
+        hw08/main.c)
