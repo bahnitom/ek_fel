@@ -1,18 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// macros
 #define LENGTH 10
+#define ERROR_HISTOGRAM 100
 #define ERROR_MALLOC 101
 #define ERROR_REALLOC 102
+
+// functions
+int read_input(int capacity, int load, int *arr_lines);
+int check_first_numb(int first_numb);
 
 int main(int argc, char *argv[])
 {
     int capacity = LENGTH;
     int load = 0;
-    int numb;
+    int cols;
 
     // allocate memory for 10 int numbers
-    int *arr_line = malloc(capacity * sizeof(int));
+    int numb;
+    int *arr_line = calloc(capacity, sizeof(int));
 
     if (arr_line == NULL) /*error malloc, for sure*/
     {
@@ -40,14 +47,40 @@ int main(int argc, char *argv[])
                 arr_line = tmp;
             }
             arr_line[load] = numb;
+            if (load == 0)
+            {
+                check_first_numb(arr_line[0]);
+            }
             load++;
         }
     }
+    check_first_numb(arr_line[0]);
+    cols = arr_line[0];
+
+    // only printing array
     for (int i = 0; i < load; i++)
     {
         printf("%d ", arr_line[i]);
     }
     printf("\n");
+
     free(arr_line);
     return 0;
+}
+
+int check_first_numb(int first_numb)
+{
+    if (first_numb <= 0)
+    {
+        fprintf(stderr, "Error: Chyba histogramu!\n");
+        exit(ERROR_HISTOGRAM);
+    }
+    else
+        return 0;
+}
+
+int read_input(int capacity, int load, int *arr_lines){
+    // paste function
+
+
 }
