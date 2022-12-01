@@ -43,11 +43,45 @@ int main(int argc, char *argv[])
         }
     }
     int med_pos = load / 2;
+    int numbers = load - 1;
+    int min_val = arr_line[0];
+    int max_val = arr_line[load - 1];
     printf("Median %.2f\n", (float)arr_line[med_pos]);
-    printf("Pocet cisel: %d\n", load - 1);
-    printf("Min. hodnota: %d\n", arr_line[0]);
-    printf("Max. hodnota: %d\n", arr_line[load - 1]);
-    
+    printf("Pocet cisel: %d\n", numbers);
+    printf("Min. hodnota: %d\n", min_val);
+    printf("Max. hodnota: %d\n", max_val);
+
+    // HISTOGRAM
+
+    float SIZE = (max_val - min_val) / (float)cols;
+    float borders[cols], BIN[load];
+    char equals[cols];
+    float k_i;
+    // count bordes values
+    for (int i = 0; i < cols; ++i)
+    {
+        k_i = min_val + i * SIZE;
+        borders[i] = k_i;
+    }
+    // find values for each input
+    for (int j = 0; j < load; ++j)
+    {
+        BIN[j] = (arr_line[j] - min_val) / SIZE;
+    }
+
+    // chose in which bordes imput number belong to
+    for (int x = 0; x < load; ++x)
+    {
+        for (int y = 0; y < cols; ++y)
+        {
+            if ((BIN[x] >= borders[y]) && BIN[x] <= borders[y + 1])
+            {
+                equals[y] = '=';
+            }
+        }
+    }
+    printf("%c ", equals[0]);
+    printf("\n");
 
     // only printing array
     /* for (int i = 0; i < load; i++)
@@ -55,7 +89,12 @@ int main(int argc, char *argv[])
         printf("%d ", arr_line[i]);
     }
     printf("\n");
-    */
+ */
+    /* for (int i = 0; i < cols; i++)
+    {
+        printf("%c ", equals[i]);
+    }
+    printf("\n"); */
 
     free(arr_line);
     return 0;
