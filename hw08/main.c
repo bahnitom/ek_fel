@@ -19,16 +19,43 @@ int main(int argc, char *argv[])
     int *arr_line = NULL;
 
     arr_line = read_input(&load);
+    // only if reading array goes wrong
+    if (arr_line == NULL)
+    {
+        return -1;
+    }
 
+    // check if number of collums is set right
     check_first_numb(arr_line[0]);
     cols = arr_line[0];
 
+    // sort from lowest to highest number
+    for (int i = 0; i < load; ++i)
+    {
+        for (int j = i + 1; j < load; ++j)
+        {
+            if (arr_line[i] > arr_line[j])
+            {
+                int x = arr_line[i];
+                arr_line[i] = arr_line[j];
+                arr_line[j] = x;
+            }
+        }
+    }
+    int med_pos = load / 2;
+    printf("Median %.2f\n", (float)arr_line[med_pos]);
+    printf("Pocet cisel: %d\n", load - 1);
+    printf("Min. hodnota: %d\n", arr_line[0]);
+    printf("Max. hodnota: %d\n", arr_line[load - 1]);
+    
+
     // only printing array
-    for (int i = 0; i < load; i++)
+    /* for (int i = 0; i < load; i++)
     {
         printf("%d ", arr_line[i]);
     }
     printf("\n");
+    */
 
     free(arr_line);
     return 0;
@@ -71,8 +98,7 @@ int *read_input(int *load)
                     free(arr_line);
                     arr_line = NULL;
                     load = 0;
-                    break;
-                    // return ERROR_REALLOC;
+                    exit(ERROR_REALLOC);
                 }
                 capacity *= 2; /*double size array*/
                 arr_line = tmp;
