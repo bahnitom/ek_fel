@@ -8,52 +8,18 @@
 #define ERROR_REALLOC 102
 
 // functions
-int read_input(int capacity, int load, int *arr_lines);
+int *read_input(int *load);
 int check_first_numb(int first_numb);
 
 int main(int argc, char *argv[])
 {
-    int capacity = LENGTH;
+
     int load = 0;
     int cols;
+    int *arr_line = NULL;
 
-    // allocate memory for 10 int numbers
-    int numb;
-    int *arr_line = calloc(capacity, sizeof(int));
+    arr_line = read_input(&load);
 
-    if (arr_line == NULL) /*error malloc, for sure*/
-    {
-        fprintf(stderr, "Error malloc\n");
-        exit(ERROR_MALLOC);
-    }
-    // malloc ok ---> continue scanning numbers
-    else
-    {
-        while (scanf("%d", &numb) == 1)
-        {
-            if (load >= capacity) /*array is full*/
-            {
-                int *tmp = realloc(arr_line, (capacity * 2) * sizeof(int));
-                if (tmp == NULL) /*error realloc, for sure*/
-                {
-                    fprintf(stderr, "Error realloc\n");
-                    free(arr_line);
-                    arr_line = NULL;
-                    load = 0;
-                    break;
-                    // return ERROR_REALLOC;
-                }
-                capacity *= 2; /*double size array*/
-                arr_line = tmp;
-            }
-            arr_line[load] = numb;
-            if (load == 0)
-            {
-                check_first_numb(arr_line[0]);
-            }
-            load++;
-        }
-    }
     check_first_numb(arr_line[0]);
     cols = arr_line[0];
 
@@ -79,8 +45,46 @@ int check_first_numb(int first_numb)
         return 0;
 }
 
-int read_input(int capacity, int load, int *arr_lines){
-    // paste function
+int *read_input(int *load)
+{
+    int capacity = LENGTH;
+    int numb, count = 0;
+    // allocate memory for 10 int numbers
+    int *arr_line = calloc(capacity, sizeof(int));
 
-
+    if (arr_line == NULL) /*error malloc, for sure*/
+    {
+        fprintf(stderr, "Error malloc\n");
+        exit(ERROR_MALLOC);
+    }
+    // malloc ok ---> continue scanning numbers
+    else
+    {
+        while (scanf("%d", &numb) == 1)
+        {
+            if (count >= capacity) /*array is full*/
+            {
+                int *tmp = realloc(arr_line, (capacity * 2) * sizeof(int));
+                if (tmp == NULL) /*error realloc, for sure*/
+                {
+                    fprintf(stderr, "Error realloc\n");
+                    free(arr_line);
+                    arr_line = NULL;
+                    load = 0;
+                    break;
+                    // return ERROR_REALLOC;
+                }
+                capacity *= 2; /*double size array*/
+                arr_line = tmp;
+            }
+            arr_line[count] = numb;
+            if (load == 0)
+            {
+                check_first_numb(arr_line[0]);
+            }
+            count++;
+        }
+    }
+    *load = count;
+    return arr_line;
 }
