@@ -10,6 +10,7 @@
 // functions
 int *read_input(int *load);
 int check_first_numb(int first_numb);
+int *sort_array(int *array, int load);
 
 int main(int argc, char *argv[])
 {
@@ -30,18 +31,8 @@ int main(int argc, char *argv[])
     cols = arr_line[0];
 
     // sort from lowest to highest number
-    for (int i = 0; i < load; ++i)
-    {
-        for (int j = i + 1; j < load; ++j)
-        {
-            if (arr_line[i] > arr_line[j])
-            {
-                int x = arr_line[i];
-                arr_line[i] = arr_line[j];
-                arr_line[j] = x;
-            }
-        }
-    }
+    arr_line = sort_array(arr_line, load);
+
     int med_pos = load / 2;
     int numbers = load - 1;
     int min_val = arr_line[0];
@@ -51,51 +42,82 @@ int main(int argc, char *argv[])
     printf("Min. hodnota: %d\n", min_val);
     printf("Max. hodnota: %d\n", max_val);
 
-    // HISTOGRAM
-
+    /* HISTOGRAM */
     float SIZE = (max_val - min_val) / (float)cols;
-    float borders[cols], BIN[load];
-    char equals[cols];
+    float borders[cols];
+    int BIN[load];
+    int priority[cols];
     float k_i;
     // count bordes values
-    for (int i = 0; i < cols; ++i)
+    for (int i = 0; i < cols + 1; ++i)
     {
         k_i = min_val + i * SIZE;
         borders[i] = k_i;
     }
     // find values for each input
-    for (int j = 0; j < load; ++j)
+    for (int j = 0; j < load + 1; ++j)
     {
         BIN[j] = (arr_line[j] - min_val) / SIZE;
     }
 
-    // chose in which bordes imput number belong to
-    for (int x = 0; x < load; ++x)
+    // find longest histogram
+    int int_val = 0;
+    for (int x = 0; x < cols; ++x)
     {
-        for (int y = 0; y < cols; ++y)
+        for (int y = 0; y < load; ++y)
         {
-            if ((BIN[x] >= borders[y]) && BIN[x] <= borders[y + 1])
+            if ((borders[x] <= arr_line[y]) && (borders[x + 1] >= arr_line[y]))
             {
-                equals[y] = '=';
+                int_val++;
+                // printf("%d | ", int_val);
             }
         }
+        priority[x] = int_val;
+        int_val = 0;
     }
-    printf("%c ", equals[0]);
-    printf("\n");
+
+    // print histogram
+    int count = 0;
+    for (int y = 0; y < cols; ++y)
+    {
+        if (count < cols)
+        {
+            printf("%4.1f", borders[count]);
+            count++;
+            printf(" -");
+            printf("%6.1f", borders[count]);
+            printf(" |");
+            printf("\n");
+        }
+    }
 
     // only printing array
-    /* for (int i = 0; i < load; i++)
+   /*  for (int i = 0; i < load; i++)
     {
         printf("%d ", arr_line[i]);
     }
     printf("\n");
  */
-    /* for (int i = 0; i < cols; i++)
+    /* for (int i = 0; i < cols + 1; i++)
     {
-        printf("%c ", equals[i]);
+        printf("%.1f ", borders[i]);
     }
-    printf("\n"); */
+    printf("\n");
+    */
 
+    /* printf("BIN\n");
+    for (int i = 0; i < load; i++)
+    {
+        printf("%d ", BIN[i]);
+    }
+    printf("\n");
+ */
+/*     for (int i = 0; i < cols; i++)
+    {
+        printf("%d ", priority[i]);
+    }
+    printf("\n");
+ */
     free(arr_line);
     return 0;
 }
@@ -152,4 +174,22 @@ int *read_input(int *load)
     }
     *load = count;
     return arr_line;
+}
+
+int *sort_array(int *array, int load)
+{
+    // sort from lowest to highest number
+    for (int i = 0; i < load; ++i)
+    {
+        for (int j = i + 1; j < load; ++j)
+        {
+            if (array[i] > array[j])
+            {
+                int x = array[i];
+                array[i] = array[j];
+                array[j] = x;
+            }
+        }
+    }
+    return array;
 }
