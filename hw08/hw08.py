@@ -12,40 +12,37 @@ def load_numbers(file) -> List[int]:
             return list(map(int, line.split()))
 
 
-def load_input_file(file: Path) -> List[str]:
-    with open(file, mode='r') as input_file:
-        return [line.strip() for line in input_file.readlines()]
-
-
 def fill_bins(input_data: List[int]):
     n_intervals = input_data[0]
-    print(f"Pocet intervalu {n_intervals}")
     numbers = input_data[1:]
-    print(f"Pocet cisel {len(numbers)}")
+    bins = init_bins(n_bins=input_data[0])
+    min_num = min(input_data[1:])
     interval_size = (max(numbers) - min(numbers)) / n_intervals
-    print(f"Interval size {interval_size}")
-    min_num = min(numbers)
-    print(f"min= {min_num}")
-    max_num = max(numbers)
-    print(f"max= {max_num}")
-    median_num = statistics.median(numbers)
-    print(f"median= {median_num}")
-    bins = get_bins(n_bins=n_intervals)
     for x_i in numbers:
-        b = put_in_bin(x=x_i, min_num=min_num, interval_size=interval_size)
-        bins[b] += 1
-    return bins
+        bin_number = put_in_bin(x=x_i, min_num=min_num, interval_size=interval_size)
+        # increase count of items in bin with bin_number
+        bins[bin_number] += 1
+    return bins, interval_size
 
 
-def print_bins(bins: List[int]):
+def print_histogram(bins: List[int], interval_size: float, min_number: int):
+    """
+    Scale and print bins. bins is array of int.
+    The values at index i is the number of item in the bin i
+    """
     bin_max = max(bins)
     scale_by = 25 / bin_max
-    for b in range(len(bins)):
-        n_of_signs = math.floor(scale_by * bins[b])
-        print(f"bin {b + 1} {bins[b]})|{'=' * n_of_signs}")
+    for bin_number in range(len(bins)):
+        n_of_signs = math.floor(scale_by * bins[bin_number])
+        lower_bound = round(min_number + bin_number * interval_size, ndigits=1)
+        upper_bound = round(min_number + (bin_number + 1) * interval_size, ndigits=1)
+        print("bin %2d, (%1d) %5.1f - %5.1f |%s" %
+              (bin_number, bins[bin_number], upper_bound, lower_bound, '=' * n_of_signs))
+        # print(f"bin {bin_number} ({bins[bin_number]}) {lower_bound} - {upper_bound}|{'=' * n_of_signs}")
 
 
-def get_bins(n_bins: int) -> List[int]:
+def init_bins(n_bins: int) -> List[int]:
+    """Initialize all bins to 0"""
     return [0] * n_bins
 
 
@@ -53,13 +50,38 @@ eps = 0.001
 
 
 def put_in_bin(x: int, min_num: int, interval_size: float) -> int:
-    # interval closed from right by eps
-    return math.floor((x - min_num) / interval_size) if x == min_num \
-        else math.floor((x - eps - min_num) / interval_size)
+    """
+    Number of the bin for given x. Bins are numbered from <0, number of interval), i.e
+    there number of bins = number of interval
+    """
+    # min values belong to bin 0
+    # eps values means that the interval is right closed
+    return 0 if x == min_num else math.floor((x - eps - min_num) / interval_size)
+
+
+def print_header(input_data: List[int]):
+    # first numer is number of intervals
+    n_intervals = input_data[0]
+    # remaking numeraires is the series
+    numbers = input_data[1:]
+    median_num = statistics.median(numbers)
+    print(f"Median {median_num}")
+    print(f"Pocet cisel: {len(numbers)}")
+    min_num = min(numbers)
+    print(f"Min. hodnota: {min_num}")
+    max_num = max(numbers)
+    print(f"Max. hodnota: {max_num}")
+    interval_size = (max(numbers) - min(numbers)) / n_intervals
+    print(f"Pocet intervalu: {n_intervals}")
+    print(f"Interval size: {interval_size}")
 
 
 if __name__ == "__main__":
     f = Path(sys.argv[1])
-    i_f = load_numbers(f)
-    f_b = fill_bins(input_data=i_f)
-    print_bins(f_b)
+    input_data = load_numbers(f)
+    print_header(input_data=input_data)
+    filled_bins, interval_size = fill_bins(input_data=input_data)
+    numbers = input_data[1:]
+    min_number = min(numbers)
+    print(f"Histogram:")
+    print_histogram(filled_bins, interval_size=interval_size, min_number=min_number)
