@@ -49,10 +49,11 @@ int main(int argc, char *argv[])
     float interval_size = (float)(max_val - min_val) / (float)n_intervals;
     float borders[n_intervals];
     int priority[n_intervals];
-    int bins[n_intervals];
     int priority_sort[n_intervals];
     float k_i;
 
+    // START calculation with bins
+    int bins[n_intervals];
     // init bins to 0
     for (int i = 0; i < n_intervals; ++i)
     {
@@ -68,7 +69,7 @@ int main(int argc, char *argv[])
         bins[bin_number] += 1;
     }
 
-    //  list intervals and bin size
+    //  calculate intervals from bins. bin size = number of '='
     int bin_max = array_max(bins, n_intervals);
     double scale_by = 25.0 / bin_max;
     for (int bin_number = 0; bin_number < n_intervals; ++bin_number) {
@@ -77,7 +78,7 @@ int main(int argc, char *argv[])
         float upper_bound = ((float)min_val + ((float )bin_number + 1) * interval_size);
         printf("bin %d : %.1f-%.1f, bin size: %d\n", bin_number, lower_bound, upper_bound, n_of_signs);
     }
-
+    // END calculation with bins
 
 
     // count borders values
