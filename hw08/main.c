@@ -80,11 +80,17 @@ int main(int argc, char *argv[])
     //  calculate intervals from bins. bin size = number of '='
     int bin_max = array_max(bins, n_intervals);
     double scale_by = 25.0 / bin_max;
+    printf("Histogram:\n");
     for (int bin_number = 0; bin_number < n_intervals; ++bin_number) {
         int n_of_signs = simple_floor(scale_by * bins[bin_number]);
         float lower_bound = ((float)min_val + (float)bin_number * interval_size);
         float upper_bound = ((float)min_val + ((float )bin_number + 1) * interval_size);
-        printf("bin %d : %.1f-%.1f, bin size: %d\n", bin_number, lower_bound, upper_bound, n_of_signs);
+        printf("bin %d : %.1f-%.1f, bin size: %d | ", bin_number, lower_bound, upper_bound, n_of_signs);
+        for (int i = 0; i < n_of_signs; ++i) {
+            printf("=");
+        }
+        printf("\n");
+
     }
     // END calculation with bins
 
@@ -264,8 +270,7 @@ double simple_median(const int *array, int array_size) {
     // if number of elements are even
     if (array_size % 2 == 0) {
         median = (array[l_index] + array[r_index]) / 2.0;
-    }
-    else
+    } else
         // if number of elements are odd
         median = array[r_index];
     return median;
