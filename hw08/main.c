@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+
 
 // macros
 #define LENGTH 10
@@ -18,7 +18,14 @@ int *sort_array(int *array, int load);
 
 int put_in_bin(int x, int min_num, float interval_size);
 
-int array_max(int *array, int array_size);
+int array_max(const int *array, int array_size);
+
+int array_min(const int *array, int array_size);
+
+int simple_floor(double num);
+
+double simple_median(const int *array, int array_size);
+
 int main(int argc, char *argv[])
 {
 
@@ -40,7 +47,8 @@ int main(int argc, char *argv[])
     int numbers = load;
     int min_val = arr_line_sort[0];
     int max_val = arr_line_sort[load - 1];
-    printf("Median %.2f\n", (float)arr_line_sort[med_pos]);
+    double median = simple_median(arr_line_sort, numbers);
+    printf("Median %.2f\n", median);
     printf("Pocet cisel: %d\n", numbers);
     printf("Min. hodnota: %d\n", min_val);
     printf("Max. hodnota: %d\n", max_val);
@@ -73,7 +81,7 @@ int main(int argc, char *argv[])
     int bin_max = array_max(bins, n_intervals);
     double scale_by = 25.0 / bin_max;
     for (int bin_number = 0; bin_number < n_intervals; ++bin_number) {
-        int n_of_signs = floor(scale_by * bins[bin_number]);
+        int n_of_signs = simple_floor(scale_by * bins[bin_number]);
         float lower_bound = ((float)min_val + (float)bin_number * interval_size);
         float upper_bound = ((float)min_val + ((float )bin_number + 1) * interval_size);
         printf("bin %d : %.1f-%.1f, bin size: %d\n", bin_number, lower_bound, upper_bound, n_of_signs);
@@ -211,22 +219,54 @@ int *sort_array(int *array, int load)
     return array;
 }
 
-int put_in_bin(int x, int min_num, float interval_size)
-{
+int put_in_bin(int x, int min_num, float interval_size) {
     if (x == min_num) {
         return 0;
     } else {
         double ret = (x - EPSILON - min_num) / interval_size;
-        return floor(ret);
+        return simple_floor(ret);
     }
 }
 
-int array_max(int *array, int array_size){
-    int max = 0;
+int array_max(const int *array, int array_size) {
+    int ret = 0;
     for (unsigned int i = 0; i < array_size; i++) {
-        if (array[i] > max) {
-            max = array[i];
+        if (array[i] > ret) {
+            ret = array[i];
         }
     }
-    return max;
+    return ret;
+}
+
+int array_min(const int *array, int array_size) {
+    int ret = 0;
+    for (unsigned int i = 0; i < array_size; i++) {
+        if (array[i] < ret) {
+            ret = array[i];
+        }
+    }
+    return ret;
+}
+
+/* Largest integer not greater than X.  */
+int simple_floor(double num) {
+    if (num < 0)
+        return (int) num - 1;
+    else
+        return (int) num;
+}
+
+
+double simple_median(const int *array, int array_size) {
+    double median = 0;
+    int l_index = (array_size - 1) / 2;;
+    int r_index = array_size / 2;
+    // if number of elements are even
+    if (array_size % 2 == 0) {
+        median = (array[l_index] + array[r_index]) / 2.0;
+    }
+    else
+        // if number of elements are odd
+        median = array[r_index];
+    return median;
 }
