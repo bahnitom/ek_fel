@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 // macros
 #define LENGTH 10
 #define ERROR_HISTOGRAM 100
 #define ERROR_MALLOC 101
 #define ERROR_REALLOC 102
+#define EPSILON 0.001
 
 // functions
 int *read_input(int *load);
@@ -14,17 +16,20 @@ int check_first_numb(int first_numb);
 
 int *sort_array(int *array, int load);
 
+int put_in_bin(int x, int min_num, float interval_size);
+
+int array_max(int *array, int array_size);
 int main(int argc, char *argv[])
 {
 
     int load = 0;
-    int cols;
+    int n_intervals;
     int *arr_line = NULL;
     int *arr_line_sort = NULL;
 
-    // read cols
-    scanf("%d", &cols);
-    check_first_numb(cols);
+    // read n_intervals
+    scanf("%d", &n_intervals);
+    check_first_numb(n_intervals);
     arr_line = read_input(&load);
 
     // sort from lowest to highest number
@@ -41,22 +46,50 @@ int main(int argc, char *argv[])
     printf("Max. hodnota: %d\n", max_val);
 
     /* HISTOGRAM */
-    float SIZE = (float)(max_val - min_val) / (float)cols;
-    float borders[cols];
-    int priority[cols];
-    int priority_sort[cols];
+    float interval_size = (float)(max_val - min_val) / (float)n_intervals;
+    float borders[n_intervals];
+    int priority[n_intervals];
+    int bins[n_intervals];
+    int priority_sort[n_intervals];
     float k_i;
 
-    // count bordes values
-    for (int i = 0; i < cols + 1; ++i)
+    // init bins to 0
+    for (int i = 0; i < n_intervals; ++i)
     {
-        k_i = (float)min_val + (float)i * SIZE;
+        bins[i] = 0;
+    }
+
+    //  assign number to bins
+    for (int i = 0; i < numbers; i++)
+    {
+        int x = arr_line[i];
+        int bin_number = put_in_bin(x, min_val, interval_size);
+        // increase count of items in the bin with bin_number
+        bins[bin_number] += 1;
+    }
+
+    //  list intervals and bin size
+    int bin_max = array_max(bins, n_intervals);
+    double scale_by = 25.0 / bin_max;
+    for (int bin_number = 0; bin_number < n_intervals; ++bin_number) {
+        int n_of_signs = floor(scale_by * bins[bin_number]);
+        float lower_bound = ((float)min_val + (float)bin_number * interval_size);
+        float upper_bound = ((float)min_val + ((float )bin_number + 1) * interval_size);
+        printf("bin %d : %.1f-%.1f, bin size: %d\n", bin_number, lower_bound, upper_bound, n_of_signs);
+    }
+
+
+
+    // count borders values
+    for (int i = 0; i < n_intervals + 1; ++i)
+    {
+        k_i = (float)min_val + (float)i * interval_size;
         borders[i] = k_i;
     }
 
     // count how many numbers are in which interval - TODO function
     int int_val = 0;
-    for (int x = 0; x < cols; ++x)
+    for (int x = 0; x < n_intervals; ++x)
     {
         for (int y = 0; y < load; ++y)
         {
@@ -72,21 +105,21 @@ int main(int argc, char *argv[])
     // find interval with most bins and count multiplier of char '=' - TODO function
     double most_bins;
     double max_bin;
-    for (int i = 0; i < cols; i++)
+    for (int i = 0; i < n_intervals; i++)
     {
         priority_sort[i] = priority[i];
     }
-    *priority_sort = *sort_array(priority_sort, cols);
-    most_bins = priority_sort[cols - 1];
+    *priority_sort = *sort_array(priority_sort, n_intervals);
+    most_bins = priority_sort[n_intervals - 1];
 
     max_bin = 25.000 / most_bins;
 
     // print histogram
     int count = 0;
     printf("Histogram:\n");
-    for (int y = 0; y < cols; ++y)
+    for (int y = 0; y < n_intervals; ++y)
     {
-        if (count < cols)
+        if (count < n_intervals)
         {
             printf("%5.1f", borders[count]);
             count++;
@@ -175,4 +208,24 @@ int *sort_array(int *array, int load)
         }
     }
     return array;
+}
+
+int put_in_bin(int x, int min_num, float interval_size)
+{
+    if (x == min_num) {
+        return 0;
+    } else {
+        double ret = (x - EPSILON - min_num) / interval_size;
+        return floor(ret);
+    }
+}
+
+int array_max(int *array, int array_size){
+    int max = 0;
+    for (unsigned int i = 0; i < array_size; i++) {
+        if (array[i] > max) {
+            max = array[i];
+        }
+    }
+    return max;
 }
