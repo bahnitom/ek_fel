@@ -43,7 +43,6 @@ int main(int argc, char *argv[])
     arr_line_sort = sort_array(arr_line, load);
 
     // print A solution
-    int med_pos = load / 2;
     int numbers = load;
     int min_val = arr_line_sort[0];
     int max_val = arr_line_sort[load - 1];
@@ -80,12 +79,12 @@ int main(int argc, char *argv[])
     //  calculate intervals from bins. bin size = number of '='
     int bin_max = array_max(bins, n_intervals);
     double scale_by = 25.0 / bin_max;
-    printf("Histogram:\n");
+    printf("Histogram bins:\n");
     for (int bin_number = 0; bin_number < n_intervals; ++bin_number) {
         int n_of_signs = simple_floor(scale_by * bins[bin_number]);
-        float lower_bound = ((float)min_val + (float)bin_number * interval_size);
-        float upper_bound = ((float)min_val + ((float )bin_number + 1) * interval_size);
-        printf("bin %d : %.1f-%.1f, bin size: %d | ", bin_number, lower_bound, upper_bound, n_of_signs);
+        float lower_bound = ((float) min_val + (float) bin_number * interval_size);
+        float upper_bound = ((float) min_val + ((float) bin_number + 1) * interval_size);
+        printf("%5.1f - %5.1f |", lower_bound, upper_bound);
         for (int i = 0; i < n_of_signs; ++i) {
             printf("=");
         }
