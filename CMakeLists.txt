@@ -43,3 +43,8 @@ project(hw08)
 set(CMAKE_CXX_STANDARD 14)
 add_executable(hw08
         hw08/main.c)
+
+project(hw09)
+set(CMAKE_CXX_STANDARD 14)
+add_executable(hw09
+        hw09/main.c)

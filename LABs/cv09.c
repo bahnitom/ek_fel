@@ -28,7 +28,7 @@ int main(void)
         {
             char *tmp;
             tmp = realloc(text, 2 * len);
-            if (text == NULL)
+            if (tmp == NULL)
             {
                 fprintf(stderr, "ERROR REALLOC\n");
                 free(text);
