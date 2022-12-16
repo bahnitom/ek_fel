@@ -32,29 +32,26 @@ def load_input_file(file: Path) -> List[str]:
     with open(file, mode='r') as input_file:
         # s.translate(str.maketrans('', '', string.punctuation)) remove punctuation
         lines = [line.translate(str.maketrans('', '', string.punctuation)) for line in input_file.readlines()]
-        tmp_list = [line.split() for line in lines]
+        tmp_list: List[List[str]] = [line.split() for line in lines]
         all_words = []
         for word_list in tmp_list:
             all_words += word_list
         return all_words
 
 
-def unique_words(words: List[str], case_sensitive: bool = False):
+def unique_words(case_aware_words: List[str]):
     seen = set()
     result = []
-    for item in words:
-        item = item if case_sensitive else item.lower()
+    for item in case_aware_words:
         if item not in seen:
             seen.add(item)
             result.append(item)
-    return result if case_sensitive else [r.lower() for r in result]
+    return result
 
 
-def word_count(all_words: List[str], unique_word: str,
-               case_sensitive: bool = False) -> int:
+def word_count(case_aware_words: List[str], unique_word: str) -> int:
     count = 0
-    for w in all_words:
-        w = w if case_sensitive else w.lower()
+    for w in case_aware_words:
         if w == unique_word:
             count += 1
     return count
@@ -70,12 +67,16 @@ if __name__ == '__main__':
     sorting = args.s
     case_sensitive: bool = args.c
     print(f"sorting : {sorting}, case sensitive: {case_sensitive}")
-    all_words = load_input_file(Path(args.f))
-    print(f'all words count {len(all_words)}')
-    unique_w = unique_words(words=all_words, case_sensitive=case_sensitive)
+    # MUST be kept untouched it is in original order
+    initial_order_words: List[str] = load_input_file(Path(args.f))
+    case_aware_words = initial_order_words if case_sensitive else [w.lower() for w in initial_order_words]
+    print(f'all words count {len(initial_order_words)}')
+    unique_w = unique_words(case_aware_words=case_aware_words)
     print(f'unique words count {len(unique_w)}, case sensitive : {case_sensitive}')
-    word_counts = {u_w: word_count(all_words=all_words, unique_word=u_w, case_sensitive=case_sensitive)
-                   for u_w in unique_w}
+    word_counts = {u_w: word_count(case_aware_words=case_aware_words, unique_word=u_w) for u_w in unique_w}
+    print('Seznam slov:')
     for k, v in word_counts.items():
         print("%-20s %d" % (k, v))
-    print("%-20s %d" % ('Pocet slov', len(unique_w)))
+    print("%-20s %d" % ('Pocet slov:', len(unique_w)))
+    print("%-20s %d" % ('Nejcastejsi:', len(unique_w)))
+    print("%-20s %d" % ('Nejmene caste:', len(unique_w)))
