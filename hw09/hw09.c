@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define MAX_WORD 100
 #define BUFSIZE 100
@@ -10,7 +11,7 @@ int bufp = 0; /* next free position in buf */
 
 /* Case-sensitive unique words in order in which they appear in the text */
 struct key {
-    char *word;
+    char word[MAX_WORD];
     int count;
 } unique_words_counts[] = {
         "Ahoj", 0,
@@ -28,19 +29,10 @@ struct key {
 
 #define NKEYS (sizeof unique_words_counts/sizeof unique_words_counts[0])
 
-int lower_case(char *s) {
-    // This will just convert
-    // uppercase letters in string
-    // to lowercase. Other characters
-    // will remain unaffected.
-    for (int i = 0; i < strlen(s); i++) {
-        s[i] = tolower(s[i]);
+void to_lower_case(char str[MAX_WORD]) {
+    for (int i = 0; i < strlen(str); i++) {
+        str[i] = tolower(str[i]);
     }
-
-    // Printing the output
-    printf("%s", s);
-
-    return 0;
 }
 
 
@@ -48,9 +40,7 @@ void case_insensitive(struct key table[]) {
     struct key ret[NKEYS];
     int n;
     for (n = 0; n < NKEYS; n++) {
-        for (int i = 0; i < strlen(table[n].word); i++) {
-            lower_case(table[n].word);
-        }
+        to_lower_case(table[n].word);
     }
 }
 
@@ -74,15 +64,20 @@ void ungetch(int c) /* push character back on input */
         buf[bufp++] = c;
 }
 
+
 /* count C keywords */
 int main() {
     int n;
     char word[MAX_WORD];
-//    case_insensitive(unique_words_counts);
+    bool lower_case = true;
+    if (lower_case)  case_insensitive(unique_words_counts);
+
     while (get_word(word, MAX_WORD) != EOF)
-        if (isalpha(word[0]))
+        if (isalpha(word[0])) {
+            if (lower_case) to_lower_case(word);
             if ((n = simple_search(word, unique_words_counts, NKEYS)) >= 0)
                 unique_words_counts[n].count++;
+        }
     for (n = 0; n < NKEYS; n++)
         if (unique_words_counts[n].count > 0)
             printf("%-20s %d\n", unique_words_counts[n].word, unique_words_counts[n].count);
