@@ -40,9 +40,11 @@ add_executable(my_codes_working
         my_codes_working/main.c)
 
 project(hw08)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#set(CMAKE_CXX_STANDARD 14)
 add_executable(hw08
         hw08/main.c)
+target_link_libraries(hw08 m)
 
 project(hw09)
 set(CMAKE_CXX_STANDARD 14)
