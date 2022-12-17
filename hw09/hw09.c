@@ -8,26 +8,58 @@ char buf[BUFSIZE]; /* buffer for ungetch */
 int bufp = 0; /* next free position in buf */
 
 
-/* Arrays of Structures */
+/* Case-sensitive unique words in order in which they appear in the text */
 struct key {
     char *word;
     int count;
-} word_counts[] = {
-        "ahoj", 0,
+} unique_words_counts[] = {
+        "Ahoj", 0,
         "jak", 0,
         "se", 0,
-        "mas", 0
+        "mas", 0,
+        "Mam", 0,
+        "dobre", 0,
+        "Jak", 0,
+        "ty", 0,
+        "Ja", 0,
+        "mam", 0,
+        "taky", 0,
 };
 
-#define NKEYS (sizeof word_counts/sizeof word_counts[0])
+#define NKEYS (sizeof unique_words_counts/sizeof unique_words_counts[0])
+
+int lower_case(char *s) {
+    // This will just convert
+    // uppercase letters in string
+    // to lowercase. Other characters
+    // will remain unaffected.
+    for (int i = 0; i < strlen(s); i++) {
+        s[i] = tolower(s[i]);
+    }
+
+    // Printing the output
+    printf("%s", s);
+
+    return 0;
+}
+
+
+void case_insensitive(struct key table[]) {
+    struct key ret[NKEYS];
+    int n;
+    for (n = 0; n < NKEYS; n++) {
+        for (int i = 0; i < strlen(table[n].word); i++) {
+            lower_case(table[n].word);
+        }
+    }
+}
+
 
 int get_word(char *, int);
 
 int binsearch(char *, struct key *, int);
 
-//int getch(void);
-//
-//void ungetch(int);
+int simple_search(char *word, struct key table[], int n);
 
 int getch(void) /* get a (possibly pushed-back) character */
 {
@@ -46,14 +78,17 @@ void ungetch(int c) /* push character back on input */
 int main() {
     int n;
     char word[MAX_WORD];
+//    case_insensitive(unique_words_counts);
     while (get_word(word, MAX_WORD) != EOF)
         if (isalpha(word[0]))
-            if ((n = binsearch(word, word_counts, NKEYS)) >= 0)
-                word_counts[n].count++;
+            if ((n = simple_search(word, unique_words_counts, NKEYS)) >= 0)
+                unique_words_counts[n].count++;
     for (n = 0; n < NKEYS; n++)
-        if (word_counts[n].count > 0)
-            printf("%4d %s\n",
-                   word_counts[n].count, word_counts[n].word);
+        if (unique_words_counts[n].count > 0)
+            printf("%-20s %d\n", unique_words_counts[n].word, unique_words_counts[n].count);
+    printf("%-20s %lu\n", "Pocet slov:", NKEYS);
+    printf("%-20s %lu\n", "Nejcastejsi:", NKEYS);
+    printf("%-20s %lu\n", "Nejmene caste:", NKEYS);
     return 0;
 }
 
@@ -71,6 +106,14 @@ int binsearch(char *word, struct key tab[], int n) {
             low = mid + 1;
         else
             return mid;
+    }
+    return -1;
+}
+
+int simple_search(char *word, struct key table[], int n) {
+    for (int i = 0; i < n; ++i) {
+        if ((strcmp(word, table[i].word)) == 0)
+            return i;
     }
     return -1;
 }
