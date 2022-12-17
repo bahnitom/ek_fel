@@ -66,17 +66,21 @@ if __name__ == '__main__':
     args = parser.parse_args()
     sorting = args.s
     case_sensitive: bool = args.c
-    print(f"sorting : {sorting}, case sensitive: {case_sensitive}")
+    # print(f"sorting : {sorting}, case sensitive: {case_sensitive}")
     # MUST be kept untouched it is in original order
     initial_order_words: List[str] = load_input_file(Path(args.f))
     case_aware_words = initial_order_words if case_sensitive else [w.lower() for w in initial_order_words]
-    print(f'all words count {len(initial_order_words)}')
+    # print(f'all words count {len(initial_order_words)}')
     unique_w = unique_words(case_aware_words=case_aware_words)
-    print(f'unique words count {len(unique_w)}, case sensitive : {case_sensitive}')
+    # print(f'unique words count {len(unique_w)}, case sensitive : {case_sensitive}')
     word_counts = {u_w: word_count(case_aware_words=case_aware_words, unique_word=u_w) for u_w in unique_w}
+    max_count = max(word_counts.values())
+    min_count = min(word_counts.values())
+    most_frequent = [k for k, v in word_counts.items() if v == max_count]
+    least_frequent = [k for k, v in word_counts.items() if v == min_count]
     print('Seznam slov:')
     for k, v in word_counts.items():
         print("%-20s %d" % (k, v))
     print("%-20s %d" % ('Pocet slov:', len(unique_w)))
-    print("%-20s %d" % ('Nejcastejsi:', len(unique_w)))
-    print("%-20s %d" % ('Nejmene caste:', len(unique_w)))
+    print("%-20s %s" % ('Nejcastejsi:', most_frequent))
+    print("%-20s %s" % ('Nejmene caste:', least_frequent))
