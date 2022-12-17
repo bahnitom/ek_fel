@@ -1,33 +1,119 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
 #define SIZE 20
+#define TOKEN " "
 enum {
     ERROR_MALLOC = -1, ERROR_REALLOC = -2
 };
 
+// List of punctuation characters to remove
+const char PUNCTUATIONS[] = "!#$%&'()*+,-./:;<=>?@[]^_`{|}~";
+
 /* functions */
 char *load_input();
+
+void remove_punctuations(char *input);
+
+int count_words_in_string(const char *input);
+
+
+char *copy_strings(const char *input);
+
+
+
 
 int main(void) {
 
     char *input = NULL;
     input = load_input();
+    remove_punctuations(input);
+    int word_count = count_words_in_string(input);
+    //char *input_copy = copy_strings(input);
 
-    for(int i = 0; i < strlen(input); i ++){
-        if (ispunct(input[i])){
-            // copy rest of string behind punctuation symbol and paste it in actual position
-            strcpy(input + i, input + i + 1);
-            // check again same symbol, because of possible existence punctuation
-            i --;
+    /*maybe function*/
+//    char *word;
+//    int cnt = 0;
+//    word = strtok(input_copy, TOKEN);
+//    while (word != NULL) {
+//        printf("%s\n", word);
+//        word = strtok(NULL, TOKEN);
+//        cnt++;
+//    }
+
+    struct word_count {
+        char *word;
+        int count;
+    }words[word_count];
+
+    int word_num = 0;
+    char *word;
+    word = strtok(input, TOKEN);
+    //get first word from string
+    while (word != NULL) {
+        int found = 0;
+        for (int i = 0; i < word_count; i++) {
+            // add actual word to structure and compare if its in string word
+            if (strstr(input, word) != NULL) {
+                // word exist in string
+                words[i].count++;
+                found = 1;
+                break;
+            }
         }
+        if (!found) {
+            // word is not more than once in string
+            words[word_num].word = word;
+            words[word_num].count = 0;
+            word_num++;
+        }
+        word = strtok(NULL, TOKEN);
+        // get another word from string
+    }
+    //try print
+    for(int i = 0; i < word_num; i++){
+        printf("%s %d\n",words[i].word, words[i].count);
     }
 
-    printf("%lu\n", strlen(input));
-    printf("%s\n", input);
+    printf("%d\n", word_count);
+    //printf("%s\n", input);
+    free(word);
+    free(input);
     return 0;
+}
+
+char *copy_strings(const char *input) {
+    //need use malloc, because of valgrind
+    char *input_copy = malloc(strlen(input) + 1);
+    if (input_copy == NULL) {
+        fprintf(stderr, "Error malloc\n");
+        exit(ERROR_MALLOC);
+    }
+    strcpy(input_copy, input);
+    return input_copy;
+}
+
+int count_words_in_string(const char *input) {
+    int count = 0;
+    // read text to end + 1, because to find '\0'character
+    for (int i = 0; i < strlen(input) + 1; i++) {
+        if (input[i] == 32 || input[i] == '\0') {
+            count++;
+        }
+    }
+    return count;
+}
+
+void remove_punctuations(char *input) {
+    for (int i = 0; i < strlen(input); i++) {
+        if (strchr(PUNCTUATIONS, input[i]) != NULL) {
+            // Shift the rest of the string one character to the left
+            memmove(input + i, input + i + 1, strlen(input + i + 1) + 1);
+            // check again same symbol, because of possible existence punctuation
+            i--;
+        }
+    }
 }
 
 char *load_input() {
