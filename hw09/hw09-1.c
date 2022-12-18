@@ -85,7 +85,6 @@ struct tnode *copyTree(struct tnode *p, struct tnode *root) {
 /* sorttree: performs inorder traversal on root and creates a BST p according
  * to frequency of occurrence */
 struct tnode *sorttree(struct tnode *p, struct tnode *root) {
-    struct tnode *copyTree(struct tnode *, struct tnode *);
 
     if (root) {
         p = sorttree(p, root->left);
@@ -157,6 +156,7 @@ void ungetch(int c) {
 
 int main(void) {
     struct tnode *root;                /* root node */
+    struct tnode *sorted = NULL;                /* root node */
     char word[MAXWORD];                /* currently read word */
 
     root = NULL;
@@ -164,7 +164,11 @@ int main(void) {
         if (isalpha(word[0]))
             root = (addtree(root, word)); /* build tree */
     printtree(root);
+    sorted = sorttree(sorted, root);
+    printtree(sorted);
     freetree(root);
+    freetree(sorted);
     root = NULL;
+    sorted = NULL;
     return 0;
 }
