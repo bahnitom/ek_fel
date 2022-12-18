@@ -75,7 +75,7 @@ struct tnode *copyTree(struct tnode *p, struct tnode *root) {
         p->word = strDup(root->word);
         p->count = root->count;
         p->left = p->right = NULL;
-    } else if (root->count <= p->count)
+    } else if (root->count >= p->count)
         p->left = copyTree(p->left, root);
     else
         p->right = copyTree(p->right, root);
@@ -163,7 +163,7 @@ int main(void) {
     while (getword(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
             root = (addtree(root, word)); /* build tree */
-    printtree(root);
+//    printtree(root);
     sorted = sorttree(sorted, root);
     printtree(sorted);
     freetree(root);
