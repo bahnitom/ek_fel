@@ -63,7 +63,7 @@ struct tnode *addtree(struct tnode *p, char *w) {
 void printtree(struct tnode *p) {
     if (p) {
         printtree(p->right);
-        printf("%4d %s\n", p->count, p->word);
+        printf("%-20s %d\n", p->word, p->count);
         printtree(p->left);
     }
 }
