@@ -54,4 +54,4 @@ add_executable(hw09
 project(hw09_tmp)
 set(CMAKE_CXX_STANDARD 14)
 add_executable(hw09_tmp
-        hw09/hw09.c)
+        hw09/6-4_2.c)
