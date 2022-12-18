@@ -18,10 +18,7 @@ void remove_punctuations(char *input);
 
 int count_words_in_string(const char *input);
 
-
 char *copy_strings(const char *input);
-
-
 
 
 int main(void) {
@@ -30,7 +27,7 @@ int main(void) {
     input = load_input();
     remove_punctuations(input);
     int word_count = count_words_in_string(input);
-    //char *input_copy = copy_strings(input);
+    char *input_copy = copy_strings(input);
 
     /*maybe function*/
 //    char *word;
@@ -42,44 +39,56 @@ int main(void) {
 //        cnt++;
 //    }
 
+
+//    char *word = "Jak";
+//    if (strstr(input, word) != NULL) {
+//        printf("slovo %s je v retezci\n", word);
+//    } else {
+//        printf("slovo %s neni v retezci\n", word);
+//    }
+
+
     struct word_count {
         char *word;
         int count;
-    }words[word_count];
+    } words[word_count];
 
-    int word_num = 0;
+    int word_num = 0, count = 0;
     char *word;
-    word = strtok(input, TOKEN);
+    char *tmp = input;
+    word = strtok(input_copy, TOKEN);
     //get first word from string
     while (word != NULL) {
-        int found = 0;
-        for (int i = 0; i < word_count; i++) {
-            // add actual word to structure and compare if its in string word
-            if (strstr(input, word) != NULL) {
-                // word exist in string
-                words[i].count++;
-                found = 1;
-                break;
-            }
+        // word == NULL --> in string is not any more words
+        words[word_num].count = 0; //start from zero
+        unsigned long word_len = strlen(word);
+        while ((tmp = strstr(tmp, word)) != NULL) { // word exist in string
+            //we don't need to check same word
+            tmp += word_len + 1;
+            count++;
         }
-        if (!found) {
-            // word is not more than once in string
-            words[word_num].word = word;
-            words[word_num].count = 0;
-            word_num++;
+        // if while not true, tmp set to NULL
+        if(tmp == NULL){
+            tmp = input;
         }
-        word = strtok(NULL, TOKEN);
+        //set values to actual word
+        words[word_num].word = word;
+        words[word_num].count = count;
+        word_num++;
+        count = 0;
         // get another word from string
+        word = strtok(NULL, TOKEN);
     }
-    //try print
-    for(int i = 0; i < word_num; i++){
-        printf("%s %d\n",words[i].word, words[i].count);
+    //print
+    for (int i = 0; i < word_num; i++) {
+        printf("%s %d\n", words[i].word, words[i].count);
     }
 
-    printf("%d\n", word_count);
-    //printf("%s\n", input);
-    free(word);
+//    printf("%d\n", word_count);
+//    printf("%s\n", input);
     free(input);
+    free(input_copy);
+
     return 0;
 }
 
@@ -89,8 +98,9 @@ char *copy_strings(const char *input) {
     if (input_copy == NULL) {
         fprintf(stderr, "Error malloc\n");
         exit(ERROR_MALLOC);
+    } else {
+        strcpy(input_copy, input);
     }
-    strcpy(input_copy, input);
     return input_copy;
 }
 
