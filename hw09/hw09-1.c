@@ -52,10 +52,9 @@ struct tnode *addtree(struct tnode *p, char *w) {
         p->left = p->right = NULL;
     } else if (!(cond = strcmp(w, p->word)))
         ++p->count;                    /* repeated word */
-    else if (cond < 0)                 /* less than into left subtree */
-        p->left = addtree(p->left, w);
     else
-        p->right = addtree(p->right, w);
+        /* in correlation with printtree corresponds to original order*/
+        p->left = addtree(p->left, w);
     return p;
 }
 
@@ -163,7 +162,9 @@ int main(void) {
     while (getword(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
             root = (addtree(root, word)); /* build tree */
-//    printtree(root);
+    printf("Original order\n");
+    printtree(root);
+    printf("By increasing count order\n");
     sorted = sorttree(sorted, root);
     printtree(sorted);
     freetree(root);
