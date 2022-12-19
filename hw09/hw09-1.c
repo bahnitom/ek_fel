@@ -54,7 +54,7 @@ struct tnode *talloc(void);        /* allocate memory to new tree node */
 
 char *strDup(char *);              /* copy string into safe place */
 
-struct tnode *add_tree_linear(struct tnode *p, char *w);
+struct tnode *add_tree_linear(struct tnode *p, char *w, int case_sensitive);
 
 void printtree(struct tnode *);
 
@@ -70,21 +70,37 @@ struct tnode *copy_tree_alpha(struct tnode *p, struct tnode *root);
 int buf[BUFSIZE];         /* buffer from ungetch */
 int bufp = 0;             /* next free position in buf */
 
+char *lower_case(char *word) {
+    char *temp = strdup(word); // make a copy
+
+    // adjust copy to lowercase
+    unsigned char *tptr = (unsigned char *)temp;
+    while(*tptr) {
+        *tptr = tolower(*tptr);
+        tptr++;
+    }
+//    free(temp);
+    return temp;
+}
+
+
 /*************************
  * linear search:  nodes are added only to left
  * Keeps the original order
 **************************/
-struct tnode *add_tree_linear(struct tnode *p, char *w) {
+struct tnode *add_tree_linear(struct tnode *p, char *w, int case_sensitive) {
+    if (case_sensitive == 0)
+        w = lower_case(w);
     if (!p) {                          /* a new word has arrived */
         p = talloc();                  /* make a new node */
-        p->word = strDup(w);           /* copy data to it */
+        p->word = strdup(w);           /* copy data to it */
         p->count = 1;
         p->left = p->right = NULL;
     } else if (strcmp(w, p->word) == 0)
         ++p->count;                    /* repeated word */
     else
         /* in correlation with printtree corresponds to original order*/
-        p->left = add_tree_linear(p->left, w);
+        p->left = add_tree_linear(p->left, w, case_sensitive);
     return p;
 }
 
@@ -102,7 +118,7 @@ void printtree(struct tnode *p) {
 struct tnode *copyTree(struct tnode *p, struct tnode *root) {
     if (!p) {
         p = talloc();
-        p->word = strDup(root->word);
+        p->word = strdup(root->word);
         p->count = root->count;
         p->left = p->right = NULL;
     } else if (root->count >= p->count)
@@ -115,7 +131,7 @@ struct tnode *copyTree(struct tnode *p, struct tnode *root) {
 struct tnode *copy_tree_alpha(struct tnode *p, struct tnode *root) {
     if (!p) {
         p = talloc();
-        p->word = strDup(root->word);
+        p->word = strdup(root->word);
         p->count = root->count;
         p->left = p->right = NULL;
     } else if (strcmp(root->word, p->word) >= 0)
@@ -147,15 +163,6 @@ struct tnode *talloc(void) {
     return malloc(sizeof(struct tnode));
 }
 
-/*strDup: make a duplicate of s */
-char *strDup(char *s) {
-    char *p;
-
-    p = malloc(strlen(s) + 1); /* +1 for '\0' */
-    if (p)
-        strcpy(p, s);
-    return p;
-}
 
 /* freetree: free allocated heap memory of node tree */
 void freetree(struct tnode *node) {
@@ -203,29 +210,31 @@ void ungetch(int c) {
 }
 
 int main(void) {
-    struct tnode *root;                /* root node */
+    struct tnode *root = NULL;                /* root node */
     struct tnode *sorted = NULL;                /* root node */
-    struct tnode *sorted_alpha = NULL;                /* root node */
     char word[MAXWORD];                /* currently read word */
+    int case_sensitive_arg = 1;
+    int sort_arg = 1;
 
-    root = NULL;
     while (getword(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
-            root = (add_tree_linear(root, word)); /* build tree */
-//            root = (add_tree_alpha(root, word)); /* build tree */
-    printf("\nOriginal order -c\n");
+            root = add_tree_linear(root, word, case_sensitive_arg); /* build tree */
+    printf("\nOriginal order -c %d, -s %d\n", case_sensitive_arg, sort_arg);
     printtree(root);
-    printf("\nBy increasing count order\n");
-    sorted = sorttree(sorted, root, 1);
+
+    printf("\nIncreasing count -c %d, -s %d\n", case_sensitive_arg, sort_arg);
+    sorted = sorttree(sorted, root, sort_arg);
     printtree(sorted);
-    printf("\nAlphabet order -c -s 2\n");
-    sorted_alpha = sorttree(sorted_alpha, root, 2);
-    printtree(sorted_alpha);
+    freetree(sorted);
+    sorted = NULL;
+
+    sort_arg = 2;
+    printf("\nAlphabet order -c %d, -s %d\n", case_sensitive_arg, sort_arg);
+    sorted = sorttree(sorted, root, sort_arg);
+    printtree(sorted);
     freetree(root);
     freetree(sorted);
-    freetree(sorted_alpha);
     root = NULL;
     sorted = NULL;
-    sorted_alpha = NULL;
     return 0;
 }
