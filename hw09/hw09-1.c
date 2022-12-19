@@ -1,12 +1,31 @@
-/*
- * Write a program that prints the distinct words in its input sorted into
- * decreasing order of frequency of occurrence. Precede each word by its count.
- *
- * By Faisal Saadatmand
- */
+/*************************************************************
+* Write a program that prints the distinct words in its input sorted into
+* decreasing order of frequency of occurrence. Precede each word by its count.
+*
+* By Faisal Saadatmand
+*
 
-/* NOTE: I included a definition for sorttree and copytree for academic
- * purposes. They are not used in the code */
+* NOTE: I included a definition for sorttree and copytree for academic
+* purposes. They are not used in the code
+**************************************************************/
+
+/*************************************************************
+* read a file from std in
+* cmd line arguments
+* split text to words and remove punctuation
+* list of all unique word and their counts
+* 20 chars for each word <space> word_count
+* count all words, number is considered as word
+* find most and least frequent words. if more than one keep the order as in text
+* -s sort output
+*    1 = sort by increasing frequency
+*    2 = sort alphabetically
+*    other values ignored with warning "Warning: Chybna hodnota parametru -s!\n"
+* exit code is always 0
+* output ends by \n
+* check the value of arg -l (positive int)
+**************************************************************/
+
 
 #include <ctype.h>
 #include <stdio.h>
@@ -29,7 +48,7 @@ int getword(char *, int);
 
 struct tnode *talloc(void);        /* allocate memory to new tree node */
 char *strDup(char *);              /* copy string into safe place */
-struct tnode *addtree(struct tnode *, char *);
+struct tnode *add_tree_linear(struct tnode *p, char *w);
 
 void printtree(struct tnode *);
 
@@ -41,20 +60,21 @@ struct tnode *sorttree(struct tnode *, struct tnode *); /* optional */
 int buf[BUFSIZE];         /* buffer from ungetch */
 int bufp = 0;             /* next free position in buf */
 
-/* addtree: add a node with w, at or below p */
-struct tnode *addtree(struct tnode *p, char *w) {
-    int cond;
-
+/*************************
+ * linear search:  nodes are added only to left
+ * Keeps the original order
+**************************/
+struct tnode *add_tree_linear(struct tnode *p, char *w) {
     if (!p) {                          /* a new word has arrived */
         p = talloc();                  /* make a new node */
         p->word = strDup(w);           /* copy data to it */
         p->count = 1;
         p->left = p->right = NULL;
-    } else if (!(cond = strcmp(w, p->word)))
+    } else if (strcmp(w, p->word) == 0)
         ++p->count;                    /* repeated word */
     else
         /* in correlation with printtree corresponds to original order*/
-        p->left = addtree(p->left, w);
+        p->left = add_tree_linear(p->left, w);
     return p;
 }
 
@@ -161,7 +181,7 @@ int main(void) {
     root = NULL;
     while (getword(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
-            root = (addtree(root, word)); /* build tree */
+            root = (add_tree_linear(root, word)); /* build tree */
     printf("Original order\n");
     printtree(root);
     printf("By increasing count order\n");
