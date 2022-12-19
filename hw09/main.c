@@ -18,7 +18,7 @@ void remove_punctuations(char *input);
 
 int count_words_in_string(const char *input);
 
-char *copy_strings(const char *input);
+char *remove_duplicates(char *input);
 
 
 int main(void) {
@@ -27,26 +27,7 @@ int main(void) {
     input = load_input();
     remove_punctuations(input);
     int word_count = count_words_in_string(input);
-    char *input_copy = copy_strings(input);
-
-    /*maybe function*/
-//    char *word;
-//    int cnt = 0;
-//    word = strtok(input_copy, TOKEN);
-//    while (word != NULL) {
-//        printf("%s\n", word);
-//        word = strtok(NULL, TOKEN);
-//        cnt++;
-//    }
-
-
-//    char *word = "Jak";
-//    if (strstr(input, word) != NULL) {
-//        printf("slovo %s je v retezci\n", word);
-//    } else {
-//        printf("slovo %s neni v retezci\n", word);
-//    }
-
+    char *input_copy = remove_duplicates(input);
 
     struct word_count {
         char *word;
@@ -68,7 +49,7 @@ int main(void) {
             count++;
         }
         // if while not true, tmp set to NULL
-        if(tmp == NULL){
+        if (tmp == NULL) {
             tmp = input;
         }
         //set values to actual word
@@ -92,9 +73,22 @@ int main(void) {
     return 0;
 }
 
-char *copy_strings(const char *input) {
+char *remove_duplicates(char *input) {
+    //TODO remove from string duplicated words
+    unsigned long len = strlen(input);
+    for (int i = 0; i < len; i++) {
+        for (int j = i + 1; j < len; j++) {
+            if (&input[i] == &input[j]) //ma vzit prvni slovo a dalsi slovo, ale nedela to
+            {
+                memmove(input + j, input + j + 1, len - j);
+                len--;
+                j--;
+            }
+        }
+    }
+
     //need use malloc, because of valgrind
-    char *input_copy = malloc(strlen(input) + 1);
+    char *input_copy = malloc(len + 1);
     if (input_copy == NULL) {
         fprintf(stderr, "Error malloc\n");
         exit(ERROR_MALLOC);
