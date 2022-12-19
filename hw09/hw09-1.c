@@ -10,20 +10,24 @@
 **************************************************************/
 
 /*************************************************************
-* read a file from std in
-* cmd line arguments
-* split text to words and remove punctuation
-* list of all unique word and their counts
-* 20 chars for each word <space> word_count
-* count all words, number is considered as word
-* find most and least frequent words. if more than one keep the order as in text
-* -s sort output
-*    1 = sort by increasing frequency
-*    2 = sort alphabetically
-*    other values ignored with warning "Warning: Chybna hodnota parametru -s!\n"
-* exit code is always 0
-* output ends by \n
-* check the value of arg -l (positive int)
+ * read a file from std in
+ * cmd line arguments
+ * split text to words and remove punctuation
+ * list of all unique word and their counts
+ * 20 chars for each word <space> word_count
+ * count all words, number is considered as word
+ * find most and least frequent words. if more than one keep the order as in text
+ * Arguments
+ * -c : case sensitive
+ * without -s argument
+ *    order as in the text
+ * -s sort output
+ *    1 = sort by increasing frequency
+ *    2 = sort alphabetically
+ *    other values ignored with warning "Warning: Chybna hodnota parametru -s!\n"
+ * exit code is always 0
+ * output ends by \n
+ * check the value of arg -l (positive int)
 **************************************************************/
 
 
@@ -48,13 +52,19 @@ int getword(char *, int);
 
 struct tnode *talloc(void);        /* allocate memory to new tree node */
 char *strDup(char *);              /* copy string into safe place */
+
 struct tnode *add_tree_linear(struct tnode *p, char *w);
+
+struct tnode *add_tree_alpha(struct tnode *p, char *w);
 
 void printtree(struct tnode *);
 
 void freetree(struct tnode *);
 
-struct tnode *sorttree(struct tnode *, struct tnode *); /* optional */
+struct tnode *sorttree(struct tnode *, struct tnode *);
+struct tnode *sort_tree_alpha(struct tnode *p, struct tnode *root);
+
+struct tnode *copy_tree_alpha(struct tnode *p, struct tnode *root);
 
 /* globals */
 int buf[BUFSIZE];         /* buffer from ungetch */
@@ -75,6 +85,27 @@ struct tnode *add_tree_linear(struct tnode *p, char *w) {
     else
         /* in correlation with printtree corresponds to original order*/
         p->left = add_tree_linear(p->left, w);
+    return p;
+}
+
+/*************************
+ * nodes are added both to left and right according alphabet
+ * Keeps the alphabetical  order
+**************************/
+struct tnode *add_tree_alpha(struct tnode *p, char *w) {
+    int cond;
+
+    if (!p) {                          /* a new word has arrived */
+        p = talloc();                  /* make a new node */
+        p->word = strDup(w);           /* copy data to it */
+        p->count = 1;
+        p->left = p->right = NULL;
+    } else if (!(cond = strcmp(w, p->word)))
+        ++p->count;                    /* repeated word */
+    else if (cond < 0)                 /* less than into left subtree */
+        p->left = add_tree_alpha(p->left, w);
+    else
+        p->right = add_tree_alpha(p->right, w);
     return p;
 }
 
@@ -101,6 +132,20 @@ struct tnode *copyTree(struct tnode *p, struct tnode *root) {
     return p;
 }
 
+struct tnode *copy_tree_alpha(struct tnode *p, struct tnode *root) {
+    if (!p) {
+        p = talloc();
+        p->word = strDup(root->word);
+        p->count = root->count;
+        p->left = p->right = NULL;
+    } else if (strcmp(root->word, p->word) >= 0)
+        p->left = copy_tree_alpha(p->left, root);
+    else
+        p->right = copy_tree_alpha(p->right, root);
+    return p;
+}
+
+
 /* sorttree: performs inorder traversal on root and creates a BST p according
  * to frequency of occurrence */
 struct tnode *sorttree(struct tnode *p, struct tnode *root) {
@@ -109,6 +154,16 @@ struct tnode *sorttree(struct tnode *p, struct tnode *root) {
         p = sorttree(p, root->left);
         p = copyTree(p, root);
         p = sorttree(p, root->right);
+    }
+    return p;
+}
+
+struct tnode *sort_tree_alpha(struct tnode *p, struct tnode *root) {
+
+    if (root) {
+        p = sort_tree_alpha(p, root->left);
+        p = copy_tree_alpha(p, root);
+        p = sort_tree_alpha(p, root->right);
     }
     return p;
 }
@@ -176,20 +231,27 @@ void ungetch(int c) {
 int main(void) {
     struct tnode *root;                /* root node */
     struct tnode *sorted = NULL;                /* root node */
+    struct tnode *sorted_alpha = NULL;                /* root node */
     char word[MAXWORD];                /* currently read word */
 
     root = NULL;
     while (getword(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
             root = (add_tree_linear(root, word)); /* build tree */
-    printf("Original order\n");
+//            root = (add_tree_alpha(root, word)); /* build tree */
+    printf("\nOriginal order -c\n");
     printtree(root);
-    printf("By increasing count order\n");
+    printf("\nBy increasing count order\n");
     sorted = sorttree(sorted, root);
     printtree(sorted);
+    printf("\nAlphabet order -c -s 2\n");
+    sorted_alpha = sort_tree_alpha(sorted_alpha, root);
+    printtree(sorted_alpha);
     freetree(root);
     freetree(sorted);
+    freetree(sorted_alpha);
     root = NULL;
     sorted = NULL;
+    sorted_alpha = NULL;
     return 0;
 }
