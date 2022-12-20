@@ -67,6 +67,7 @@ int main(void) {
 
 //    printf("%d\n", word_count);
 //    printf("%s\n", input);
+//    printf("%s\n", input_copy);
     free(input);
     free(input_copy);
 
@@ -74,28 +75,37 @@ int main(void) {
 }
 
 char *remove_duplicates(char *input) {
-    //TODO remove from string duplicated words
-    unsigned long len = strlen(input);
-    for (int i = 0; i < len; i++) {
-        for (int j = i + 1; j < len; j++) {
-            if (&input[i] == &input[j]) //ma vzit prvni slovo a dalsi slovo, ale nedela to
-            {
-                memmove(input + j, input + j + 1, len - j);
-                len--;
-                j--;
-            }
-        }
-    }
 
-    //need use malloc, because of valgrind
-    char *input_copy = malloc(len + 1);
-    if (input_copy == NULL) {
+    unsigned long len = strlen(input);
+    char *word = NULL;
+    char *resentence;
+    //allocate memory
+    resentence = malloc(len + 1);
+    if (resentence == NULL) {
         fprintf(stderr, "Error malloc\n");
         exit(ERROR_MALLOC);
     } else {
-        strcpy(input_copy, input);
+        // get first word
+        *resentence = 0;
+//        strcpy(resentence,input);
+        word = strtok(input, TOKEN);
+        /*z nejakeho duvoud strtok okrouhne i input string,ktery pak pouzivam --> spatne
+         * pokud input prekopiruju do resentence a pote ho vynulu tak podle debugu vse
+         * sedi a melo by fungovat ale ze zahadneho duvodu program pri vypisu preskoci jedno slovo --> spatne*/
+
+
+        if (word != NULL){// && strstr(temp1, temp) == NULL)
+            strcpy(resentence, word);
+            while ((word = strtok(NULL, TOKEN)) != NULL){
+                if (strstr(resentence, word) == NULL){
+                    strcat(resentence, TOKEN);
+                    strcat(resentence, word);
+                }
+            }
+        }
+        puts(resentence);
     }
-    return input_copy;
+    return resentence;
 }
 
 int count_words_in_string(const char *input) {
