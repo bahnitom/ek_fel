@@ -71,7 +71,7 @@ int buf[BUFSIZE];         /* buffer from ungetch */
 int bufp = 0;             /* next free position in buf */
 
 char *lower_case(char *word) {
-    char *temp = strdup(word); // make a copy
+    char *temp = strDup(word); // make a copy
 
     // adjust copy to lowercase
     unsigned char *tptr = (unsigned char *)temp;
@@ -84,6 +84,17 @@ char *lower_case(char *word) {
 }
 
 
+/*strDup: make a duplicate of s */
+char *strDup(char *s) {
+    char *p;
+
+    p = malloc(strlen(s) + 1); /* +1 for '\0'*/
+    if (p)
+       strcpy(p, s);
+   
+    return p;
+}
+
 /*************************
  * linear search:  nodes are added only to left
  * Keeps the original order
@@ -93,7 +104,7 @@ struct tnode *add_tree_linear(struct tnode *p, char *w, int case_sensitive) {
         w = lower_case(w);
     if (!p) {                          /* a new word has arrived */
         p = talloc();                  /* make a new node */
-        p->word = strdup(w);           /* copy data to it */
+        p->word = strDup(w);           /* copy data to it */
         p->count = 1;
         p->left = p->right = NULL;
     } else if (strcmp(w, p->word) == 0)
@@ -118,7 +129,7 @@ void printtree(struct tnode *p) {
 struct tnode *copyTree(struct tnode *p, struct tnode *root) {
     if (!p) {
         p = talloc();
-        p->word = strdup(root->word);
+        p->word = strDup(root->word);
         p->count = root->count;
         p->left = p->right = NULL;
     } else if (root->count >= p->count)
@@ -131,7 +142,7 @@ struct tnode *copyTree(struct tnode *p, struct tnode *root) {
 struct tnode *copy_tree_alpha(struct tnode *p, struct tnode *root) {
     if (!p) {
         p = talloc();
-        p->word = strdup(root->word);
+        p->word = strDup(root->word);
         p->count = root->count;
         p->left = p->right = NULL;
     } else if (strcmp(root->word, p->word) >= 0)
