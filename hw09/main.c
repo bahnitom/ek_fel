@@ -18,6 +18,8 @@ void remove_punctuations(char *input);
 
 int count_words_in_string(const char *input);
 
+char *copy_strings(const char *input);
+
 char *remove_duplicates(char *input);
 
 
@@ -27,7 +29,7 @@ int main(void) {
     input = load_input();
     remove_punctuations(input);
     int word_count = count_words_in_string(input);
-    char *input_copy = remove_duplicates(input);
+    char *resentance = remove_duplicates(input);
 
     struct word_count {
         char *word;
@@ -37,7 +39,7 @@ int main(void) {
     int word_num = 0, count = 0;
     char *word;
     char *tmp = input;
-    word = strtok(input_copy, TOKEN);
+    word = strtok(resentance, TOKEN);
     //get first word from string
     while (word != NULL) {
         // word == NULL --> in string is not any more words
@@ -62,50 +64,51 @@ int main(void) {
     }
     //print
     for (int i = 0; i < word_num; i++) {
-        printf("%s %d\n", words[i].word, words[i].count);
+        printf("%-20s %d\n", words[i].word, words[i].count);
     }
 
-//    printf("%d\n", word_count);
-//    printf("%s\n", input);
-//    printf("%s\n", input_copy);
     free(input);
-    free(input_copy);
-
+    free(resentance);
     return 0;
 }
 
 char *remove_duplicates(char *input) {
 
     unsigned long len = strlen(input);
-    char *word = NULL;
-    char *resentence;
+    char *word = NULL, *resentence = NULL, *input_copy = NULL;
     //allocate memory
     resentence = malloc(len + 1);
     if (resentence == NULL) {
         fprintf(stderr, "Error malloc\n");
         exit(ERROR_MALLOC);
     } else {
+        input_copy = copy_strings(input);
         // get first word
-        *resentence = 0;
-//        strcpy(resentence,input);
-        word = strtok(input, TOKEN);
-        /*z nejakeho duvoud strtok okrouhne i input string,ktery pak pouzivam --> spatne
-         * pokud input prekopiruju do resentence a pote ho vynulu tak podle debugu vse
-         * sedi a melo by fungovat ale ze zahadneho duvodu program pri vypisu preskoci jedno slovo --> spatne*/
+        word = strtok(input_copy, TOKEN);
 
-
-        if (word != NULL){// && strstr(temp1, temp) == NULL)
+        if (word != NULL){// && strstr(resentence, word) == NULL)
             strcpy(resentence, word);
             while ((word = strtok(NULL, TOKEN)) != NULL){
                 if (strstr(resentence, word) == NULL){
-                    strcat(resentence, TOKEN);
-                    strcat(resentence, word);
+                    strcat(resentence, TOKEN); // add space to string
+                    strcat(resentence, word);  // add word to string
                 }
             }
         }
         puts(resentence);
     }
     return resentence;
+}
+
+char *copy_strings(const char *input) {
+    //need use malloc, because of valgrind
+    char *input_copy = malloc(strlen(input) + 1);
+    if (input_copy == NULL) {
+        fprintf(stderr, "Error malloc\n");
+        exit(ERROR_MALLOC);
+    }
+    strcpy(input_copy, input);
+    return input_copy;
 }
 
 int count_words_in_string(const char *input) {
