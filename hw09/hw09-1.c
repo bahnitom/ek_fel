@@ -66,6 +66,8 @@ struct tnode *copyTree(struct tnode *p, struct tnode *root);
 
 struct tnode *copy_tree_alpha(struct tnode *p, struct tnode *root);
 
+void remove_last_space(char *BUFFER);
+
 /* globals */
 int buf[BUFSIZE];         /* buffer from ungetch */
 int bufp = 0;             /* next free position in buf */
@@ -150,27 +152,26 @@ int min_count(struct tnode *p) {
     }
 }
 
-void words_with_count(struct tnode *p, int count, char buffer[]) {
+void words_with_count(struct tnode *p, int count) {
     if (p) {
         if (p->count == count) {
-            strcat(buffer,p->word);
-//            printf("%s ", p->word);
+            printf(" %s", p->word);
         }
-        words_with_count(p->left, count, buffer);
+        words_with_count(p->left, count);
     }
 }
 
 /* Counts no. of nodes in linked list */
-int words_count(struct tnode *p)
-{
+int words_count(struct tnode *p) {
     int count = 0; // Initialize count
-    struct tnode* current = p; // Initialize current
+    struct tnode *current = p; // Initialize current
     while (current != NULL) {
         count++;
         current = current->left;
     }
     return count;
 }
+
 /* copyTree: copy nodes in root into p according to frequency of occurrence. */
 struct tnode *copyTree(struct tnode *p, struct tnode *root) {
     if (!p) {
@@ -266,46 +267,59 @@ void ungetch(int c) {
         buf[bufp++] = c;
 }
 
-int main(void) {
+int main(int argc, char *argv[]) {
     struct tnode *root = NULL;                /* root node */
-    struct tnode *sorted = NULL;                /* root node */
+//    struct tnode *sorted = NULL;                /* root node */
     char word[MAXWORD];                /* currently read word */
     int case_sensitive_arg = 0;
-    int sort_arg = 1;
+//    int sort_arg = 1;
     int max_cnt = 0;
     int min_cnt = 0;
-    char BUFFER[100] = {""};
 
     while (getword(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
             root = add_tree_linear(root, word, case_sensitive_arg); /* build tree */
-    printf("\nOriginal order -c %d, -s %d\n", case_sensitive_arg, sort_arg);
+    //printf("\nOriginal order -c %d, -s %d\n", case_sensitive_arg, sort_arg);
     max_cnt = max_count(root);
     min_cnt = min_count(root);
-//    printf("\nmax count=%d, min count=%d\n", max_cnt, min_cnt);
+    printf("Seznam slov:\n");
+
     printtree(root);
-    printf("\nPocet slov: %d", words_count(root));
-    words_with_count(root, max_cnt, BUFFER);
-    printf("\nNejcastejsi: %s", BUFFER);
+    printf("%-20s %d", "Pocet slov:", words_count(root));
+    printf("\n%-20s", "Nejcastejsi:");
+    words_with_count(root, max_cnt);
+    printf("\n%-20s", "Nejmene caste:");
+    words_with_count(root, min_cnt);
     printf("\n");
-    words_with_count(root, min_cnt, BUFFER);
-    printf("\nNejmene caste: %s", BUFFER);
-    printf("\n");
-    return 0;
-
-    printf("\nIncreasing count -c %d, -s %d\n", case_sensitive_arg, sort_arg);
-    sorted = sorttree(sorted, root, sort_arg);
-    printtree(sorted);
-    freetree(sorted);
-    sorted = NULL;
-
-    sort_arg = 2;
-    printf("\nAlphabet order -c %d, -s %d\n", case_sensitive_arg, sort_arg);
-    sorted = sorttree(sorted, root, sort_arg);
-    printtree(sorted);
     freetree(root);
-    freetree(sorted);
     root = NULL;
-    sorted = NULL;
     return 0;
+
+//    printf("\nIncreasing count -c %d, -s %d\n", case_sensitive_arg, sort_arg);
+//    sorted = sorttree(sorted, root, sort_arg);
+//    printtree(sorted);
+//    freetree(sorted);
+//    sorted = NULL;
+//
+//    sort_arg = 2;
+//    printf("\nAlphabet order -c %d, -s %d\n", case_sensitive_arg, sort_arg);
+//    sorted = sorttree(sorted, root, sort_arg);
+//    printtree(sorted);
+//    freetree(root);
+//    freetree(sorted);
+//    root = NULL;
+//    sorted = NULL;
+    return 0;
+}
+
+
+void remove_last_space(char *BUFFER) {
+    unsigned long i;
+    for (i = strlen(BUFFER) - 1; i >= 0; i--) {
+        if (BUFFER[i] != ' ' && BUFFER[i] != '\t' && BUFFER[i] != '\n') {
+            break;
+        }
+    }
+    // Add a null terminator at the index i + 1 to truncate the string
+    BUFFER[i + 1] = '\0';
 }
