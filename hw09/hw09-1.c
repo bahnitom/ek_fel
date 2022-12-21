@@ -125,6 +125,31 @@ void printtree(struct tnode *p) {
     }
 }
 
+int MAX_COUNT = 1000000;
+int MIN_COUNT = 0;
+
+int max_count(struct tnode *p) {
+    if (p) {
+        int curr = p->count;
+        //  p->right is NULL
+        int next = max_count(p->left);
+        return curr > next ? curr : next;
+    } else {
+        return MIN_COUNT;
+    }
+}
+
+
+int min_count(struct tnode *p) {
+    if (p) {
+        int curr = p->count;
+        int next = min_count(p->left);
+        return curr < next ? curr : next;
+    } else {
+        return MAX_COUNT;
+    }
+}
+
 /* copyTree: copy nodes in root into p according to frequency of occurrence. */
 struct tnode *copyTree(struct tnode *p, struct tnode *root) {
     if (!p) {
@@ -226,11 +251,16 @@ int main(void) {
     char word[MAXWORD];                /* currently read word */
     int case_sensitive_arg = 0;
     int sort_arg = 1;
+    int max_cnt = 0;
+    int min_cnt = 0;
 
     while (getword(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
             root = add_tree_linear(root, word, case_sensitive_arg); /* build tree */
     printf("\nOriginal order -c %d, -s %d\n", case_sensitive_arg, sort_arg);
+    max_cnt = max_count(root);
+    min_cnt = min_count(root);
+    printf("\nmax count=%d, min count=%d\n", max_cnt, min_cnt);
     printtree(root);
 
     printf("\nIncreasing count -c %d, -s %d\n", case_sensitive_arg, sort_arg);
