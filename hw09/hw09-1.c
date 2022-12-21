@@ -150,12 +150,13 @@ int min_count(struct tnode *p) {
     }
 }
 
-void words_with_count(struct tnode *p, int count) {
+void words_with_count(struct tnode *p, int count, char buffer[]) {
     if (p) {
         if (p->count == count) {
-            printf("%s ", p->word);
+            strcat(buffer,p->word);
+//            printf("%s ", p->word);
         }
-        words_with_count(p->left, count);
+        words_with_count(p->left, count, buffer);
     }
 }
 
@@ -273,6 +274,7 @@ int main(void) {
     int sort_arg = 1;
     int max_cnt = 0;
     int min_cnt = 0;
+    char BUFFER[100] = {""};
 
     while (getword(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
@@ -283,11 +285,11 @@ int main(void) {
 //    printf("\nmax count=%d, min count=%d\n", max_cnt, min_cnt);
     printtree(root);
     printf("\nPocet slov: %d", words_count(root));
-    printf("\nNejcastejsi: ");
-    words_with_count(root, max_cnt);
+    words_with_count(root, max_cnt, BUFFER);
+    printf("\nNejcastejsi: %s", BUFFER);
     printf("\n");
-    printf("\nNejmene caste: ");
-    words_with_count(root, min_cnt);
+    words_with_count(root, min_cnt, BUFFER);
+    printf("\nNejmene caste: %s", BUFFER);
     printf("\n");
     return 0;
 
