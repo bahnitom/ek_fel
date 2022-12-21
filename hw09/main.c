@@ -89,14 +89,14 @@ char *remove_duplicates(char *input) {
         if (word != NULL){// && strstr(resentence, word) == NULL)
             strcpy(resentence, word);
             while ((word = strtok(NULL, TOKEN)) != NULL){
-                if (strstr(resentence, word) == NULL){
+                if (strstr(resentence, word) == NULL){ /*z nejakeho duvodu vyhodnoti ze slovo Ja se uz v retezci vyskytuje*/
                     strcat(resentence, TOKEN); // add space to string
                     strcat(resentence, word);  // add word to string
                 }
             }
         }
-        puts(resentence);
     }
+    free(input_copy);
     return resentence;
 }
 
