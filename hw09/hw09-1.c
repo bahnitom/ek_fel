@@ -74,8 +74,8 @@ char *lower_case(char *word) {
     char *temp = strDup(word); // make a copy
 
     // adjust copy to lowercase
-    unsigned char *tptr = (unsigned char *)temp;
-    while(*tptr) {
+    unsigned char *tptr = (unsigned char *) temp;
+    while (*tptr) {
         *tptr = tolower(*tptr);
         tptr++;
     }
@@ -90,8 +90,8 @@ char *strDup(char *s) {
 
     p = malloc(strlen(s) + 1); /* +1 for '\0'*/
     if (p)
-       strcpy(p, s);
-   
+        strcpy(p, s);
+
     return p;
 }
 
@@ -224,7 +224,7 @@ int main(void) {
     struct tnode *root = NULL;                /* root node */
     struct tnode *sorted = NULL;                /* root node */
     char word[MAXWORD];                /* currently read word */
-    int case_sensitive_arg = 1;
+    int case_sensitive_arg = 0;
     int sort_arg = 1;
 
     while (getword(word, MAXWORD) != EOF)
