@@ -150,6 +150,26 @@ int min_count(struct tnode *p) {
     }
 }
 
+void words_with_count(struct tnode *p, int count) {
+    if (p) {
+        if (p->count == count) {
+            printf("%s ", p->word);
+        }
+        words_with_count(p->left, count);
+    }
+}
+
+/* Counts no. of nodes in linked list */
+int words_count(struct tnode *p)
+{
+    int count = 0; // Initialize count
+    struct tnode* current = p; // Initialize current
+    while (current != NULL) {
+        count++;
+        current = current->left;
+    }
+    return count;
+}
 /* copyTree: copy nodes in root into p according to frequency of occurrence. */
 struct tnode *copyTree(struct tnode *p, struct tnode *root) {
     if (!p) {
@@ -260,8 +280,16 @@ int main(void) {
     printf("\nOriginal order -c %d, -s %d\n", case_sensitive_arg, sort_arg);
     max_cnt = max_count(root);
     min_cnt = min_count(root);
-    printf("\nmax count=%d, min count=%d\n", max_cnt, min_cnt);
+//    printf("\nmax count=%d, min count=%d\n", max_cnt, min_cnt);
     printtree(root);
+    printf("\nPocet slov: %d", words_count(root));
+    printf("\nNejcastejsi: ");
+    words_with_count(root, max_cnt);
+    printf("\n");
+    printf("\nNejmene caste: ");
+    words_with_count(root, min_cnt);
+    printf("\n");
+    return 0;
 
     printf("\nIncreasing count -c %d, -s %d\n", case_sensitive_arg, sort_arg);
     sorted = sorttree(sorted, root, sort_arg);
