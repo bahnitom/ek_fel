@@ -1,15 +1,4 @@
 /*************************************************************
-* Write a program that prints the distinct words in its input sorted into
-* decreasing order of frequency of occurrence. Precede each word by its count.
-*
-* By Faisal Saadatmand
-*
-
-* NOTE: I included a definition for sorttree and copytree for academic
-* purposes. They are not used in the code
-**************************************************************/
-
-/*************************************************************
  * read a file from std in
  * cmd line arguments
  * split text to words and remove punctuation
@@ -35,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <getopt.h>
 
 #define MAXWORD 100
 #define BUFSIZE 100
@@ -269,13 +259,56 @@ void ungetch(int c) {
 
 int main(int argc, char *argv[]) {
     struct tnode *root = NULL;                /* root node */
-//    struct tnode *sorted = NULL;                /* root node */
+    struct tnode *sorted = NULL;                /* root node */
     char word[MAXWORD];                /* currently read word */
     int case_sensitive_arg = 0;
-//    int sort_arg = 1;
+    int sort_arg = 0;
     int max_cnt = 0;
     int min_cnt = 0;
+    int opt;
+    int s_value;
 
+    while ((opt = getopt(argc, argv, "s:c")) != -1) {
+        switch (opt) {
+            case 's':
+                s_value = atoi(optarg);
+                // Handle the -s option
+                if (s_value == 1) {
+                    // Do something for -s 1
+                    sort_arg = 1;
+                } else if (s_value == 2) {
+                    // Do something for -s 2
+                    sort_arg = 2;
+                } else {
+                    // do mandatory
+                    sort_arg = 0;
+                    fprintf(stderr, "Invalid value for -s option: %d\n", s_value);
+                    return 1;
+                }
+                break;
+            case 'c':
+                // Do something for -c
+                case_sensitive_arg = 1;
+                break;
+//            case 's': //both of them
+//            case 'c':
+//                s_value = atoi(optarg);
+//                // Handle the -s option
+//                if (s_value == 1) {
+//                    // Do something for -s 1
+//                    sort_arg = 1;
+//                } else if (s_value == 2) {
+//                    // Do something for -s 2
+//                    sort_arg = 2;
+//                }
+//                case_sensitive_arg = 1;
+//                break;
+            case '?':
+                // Handle invalid options
+                fprintf(stderr, "Warning: Chybna hodnota parametru -s!\n");
+                exit(0);
+        }
+    }
     while (getword(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
             root = add_tree_linear(root, word, case_sensitive_arg); /* build tree */
@@ -283,8 +316,25 @@ int main(int argc, char *argv[]) {
     max_cnt = max_count(root);
     min_cnt = min_count(root);
     printf("Seznam slov:\n");
-
-    printtree(root);
+    if (sort_arg == 0) {
+        printtree(root);
+    }
+    if (sort_arg == 1) {
+        //printf("Increasing count -c %d, -s %d\n", case_sensitive_arg, sort_arg);
+        sorted = sorttree(sorted, root, sort_arg);
+        printtree(sorted);
+        freetree(sorted);
+        sorted = NULL;
+    }
+    if (sort_arg == 2) {
+        //printf("Alphabet order -c %d, -s %d\n", case_sensitive_arg, sort_arg);
+        sorted = sorttree(sorted, root, sort_arg);
+        printtree(sorted);
+        //freetree(root);
+        freetree(sorted);
+        //root = NULL;
+        sorted = NULL;
+    }
     printf("%-20s %d", "Pocet slov:", words_count(root));
     printf("\n%-20s", "Nejcastejsi:");
     words_with_count(root, max_cnt);
@@ -294,32 +344,4 @@ int main(int argc, char *argv[]) {
     freetree(root);
     root = NULL;
     return 0;
-
-//    printf("\nIncreasing count -c %d, -s %d\n", case_sensitive_arg, sort_arg);
-//    sorted = sorttree(sorted, root, sort_arg);
-//    printtree(sorted);
-//    freetree(sorted);
-//    sorted = NULL;
-//
-//    sort_arg = 2;
-//    printf("\nAlphabet order -c %d, -s %d\n", case_sensitive_arg, sort_arg);
-//    sorted = sorttree(sorted, root, sort_arg);
-//    printtree(sorted);
-//    freetree(root);
-//    freetree(sorted);
-//    root = NULL;
-//    sorted = NULL;
-    return 0;
-}
-
-
-void remove_last_space(char *BUFFER) {
-    unsigned long i;
-    for (i = strlen(BUFFER) - 1; i >= 0; i--) {
-        if (BUFFER[i] != ' ' && BUFFER[i] != '\t' && BUFFER[i] != '\n') {
-            break;
-        }
-    }
-    // Add a null terminator at the index i + 1 to truncate the string
-    BUFFER[i + 1] = '\0';
 }
