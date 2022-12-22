@@ -44,11 +44,6 @@ struct tnode *talloc(void);        /* allocate memory to new tree node */
 
 char *strDup(char *);              /* copy string into safe place */
 
-<<<<<<< HEAD:hw09/main_pantom.c
-char *copy_strings(const char *input);
-
-char *remove_duplicates(char *input);
-=======
 struct tnode *add_tree_linear(struct tnode *p, char *w, int case_sensitive);
 
 void printtree(struct tnode *);
@@ -56,54 +51,11 @@ void printtree(struct tnode *);
 void freetree(struct tnode *);
 
 struct tnode *sorttree(struct tnode *p, struct tnode *root, int sort_arg);
->>>>>>> hw09_tmp:hw09/main.c
 
 struct tnode *copyTree(struct tnode *p, struct tnode *root);
 
 struct tnode *copy_tree_alpha(struct tnode *p, struct tnode *root);
 
-<<<<<<< HEAD:hw09/main_pantom.c
-    char *input = NULL;
-    input = load_input();
-    remove_punctuations(input);
-    int word_count = count_words_in_string(input);
-    char *resentance = remove_duplicates(input);
-
-    struct word_count {
-        char *word;
-        int count;
-    } words[word_count];
-
-    int word_num = 0, count = 0;
-    char *word;
-    char *tmp = input;
-    word = strtok(resentance, TOKEN);
-    //get first word from string
-    while (word != NULL) {
-        // word == NULL --> in string is not any more words
-        words[word_num].count = 0; //start from zero
-        unsigned long word_len = strlen(word);
-        while ((tmp = strstr(tmp, word)) != NULL) { // word exist in string
-            //we don't need to check same word
-            tmp += word_len + 1;
-            count++;
-        }
-        // if while not true, tmp set to NULL
-        if (tmp == NULL) {
-            tmp = input;
-        }
-        //set values to actual word
-        words[word_num].word = word;
-        words[word_num].count = count;
-        word_num++;
-        count = 0;
-        // get another word from string
-        word = strtok(NULL, TOKEN);
-    }
-    //print
-    for (int i = 0; i < word_num; i++) {
-        printf("%-20s %d\n", words[i].word, words[i].count);
-=======
 void remove_last_space(char *BUFFER);
 
 /* globals */
@@ -162,51 +114,9 @@ void printtree(struct tnode *p) {
         printtree(p->right);
         printf("%-20s %d\n", p->word, p->count);
         printtree(p->left);
->>>>>>> hw09_tmp:hw09/main.c
     }
 }
 
-<<<<<<< HEAD:hw09/main_pantom.c
-    free(input);
-    free(resentance);
-    return 0;
-}
-
-char *remove_duplicates(char *input) {
-
-    unsigned long len = strlen(input);
-    char *word = NULL, *resentence = NULL, *input_copy = NULL;
-    //allocate memory
-    resentence = malloc(len + 1);
-    if (resentence == NULL) {
-        fprintf(stderr, "Error malloc\n");
-        exit(ERROR_MALLOC);
-    } else {
-        input_copy = copy_strings(input);
-        // get first word
-        word = strtok(input_copy, TOKEN);
-
-        if (word != NULL){// && strstr(resentence, word) == NULL)
-            strcpy(resentence, word);
-            while ((word = strtok(NULL, TOKEN)) != NULL){
-                if (strstr(resentence, word) == NULL){ /*z nejakeho duvodu vyhodnoti ze slovo Ja se uz v retezci vyskytuje*/
-                    strcat(resentence, TOKEN); // add space to string
-                    strcat(resentence, word);  // add word to string
-                }
-            }
-        }
-    }
-    free(input_copy);
-    return resentence;
-}
-
-char *copy_strings(const char *input) {
-    //need use malloc, because of valgrind
-    char *input_copy = malloc(strlen(input) + 1);
-    if (input_copy == NULL) {
-        fprintf(stderr, "Error malloc\n");
-        exit(ERROR_MALLOC);
-=======
 int MAX_COUNT = 1000000;
 int MIN_COUNT = 0;
 
@@ -229,7 +139,6 @@ int min_count(struct tnode *p) {
         return curr < next ? curr : next;
     } else {
         return MAX_COUNT;
->>>>>>> hw09_tmp:hw09/main.c
     }
 }
 
