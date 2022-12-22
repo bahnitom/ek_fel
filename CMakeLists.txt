@@ -46,12 +46,8 @@ add_executable(hw08
         hw08/main.c)
 target_link_libraries(hw08 m)
 
+
 project(hw09)
 set(CMAKE_CXX_STANDARD 14)
-add_executable(hw09
-        hw09/main_working_T.c)
-
-project(hw09_tmp)
-set(CMAKE_CXX_STANDARD 14)
 add_executable(hw09_tmp
-        hw09/hw09-1.c)
+        hw09/main.c)
