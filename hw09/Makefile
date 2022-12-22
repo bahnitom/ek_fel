@@ -1,6 +1,6 @@
 CFLAGS+= -pedantic -Wall -Werror -std=c99 -O3
 
-program: main_working_T.c
+program: main.c
 	${CC} ${CFLAGS} main.c -o program
 	
 zip:
