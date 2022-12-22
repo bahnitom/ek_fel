@@ -1,13 +1,6 @@
-/*************************************************************
- * This code defines a linked list node with an integer count and char ^word
- * count field and a pointer to the next node in the list.
- * It also defines functions for creating a new node, appending a new node to the end of the list,
- * printing the list, and sorting the list using bubble sort.
- * To use bubble sort to sort the list, the function repeatedly iterates through the list,
- * swapping adjacent elements that are in the wrong order until the list is sorted.
- */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct node {
     int count;
@@ -15,15 +8,16 @@ typedef struct node {
     struct node *next;
 } node;
 
-node *create_node(int data) {
-    node *new_node = (node *) malloc(sizeof(node));
-    new_node->count = data;
+node *create_node(int count, char *word) {
+    node *new_node = (node*)malloc(sizeof(node));
+    new_node->count = count;
+    new_node->word = strdup(word);
     new_node->next = NULL;
     return new_node;
 }
 
-void append(node **head, int data) {
-    node *new_node = create_node(data);
+void append(node **head, int count, char *word) {
+    node *new_node = create_node(count, word);
     if (*head == NULL) {
         *head = new_node;
         return;
@@ -38,13 +32,20 @@ void append(node **head, int data) {
 void print_list(node *head) {
     node *current = head;
     while (current != NULL) {
-        printf("%d ", current->count);
+        printf("%d %s\n", current->count, current->word);
         current = current->next;
     }
-    printf("\n");
 }
 
-void bubble_sort(node *head) {
+int compare_count(node *a, node *b) {
+    return a->count - b->count;
+}
+
+int compare_word(node *a, node *b) {
+    return strcmp(a->word, b->word);
+}
+
+void bubble_sort(node *head, int (*compare)(node*, node*)) {
     int swapped;
     node *current;
     node *last = NULL;
@@ -52,10 +53,13 @@ void bubble_sort(node *head) {
         swapped = 0;
         current = head;
         while (current->next != last) {
-            if (current->count > current->next->count) {
-                int temp = current->count;
+            if (compare(current, current->next) > 0) {
+                int temp_count = current->count;
                 current->count = current->next->count;
-                current->next->count = temp;
+                current->next->count = temp_count;
+                char *temp_word = current->word;
+                current->word = current->next->word;
+                current->next->word = temp_word;
                 swapped = 1;
             }
             current = current->next;
@@ -66,15 +70,18 @@ void bubble_sort(node *head) {
 
 int main() {
     node *head = NULL;
-    append(&head, 5);
-    append(&head, 2);
-    append(&head, 3);
-    append(&head, 1);
-    append(&head, 4);
-    printf("Original list: ");
+    append(&head, 5, "apple");
+    append(&head, 2, "banana");
+    append(&head, 3, "cherry");
+    append(&head, 1, "date");
+    append(&head, 4, "elderberry");
+    printf("Original list:\n");
     print_list(head);
-    bubble_sort(head);
-    printf("Sorted list: ");
+    printf("Sorting by count:\n");
+    bubble_sort(head, compare_count);
+    print_list(head);
+    printf("Sorting by word:\n");
+    bubble_sort(head, compare_word);
     print_list(head);
     return 0;
-}//
+}
