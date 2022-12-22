@@ -49,5 +49,5 @@ target_link_libraries(hw08 m)
 
 project(hw09)
 set(CMAKE_CXX_STANDARD 14)
-add_executable(hw09_tmp
-        hw09/text_analysis_l_l.c)
+add_executable(hw09
+        hw09/main.c)
