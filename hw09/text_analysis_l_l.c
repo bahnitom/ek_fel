@@ -307,14 +307,22 @@ int main(int argc, char *argv[]) {
     min_cnt = min_count(head);
     word_cnt = words_count(head);
     printf("Seznam slov:\n");
-//    printf("Original list:\n");
-    print_list(head);
-    printf("Sorting by count:\n");
-    bubble_sort(head, compare_count);
-    print_list(head);
-    printf("Sorting by word:\n");
-    bubble_sort(head, compare_word);
-    print_list(head);
+    switch (sort_arg) {
+        case 0:
+            print_list(head);
+            break;
+        case 1:
+            bubble_sort(head, compare_count);
+            print_list(head);
+            break;
+        case 2:
+            bubble_sort(head, compare_word);
+            print_list(head);
+            break;
+        default:
+            fprintf(stderr, "Warning: Chybna hodnota parametru -s!\n");
+            exit(0);
+    }
     printf("%-20s %d", "Pocet slov:", word_cnt);
     printf("\n%-20s", "Nejcastejsi:");
     words_with_count(head, max_cnt);
