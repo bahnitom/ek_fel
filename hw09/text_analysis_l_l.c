@@ -298,7 +298,7 @@ int main(int argc, char *argv[]) {
                 break;
         }
     }
-    printf("case_sens = %d, sort_ord = %d\n", case_sensitive_arg, sort_arg);
+//    printf("case_sens = %d, sort_ord = %d\n", case_sensitive_arg, sort_arg);
     while (get_word(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
             head = add_to_unique_list(head, word, case_sensitive_arg); /* build tree */
