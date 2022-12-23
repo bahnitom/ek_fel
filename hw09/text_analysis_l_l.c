@@ -67,19 +67,75 @@ void append(node **head, int count, char *word, int case_sensitive) {
  * @param head of linked list
  * @param word word to add
  * @param case_sensitive 0 = insensitive, 1 = sensitive
- * @return head of new linked list
+ * @return pointer to head node of new linked list
  */
-node *add_to_unique_list(node **head, char *word, int case_sensitive) {
+node *add_to_unique_list(node *head, char *word, int case_sensitive) {
     if (case_sensitive == 0)
         word = lower_case(word);
-    node *current = *head;
-    if (*head == NULL) {                                 /* a new word has arrived */
-        *head = create_node(1, word);
-    } else if (strcmp(word, current->word) == 0)
-        ++current->count;                                /* repeated word increase count*/
+    if (head == NULL) {                                 /* a new word has arrived */
+        head = create_node(1, word);
+    } else if (strcmp(word, head->word) == 0)
+        ++head->count;                                /* repeated word increase count*/
     else
-        current->next = add_to_unique_list(&current->next, word, case_sensitive);
-    return *head;
+        head->next = add_to_unique_list(head->next, word, case_sensitive);
+    return head;
+}
+
+int MAX_COUNT = 1000000;
+int MIN_COUNT = 0;
+
+/***********
+ * argument is node, head is pointer to node
+ * when `*` is applied to a pointer, it accesses the object the pointer points to
+ * @param head  pointer to node
+ * @return
+ */
+int max_count(node *head) {
+    if (head) {
+        int curr = head->count;
+        int next = max_count(head->next);
+        return curr > next ? curr : next;
+    } else {
+        return MIN_COUNT;
+    }
+}
+
+int min_count(node *head) {
+    if (head) {
+        int curr = head->count;
+        int next = min_count(head->next);
+        return curr < next ? curr : next;
+    } else {
+        return MAX_COUNT;
+    }
+}
+
+/* Counts no. of nodes in linked list */
+int words_count(node *head) {
+    int count = 0; // Initialize count
+    node *current = head; // Initialize current
+    while (current != NULL) {
+        count++;
+        current = current->next;
+    }
+    return count;
+}
+
+void words_with_count(node *p, int count) {
+    if (p) {
+        if (p->count == count) {
+            printf(" %s", p->word);
+        }
+        words_with_count(p->next, count);
+    }
+}
+
+void free_list(struct node *p) {
+    if (!p)
+        return;
+    free_list(p->next);
+    free(p->word);
+    free(p);
 }
 
 #define MAXWORD 100
@@ -171,11 +227,16 @@ void bubble_sort(node *head, int (*compare)(node *, node *)) {
 
 int main() {
     char word[MAXWORD];
-    int case_sensitive = 1;
+    int case_sensitive = 0;
     node *head = NULL;
     while (get_word(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
-            head = add_to_unique_list(&head, word, case_sensitive); /* build tree */
+            head = add_to_unique_list(head, word, case_sensitive); /* build tree */
+    int max_cnt = max_count(head);
+    int min_cnt = min_count(head);
+    int word_cnt = words_count(head);
+
+    printf("Seznam slov:\n");
     printf("Original list:\n");
     print_list(head);
     printf("Sorting by count:\n");
@@ -184,5 +245,13 @@ int main() {
     printf("Sorting by word:\n");
     bubble_sort(head, compare_word);
     print_list(head);
+    printf("%-20s %d", "Pocet slov:", word_cnt);
+    printf("\n%-20s", "Nejcastejsi:");
+    words_with_count(head, max_cnt);
+    printf("\n%-20s", "Nejmene caste:");
+    words_with_count(head, min_cnt);
+    printf("\n");
+    free_list(head);
+    head = NULL;
     return 0;
 }
