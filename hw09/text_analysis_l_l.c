@@ -46,6 +46,42 @@ node *create_node(int count, char *word) {
     return new_node;
 }
 
+void append(node **head, int count, char *word, int case_sensitive) {
+    if (case_sensitive == 0) {
+        word = lower_case(word);
+    }
+    node *new_node = create_node(count, word);
+    if (*head == NULL) {
+        *head = new_node;
+        return;
+    }
+    node *current = *head;
+    while (current->next != NULL) {
+        current = current->next;
+    }
+    current->next = new_node;
+}
+
+/******************************
+ * Add new word or increase count of already added word
+ * @param head of linked list
+ * @param word word to add
+ * @param case_sensitive 0 = insensitive, 1 = sensitive
+ * @return head of new linked list
+ */
+node *add_to_unique_list(node **head, char *word, int case_sensitive) {
+    if (case_sensitive == 0)
+        word = lower_case(word);
+    node *current = *head;
+    if (*head == NULL) {                                 /* a new word has arrived */
+        *head = create_node(1, word);
+    } else if (strcmp(word, current->word) == 0)
+        ++current->count;                                /* repeated word increase count*/
+    else
+        current->next = add_to_unique_list(&current->next, word, case_sensitive);
+    return *head;
+}
+
 #define MAXWORD 100
 #define BUF_SIZE 100
 
@@ -87,23 +123,6 @@ int get_word(char *word, int lim) {
 }
 
 
-void append(node **head, int count, char *word, int case_sensitive) {
-    if (case_sensitive == 0) {
-        word = lower_case(word);
-    }
-    node *new_node = create_node(count, word);
-    if (*head == NULL) {
-        *head = new_node;
-        return;
-    }
-    node *current = *head;
-    while (current->next != NULL) {
-        current = current->next;
-    }
-    current->next = new_node;
-}
-
-
 void build_linked_list(char word[MAXWORD], node **head, int case_sensitive) {
     while (get_word(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
@@ -114,7 +133,7 @@ void build_linked_list(char word[MAXWORD], node **head, int case_sensitive) {
 void print_list(node *head) {
     node *current = head;
     while (current != NULL) {
-        printf("%d %s\n", current->count, current->word);
+        printf("%-20s %d\n", current->word, current->count);
         current = current->next;
     }
 }
@@ -152,11 +171,11 @@ void bubble_sort(node *head, int (*compare)(node *, node *)) {
 
 int main() {
     char word[MAXWORD];
-    int case_sensitive = 0;
+    int case_sensitive = 1;
     node *head = NULL;
     while (get_word(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
-            append(&head, 1, word, case_sensitive); /* build tree */
+            head = add_to_unique_list(&head, word, case_sensitive); /* build tree */
     printf("Original list:\n");
     print_list(head);
     printf("Sorting by count:\n");
