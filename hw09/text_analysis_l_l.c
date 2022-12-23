@@ -1,7 +1,29 @@
+/*************************************************************
+ * read a file from std in
+ * cmd line arguments
+ * split text to words and remove punctuation
+ * list of all unique word and their counts
+ * 20 chars for each word <space> word_count
+ * count all words, number is considered as word
+ * find most and least frequent words. if more than one keep the order as in text
+ * Arguments
+ * -c : case sensitive
+ * without -s argument
+ *    order as in the text
+ * -s sort output
+ *    1 = sort by increasing frequency
+ *    2 = sort alphabetically
+ *    other values ignored with warning "Warning: Chybna hodnota parametru -s!\n"
+ * exit code is always 0
+ * output ends by \n
+ * check the value of arg -l (positive int)
+**************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <getopt.h>
 
 typedef struct node {
     int count;
@@ -225,19 +247,67 @@ void bubble_sort(node *head, int (*compare)(node *, node *)) {
     } while (swapped);
 }
 
-int main() {
+/****
+ * * without -s argument
+ *    order as in the text
+ * -s sort output
+ *    1 = sort by increasing frequency
+ *    2 = sort alphabetically
+ * @return
+ */
+int main(int argc, char *argv[]) {
     char word[MAXWORD];
-    int case_sensitive = 0;
     node *head = NULL;
+    int case_sensitive_arg = 0;
+    int sort_arg = 0;
+    int max_cnt = 0;
+    int min_cnt = 0;
+    int word_cnt = 0;
+    int opt;
+    int s_value;
+
+
+    while ((opt = getopt(argc, argv, "s:c")) != -1) {
+        switch (opt) {
+            case 's':
+                s_value = atoi(optarg);
+                // Handle the -s option
+                if (s_value == 1) {
+                    // Do something for -s 1
+                    sort_arg = 1;
+                } else if (s_value == 2) {
+                    // Do something for -s 2
+                    sort_arg = 2;
+                } else {
+                    // do mandatory
+                    sort_arg = 0;
+                    fprintf(stderr, "Invalid value for -s option: %d\n", s_value);
+                    return 1;
+                }
+                break;
+            case 'c':
+                // Do something for -c
+                case_sensitive_arg = 1;
+                break;
+            case '?':
+                // Handle invalid options
+                fprintf(stderr, "Warning: Chybna hodnota parametru -s!\n");
+                exit(0);
+            default:
+                printf("Invalid option %d\n", opt);
+                break;
+        }
+    }
+    printf("case_sens = %d, sort_ord = %d\n", case_sensitive_arg, sort_arg);
     while (get_word(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
-            head = add_to_unique_list(head, word, case_sensitive); /* build tree */
-    int max_cnt = max_count(head);
-    int min_cnt = min_count(head);
-    int word_cnt = words_count(head);
+            head = add_to_unique_list(head, word, case_sensitive_arg); /* build tree */
 
+    max_cnt = max_count(head);
+    min_cnt = min_count(head);
+    word_cnt = words_count(head);
     printf("Seznam slov:\n");
-    printf("Original list:\n");
+//    printf("Original list:\n");
     print_list(head);
     printf("Sorting by count:\n");
     bubble_sort(head, compare_count);
