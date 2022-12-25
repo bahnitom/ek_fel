@@ -277,7 +277,7 @@ int main(int argc, char *argv[]) {
     int s_value;
 
 
-    while ((opt = getopt(argc, argv, "s:c")) != -1) {
+    while ((opt = getopt(argc, argv, "s:l:c")) != -1) {
         switch (opt) {
             case 's':
                 s_value = atoi(optarg);
@@ -298,6 +298,9 @@ int main(int argc, char *argv[]) {
             case 'c':
                 // Do something for -c
                 case_sensitive_arg = 1;
+                break;
+            case 'l':
+                word_length_arg = atoi(optarg);
                 break;
             case '?':
                 // Handle invalid options
