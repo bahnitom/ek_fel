@@ -69,6 +69,14 @@ node *create_node(int count, char *word) {
 }
 
 void append(node **head, int count, char *word, int case_sensitive) {
+    /* sample use of indirection operator precedence
+     * parentheses are necessary around (*head) similar to (*ip)++
+     * pp->x is shorthand for (*pp).y)
+     *     printf("append '%s', count %d,  after '%s', count %d.\n",
+           word, count, (*head)->word, (*head)->count);
+           printf("2nd append '%s', count %d,  after '%s', count %d.\n",
+           word, count, (**head).word, (*head)->count);
+     */
     if (case_sensitive == 0) {
         word = lower_case(word);
     }
@@ -201,18 +209,19 @@ int get_word(char *word, int lim) {
 }
 
 
-void build_linked_list(char word[MAXWORD], node **head, int case_sensitive) {
-    while (get_word(word, MAXWORD) != EOF)
-        if (isalpha(word[0]))
-            append(head, 1, word, case_sensitive); /* build tree */
-}
-
-
-void print_list(node *head) {
+void print_list(node *head, int word_len) {
     node *current = head;
-    while (current != NULL) {
-        printf("%-20s %d\n", current->word, current->count);
-        current = current->next;
+    if (word_len >= 0) {
+        while (current != NULL) {
+            if (strlen(current->word) == word_len)
+                printf("%-20s %d\n", current->word, current->count);
+            current = current->next;
+        }
+    } else {
+        while (current != NULL) {
+            printf("%-20s %d\n", current->word, current->count);
+            current = current->next;
+        }
     }
 }
 
@@ -260,6 +269,7 @@ int main(int argc, char *argv[]) {
     node *head = NULL;
     int case_sensitive_arg = 0;
     int sort_arg = 0;
+    int word_length_arg = 3;
     int max_cnt = 0;
     int min_cnt = 0;
     int word_cnt = 0;
@@ -309,15 +319,15 @@ int main(int argc, char *argv[]) {
     printf("Seznam slov:\n");
     switch (sort_arg) {
         case 0:
-            print_list(head);
+            print_list(head, word_length_arg);
             break;
         case 1:
             bubble_sort(head, compare_count);
-            print_list(head);
+            print_list(head, word_length_arg);
             break;
         case 2:
             bubble_sort(head, compare_word);
-            print_list(head);
+            print_list(head, word_length_arg);
             break;
         default:
             fprintf(stderr, "Warning: Chybna hodnota parametru -s!\n");
