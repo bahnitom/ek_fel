@@ -267,31 +267,30 @@ int main(int argc, char *argv[]) {
             case 's':
                 sort_arg = atoi(optarg);
                 if (sort_arg < 1 || sort_arg > 2) {
-                    fprintf(stderr, "Invalid value for -s option: %d\n", sort_arg);
+                    fprintf(stderr, "Warning: Chybna hodnota parametru -s!\n");
                     exit(0);
                 }
                 break;
             case 'c':
-                // Do something for -c
                 case_sensitive_arg = true;
                 break;
             case 'l':
                 word_length_arg = atoi(optarg);
                 if (word_length_arg < 0) {
-                    fprintf(stderr, "Error: Chybna hodnota parametru -l!\n");
+                    fprintf(stderr, "Warning: Chybna hodnota parametru -l!\n");
                     exit(0);
                 }
                 break;
             default:
                 printf("Invalid option %d\n", opt);
-                break;
+                exit(0);
         }
     }
 //    printf("case_sensitive=%d, sort_ord=%d, word_length_arg=%d\n",
 //           case_sensitive_arg, sort_arg, word_length_arg);
     while (get_word(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
-            head = add_to_unique_list(head, word, case_sensitive_arg); /* build tree */
+            head = add_to_unique_list(head, word, case_sensitive_arg); /* build liked list */
 
     max_cnt = max_count(head);
     min_cnt = min_count(head);
