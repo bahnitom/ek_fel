@@ -260,25 +260,15 @@ int main(int argc, char *argv[]) {
     int min_cnt = 0;
     int word_cnt = 0;
     int opt;
-    int s_value;
 
 
     while ((opt = getopt(argc, argv, "s:l:c")) != -1) {
         switch (opt) {
             case 's':
-                s_value = atoi(optarg);
-                // Handle the -s option
-                if (s_value == 1) {
-                    // Do something for -s 1
-                    sort_arg = 1;
-                } else if (s_value == 2) {
-                    // Do something for -s 2
-                    sort_arg = 2;
-                } else {
-                    // do mandatory
-                    sort_arg = 0;
-                    fprintf(stderr, "Invalid value for -s option: %d\n", s_value);
-                    return 1;
+                sort_arg = atoi(optarg);
+                if (sort_arg < 1 || sort_arg > 2) {
+                    fprintf(stderr, "Invalid value for -s option: %d\n", sort_arg);
+                    exit(0);
                 }
                 break;
             case 'c':
@@ -292,17 +282,13 @@ int main(int argc, char *argv[]) {
                     exit(0);
                 }
                 break;
-            case '?':
-                // Handle invalid options
-                fprintf(stderr, "Warning: Chybna hodnota parametru -s!\n");
-                exit(0);
             default:
                 printf("Invalid option %d\n", opt);
                 break;
         }
     }
-    printf("case_sensitive=%d, sort_ord=%d, word_length_arg=%d\n",
-           case_sensitive_arg, sort_arg, word_length_arg);
+//    printf("case_sensitive=%d, sort_ord=%d, word_length_arg=%d\n",
+//           case_sensitive_arg, sort_arg, word_length_arg);
     while (get_word(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
             head = add_to_unique_list(head, word, case_sensitive_arg); /* build tree */
@@ -310,7 +296,6 @@ int main(int argc, char *argv[]) {
     max_cnt = max_count(head);
     min_cnt = min_count(head);
     word_cnt = words_count(head);
-    printf("Seznam slov:\n");
     switch (sort_arg) {
         case 0:
             print_list(head, word_length_arg);
@@ -340,14 +325,22 @@ int main(int argc, char *argv[]) {
 
 void print_list(node *head, int word_len) {
     node *current = head;
+    bool header = true;
     if (word_len >= 0) {
         while (current != NULL) {
-            if (strlen(current->word) == word_len)
+            if (strlen(current->word) == word_len) {
+                if (header)
+                    printf("Seznam slov:\n");
+                header = false;
                 printf("%-20s %d\n", current->word, current->count);
+            }
             current = current->next;
         }
     } else {
         while (current != NULL) {
+            if (header)
+                printf("Seznam slov:\n");
+            header = false;
             printf("%-20s %d\n", current->word, current->count);
             current = current->next;
         }
