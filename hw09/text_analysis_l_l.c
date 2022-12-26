@@ -208,22 +208,7 @@ int get_word(char *word, int lim) {
     return word[0];
 }
 
-
-void print_list(node *head, int word_len) {
-    node *current = head;
-    if (word_len >= 0) {
-        while (current != NULL) {
-            if (strlen(current->word) == word_len)
-                printf("%-20s %d\n", current->word, current->count);
-            current = current->next;
-        }
-    } else {
-        while (current != NULL) {
-            printf("%-20s %d\n", current->word, current->count);
-            current = current->next;
-        }
-    }
-}
+void print_list(node *, int);
 
 int compare_count(node *a, node *b) {
     return a->count - b->count;
@@ -345,4 +330,20 @@ int main(int argc, char *argv[]) {
     free_list(head);
     head = NULL;
     return 0;
+}
+
+void print_list(node *head, int word_len) {
+    node *current = head;
+    if (word_len >= 0) {
+        while (current != NULL) {
+            if (strlen(current->word) == word_len)
+                printf("%-20s %d\n", current->word, current->count);
+            current = current->next;
+        }
+    } else {
+        while (current != NULL) {
+            printf("%-20s %d\n", current->word, current->count);
+            current = current->next;
+        }
+    }
 }
