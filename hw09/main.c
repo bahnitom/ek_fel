@@ -287,6 +287,10 @@ int main(int argc, char *argv[]) {
                 break;
             case 'l':
                 word_length_arg = atoi(optarg);
+                if (word_length_arg < 0) {
+                    fprintf(stderr, "Error: Chybna hodnota parametru -l!\n");
+                    exit(0);
+                }
                 break;
             case '?':
                 // Handle invalid options
