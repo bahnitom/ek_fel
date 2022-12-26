@@ -24,6 +24,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <getopt.h>
+#include <stdbool.h>
 
 typedef struct node {
     int count;
@@ -252,9 +253,9 @@ void bubble_sort(node *head, int (*compare)(node *, node *)) {
 int main(int argc, char *argv[]) {
     char word[MAXWORD];
     node *head = NULL;
-    int case_sensitive_arg = 0;
+    bool case_sensitive_arg = false;
     int sort_arg = 0;
-    int word_length_arg = 3;
+    int word_length_arg = -1;
     int max_cnt = 0;
     int min_cnt = 0;
     int word_cnt = 0;
@@ -282,7 +283,7 @@ int main(int argc, char *argv[]) {
                 break;
             case 'c':
                 // Do something for -c
-                case_sensitive_arg = 1;
+                case_sensitive_arg = true;
                 break;
             case 'l':
                 word_length_arg = atoi(optarg);
@@ -296,7 +297,8 @@ int main(int argc, char *argv[]) {
                 break;
         }
     }
-//    printf("case_sens = %d, sort_ord = %d\n", case_sensitive_arg, sort_arg);
+    printf("case_sensitive=%d, sort_ord=%d, word_length_arg=%d\n",
+           case_sensitive_arg, sort_arg, word_length_arg);
     while (get_word(word, MAXWORD) != EOF)
         if (isalpha(word[0]))
             head = add_to_unique_list(head, word, case_sensitive_arg); /* build tree */
