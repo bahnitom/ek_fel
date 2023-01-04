@@ -9,9 +9,9 @@ function timing() {
   printf "%s : %s sec\n" "$1" "$(date $TIMING_FORMAT)"
 }
 
-HW=06
+HW=10
 TEST_FILES=(pub*.in)
-OUTPUT_FILE="b3b36prg-hw$HW"
+OUTPUT_FILE="main_hw_$HW"
 COMPILE_FILES="../../queue.c ../../main.c"
 message "remove file '$OUTPUT_FILE'"
 rm -f $OUTPUT_FILE
