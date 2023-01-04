@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(hw02a)
 set(CMAKE_CXX_STANDARD 14)
 add_executable(hw02a
-        hw02a/main.c)
+        hw02a/main.c hw10_old/main.c)
 
 project(hw02b)
 set(CMAKE_CXX_STANDARD 14)
@@ -51,3 +51,10 @@ project(hw09)
 set(CMAKE_CXX_STANDARD 14)
 add_executable(hw09_tmp
         hw09/main.c)
+
+project(hw10_old)
+set(CMAKE_CXX_STANDARD 14)
+add_executable(hw10_old
+        hw10_old/main.c
+        hw10_old/queue.h
+        hw10_old/queue.c)
