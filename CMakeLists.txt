@@ -52,9 +52,9 @@ set(CMAKE_CXX_STANDARD 14)
 add_executable(hw09_tmp
         hw09/main.c)
 
-project(hw10_old)
+project(hw10)
 set(CMAKE_CXX_STANDARD 14)
-add_executable(hw10_old
+add_executable(hw10
         hw10_old/main.c
         hw10_old/queue.h
         hw10_old/queue.c)
