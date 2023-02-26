@@ -37,7 +37,7 @@ add_executable(hw07
 project(my_codes_working)
 set(CMAKE_CXX_STANDARD 14)
 add_executable(my_codes_working
-        my_codes_working/main.c)
+        my_codes_working/main.c my_codes_working/test.c)
 
 project(hw08)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -56,3 +56,8 @@ project(hw10)
 set(CMAKE_CXX_STANDARD 14)
 add_executable(hw10
         hw10/main.c)
+
+project(cpp-lab01)
+set(CMAKE_CXX_STANDARD 14)
+add_executable(cpp_labs01
+        cpp/labs/labs01/labs01.cpp)
