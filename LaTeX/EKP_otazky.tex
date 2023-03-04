@@ -1,0 +1,158 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{footmisc}
+
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+
+%title
+\title{EKP otázky}
+\author{Tomáš Bahník}
+\date{December 2022}
+
+%header
+%\pagestyle{fancy}
+%\fancyhf{}
+%\fancyhead[L]{\small{\textit{Moje hlavička}}}
+%\fancyfoot[C]{\small{\thepage}}
+
+
+
+\renewcommand{\footnoterule}{\rule{\linewidth}{0.4pt}}
+\renewcommand{\footnotesize}{\small}
+
+\begin{document}
+
+    \maketitle
+
+    \begin{enumerate}
+        \item \textbf{Co je to SoC?} \\[0.6em] { SoC (System on a Chip) je integrované obvodové řešení, které obsahuje všechny potřebné obvody pro funkci počítače nebo jiného elektronického zařízení na jednom integrovaném obvodu (IC). To znamená, že SoC obsahuje mikroprocesor, paměť RAM, ROM, a/nebo flash paměť, a další nezbytné obvody, jako jsou kontroléry sběrnice, periférie, a/nebo kontroléry sítě, na jednom kousku polovodičového materiálu.}
+        \item \textbf{Jaké výhody mají SoC?} \\ [-1.5em]
+        \begin{enumerate}
+        \item {Menší rozměry: SoC je mnohem menší než konvenční řešení s několika čipy nebo doskami.}
+        \item {Nižší spotřeba energie: SoC má obvykle nižší spotřebu energie než konvenční řešení.}
+        \item {Vyšší výkon: SoC může být navržen tak, aby vyhovoval konkrétnímu účelu zařízení a poskytoval vyšší výkon.}
+        \item {Nižší náklady: SoC může být výhodnější z hlediska nákladů než konvenční řešení s několika samostatnými čipy nebo doskami.}
+        \item {Snadnější vývoj: SoC umožňuje vývojářům pracovat s jedním čipem namísto s několika samostatnými komponentami, což může usnadnit a urychlit vývoj zařízení.}
+        \end{enumerate}
+        \item \textbf{Popis signálu datové sběnice UART} \\[0.6em] { Signál datové sběrnice UART (Universal Asynchronous Receiver/Transmitter) je asynchronní sériové rozhraní, které slouží k přenosu dat mezi dvěma zařízeními. UART používá dva signály: Tx (transmit) pro odesílání dat a Rx (receive) pro příjem dat. UART je asynchronní, což znamená, že nepotřebuje žádný společný synchronizační signál, ale místo toho se používá start bit a stop bit pro synchronizaci přenosu dat.}
+        \item \textbf{Popis signálu datové sběrnice SPI} \\[0.6em] { Signál datové sběrnice SPI (Serial Peripheral Interface) je synchronní sériové rozhraní, které slouží k přenosu dat mezi dvěma zařízeními. SPI používá čtyři signály: MOSI (Master Out, Slave In) pro odesílání dat z master zařízení do slave zařízení, MISO (Master In, Slave Out) pro příjem dat ze slave zařízení do master zařízení, SCK (Serial Clock) pro synchronizaci přenosu dat a SS (Slave Select) pro výběr slave zařízení.}
+        \item \textbf{Popis signálu datové sběrnice I2C} \\[0.6em] { Signál datové sběrnice I2C (Inter-Integrated Circuit) je sériové rozhraní, které slouží k přenosu dat mezi dvěma nebo více zařízeními na jednom páru vodičů. I2C používá dva signály: SDA (Serial Data) pro přenos dat a SCL (Serial Clock) pro synchronizaci přenosu dat. I2C umožňuje více zařízením komunikovat na stejném páru vodičů pomocí adresování.}
+        \item \textbf{Čím je tvořen signál PWM?} \\[0.6em] { Signál PWM (Pulse Width Modulation) je tvořen pravidelným sekvencem pulzů s různou dobou trvání. Tento typ signálu se často používá pro řízení napětí nebo výkonu elektrických zařízení, například pro regulaci rychlosti motoru nebo intenzity osvětlení.}
+        \item \textbf{Obsahuje ESP32 Hallovu sondu?} \\[0.6em] { Ano, ESP32 obsahuje Hallovu sondu, což je senzor, který měří magnetické pole.}
+        \item \textbf{Hodnota napětí pro log.1 na I/O pinech ESP32} \\[0.6em] { Hodnota napětí pro log.1 na I/O pinech ESP32 je 3,3 V.}
+        \item \textbf{Co je to režim hibernace u ESP32?} \\[0.6em] { Režim hibernace u ESP32 je stav, ve kterém je mikrokontrolér ESP32 vypnutý, ale uchovává si informace o stavu v paměti RAM. Tento režim umožňuje snížit spotřebu energie a prodlužuje životnost baterie při použití ESP32 v bezdrátových senzorech nebo jiných zařízeních s omezeným zdrojem energie.}
+        \item \textbf{Na jaké frekvenci funguje WiFi?} \\[0.6em] { WiFi funguje na frekvencích v rozsahu 2,4 GHz a 5 GHz.}
+        \item \textbf{Co je to mesh ve WiFi kontextu?} \\[0.6em] { Mesh ve WiFi kontextu znamená síťovou topologii, kdy jsou všechny WiFi zařízení navzájem propojena tak, že každé z nich může sloužit jako přístupový bod pro ostatní. Tento typ sítě se často používá v domácnostech nebo malých kancelářích, aby byla zajištěna rovnoměrná pokrytí WiFi signálem v celém prostoru.}
+        \item \textbf{Jaké pracovní režimy je možno vytvířet ve WiFi sítích?} \\[0.6em] {*\footnote[1]{nejsem si jistý s odpovědí}}
+        \begin{enumerate}
+            \item {Infrastrukturní režim: Tento režim se používá v sítích, kde jsou zařízení propojena přes přístupový bod (AP). V takové síti se zařízení označují jako klienti a přístupový bod jako AP.}
+            \item {Ad-hoc režim: Tento režim se používá v sítích, kde se zařízení připojují přímo k sobě bez použití přístupového bodu. V takové síti se zařízení označují jako uzlů a fungují na stejné úrovni.}
+            \item {Mesh režim: Tento režim je síťová topologie, kdy jsou všechny WiFi zařízení navzájem propojena tak, že každé z nich může sloužit jako přístupový bod pro ostatní. Tento typ sítě se často používá v domácnostech nebo malých kancelářích, aby byla zajištěna rovnoměrná pokrytí WiFi signálem v celém prostoru.}
+        \end{enumerate}
+        \item \textbf{Co znamená zkratka AP u WiFi?} \\[0.6em] { Zkratka AP ve WiFi kontextu znamená přístupový bod (Access Point). Je to zařízení, které slouží k připojení zařízení k WiFi síti.}
+        \item \textbf{Jak se označuje komunikace při odesílání dat na webovské stránky?} \\[0.6em] { Komunikace při odesílání dat na webovské stránky se označuje jako HTTP (Hypertext Transfer Protocol). Je to protokol pro přenos hypertextových dokumentů po síti, což je základ pro fungování webových stránek.}
+        \item \textbf{Co znamená BLE?} \\[0.6em] { BLE je zkratka pro Bluetooth Low Energy. Jde o specifikaci bezdrátové technologie pro přenos dat na krátkou vzdálenost, která se vyznačuje nízkou spotřebou energie.}
+        \item \textbf{Oblast použití BLE} \\[0.6em] { BLE se často používá pro bezdrátové připojení malých zařízení. Často se používá v chytrých domácnostech, sportovních a zdravotních zařízeních, bezdrátových zařízeních (klávesnicích, myších, sluchátkách). Obecně zařízení s nízkou spotřebou energie.}
+        \item \textbf{Kolik rezistorů je potřeba minimálně pro sestrojení odporového děliče?} \\[0.6em] { Pro sestrojení odporového děliče je minimálně potřeba dva rezistory.}
+        \item \textbf{Máte odporový dělič s $R_1$ = $R_2$ = 1k. Jaké bude výstupní napětí, pokud na vstup připojíte 10 V?} \\[0.6em] { Výstupní napětí bude rovno 5 V. Je to dáno vzorcem pro dělič napětí: $U_2 = U_1 * R_2 / (R_1 + R_2$).}
+        \item \textbf{Jaké hodnoty $R_1$ a $R_2$ zvolíte pro dělič napětí, kde $U_1$ = 10 V a výstupní napětí $U_2$ = 3 V.} \\[0.6em] {*\footnote[2]{nejsem si jistý s odpovědí} Můžeme zvolit hodnoty $R_1$ = 7 k a $R_2$ = 3 k. Tento dělič by fungoval podle vzorce $U_2 = U_1 * R_2 / (R_1 + R_2$), který v tomto případě dává $U_2$ = 3 V.}
+        \item \textbf{Jakou hodnotu $R_2$ bude mít dělič napětí, pokud $R_1$=90 k, když při vstupním napětí 10 V bude výstupní napětí 1 V.} \\[0.6em] {*\footnote[3]{nejsem si jistý s odpovědí} Lze dopočíta z přechozího vztahu, napřílad pro $R_2$ = 10 k bude vztah vycházet.}
+        \item \textbf{Co způsobí zatížení děliče napětí rezistorem?} \\[0.6em] { Zatížení děliče napětí rezistorem způsobí, že výstupní napětí se bude lišit v závislosti na odporu rezistoru, který je připojen k výstupu děliče.}
+        \item \textbf{Co je odporový potenciometr, trimr?} \\[0.6em] { Odporový potenciometr je elektrický prvek, který může být nastaven na jakoukoli hodnotu odporu v určitém rozsahu pomocí otočného kolečka nebo páčky.} \\{Trimr je typ odporového potenciometru s malým rozsahem nastavitelného odporu, používaný pro úpravy a kalibraci elektrických obvodů (vhodný pro přesné úpravy).}
+        \item \textbf{Lze potenciometr použít jako dělič napětí?} \\[0.6em] {Ano, potenciometr může sloužit jako nastavitelný dělič napětí nebo může být použit k regulaci napětí v elektrických obvodech. }
+        \item \textbf{Co je spojitý a diskrétní signál?} \\[0.6em] { Spojité signály se vyskytují se v reálném světě (například zvukové vlny), mají pro každý časový okamžik určitou hodnotu, což tvoří spojitou křivku. Některé signály se zapisují funkcí, například sin(x).} \\{Diskrétní signály pak ze spojitých získáme vzorkováním a kvantováním. Vzorkování je výběr konkrétních hodnot v časové okamžiky s určitým rozestupem. Vzorkovací frekvence musí být minimálně 2× vyšší než nejvyšší frekvence v původním signálu.}
+        \item \textbf{Co je AD převodník?} \\[0.6em] { AD převodník je elektronické zařízení, které převádí analogový signál na digitální signál. AD převodník měří analogovou hodnotu zadanou do zařízení a převádí ji na binární kód, který může být počítačem nebo jiným zařízením snadno zpracován.}
+        \item \textbf{Co je DA převodník?} \\[0.6em] { DA převodník je elektronické zařízení, které převádí digitální signál na analogový signál. DA převodník přijímá binární kód a převádí ho na analogovou hodnotu, která může být použita v analogových obvodech nebo zařízeních. DA převodníky se často používají k převodu zvuku nebo obrazu z digitálního zařízení na analogové zařízení, jako jsou reproduktory nebo televize.}
+        \item \textbf{Jak se značí hodnoty rezistorů?} \\[0.6em] { Hodnoty rezistorů se obvykle značí pomocí barevného kódu, který je tvořen šesti proužky barev na rezistoru. Prvních pět proužků představuje hodnotu rezistoru v ohmech, zatímco poslední proužek představuje toleranci rezistoru.}
+        \item \textbf{Jaký má význam poslední proužek kódu u rezistoru?} \\[0.6em] { Poslední proužek kódu u rezistoru značí toleranci rezistoru, tedy povolenou odchylku hodnoty od udávané hodnoty. Například černý proužek znamená toleranci ± 20 procent, naopak zelený proužek znamená toleranci ± 2 procent}
+        \item \textbf{Co znamená DPS?} \\[0.6em] { Deska plošných spojů určená k osazení elektronických součástek, které propojují tenké vodiče nanesené na desce}
+        \item \textbf{Jaký materiál se používá u vodivých cest na DPS?} \\[0.6em] { Obvykle jsou vyrobeny z mědi. Ve vysokofrekvenční technice se můžeme setkat i se zlatými vodiči}
+        \item \textbf{Co znamená prokov?} \\[0.6em] { Je to prokovená díra do desky plošných spojů, která vodivě spojuje obě strany.}
+        \item \textbf{K čemu slouží obvodové simulátory pro elektroniku?} \\[0.6em] { Umožňují simulovat a testovat chování elektrických obvodů a schémat před jejich fyzickým vybudováním.}
+        \item \textbf{K čemu slouží aplikace WOKWI?} \\[0.6em] { Aplikace WOKWI je online nástroj pro vývoj elektronických obvodů, který umožňuje vývojářům navrhovat, simulovat a testovat elektrické obvody pomocí webového prohlížeče. WOKWI je také užitečný pro učitele a studenty, kteří se učí o elektronických obvodech a potřebují nástroj pro výuku a procvičování základů elektroniky.}
+        \item \textbf{Vysvětlete pojem inerciální sensor} \\[0.6em] { Inerciální senzor je senzor, který se používá k měření pohybu nebo změny polohy pomocí principu setrvačnosti. Inerciální senzory se obvykle skládají ze tří akcelerometry, které měří zrychlení v různých osách, a ze tří gyroskopů, které měří rychlost otáčení. Tyto senzory spolu spolupracují, aby zaznamenávaly pohyb a změnu polohy objektu a přenášely tyto informace do počítače nebo jiného zařízení pro další zpracování.}
+        \item \textbf{Co znamená zkratka MEMS?} \\[0.6em] { Zkratka MEMS (z angličtiny "Micro-Electro-Mechanical Systems") se používá k označení malých mechanických systémů nebo zařízení, která jsou vyrobena pomocí mikroelektronické technologie.}
+        \item \textbf{Co je to komunikační rozhranní mikrokontroleru/mikropočítače?} \\[0.6em] { Rozhranní, které umožňuje přenášet data mezi mikrokontrolérem/mikropočítačem a jinými zařízeními pomocí různých komunikačních protokolů.}
+        \item \textbf{Co je to synchronní komunikační rozhranní mikrokontroléru?} \\[0.6em] { Taková komunikace, která vyžaduje, aby obě strany byly nastaveny na stejné komunikační rychlosti a aby používaly společný signál pro synchronizaci přenosu dat.}
+        \item \textbf{Co je to asynchronní komunikační rozhranní mikrokontroléru?} \\[0.6em] { Asynchronní komunikace nevyžaduje společný signál pro synchronizaci přenosu dat a obě strany mohou mít různé komunikační rychlosti. Asynchronní komunikační rozhranní se obvykle používá k přenosu menších objemů dat nebo k připojení mikrokontroléru k počítači nebo jiným zařízením s nízkou rychlostí přenosu dat.}
+        \item \textbf{Rozhraní typu SPI je synchronní nebo asynchronní?} \\[0.6em] { Je synchronní.}
+        \item \textbf{Rozhraní typu UART je synchronní nebo asynchronní?} \\[0.6em] { Je asynchronní.}
+        \item \textbf{Uvedte příklad nějaké obvyklé vnitřní periférie mikrokontroléru} \\[0.6em] { Příkladem vnitřní periférie mikrokontroléru může být například analogový-digitální převodník (ADC), který slouží k převodu analogových hodnot na digitální hodnoty pro zpracování mikrokontrolérem. Dalším příkladem může být digitálně-analogový převodník (DAC), který slouží k převodu digitálních hodnot na analogové hodnoty pro výstup na například displej nebo reproduktor.}
+        \item \textbf{Jak zjednodušeně propojíte mikrokontrolér vybavený rozhraním UART a počítač typu PC vybavený rozraním USB?} \\[0.6em] { Jednoduše pomocí usb uart kabelu. Pokud je zařízení vybaveno uart převodníkem, tak se také často využívá usb na usb mikro kabel.}
+        \item \textbf{Jakým způsobem se zahajuje komunikace na rozhraní UART?} \\[0.6em] { Komunikace na rozhraní UART začíná tím, že jedna ze stran (buď mikrokontrolér nebo počítač) odešle první zprávu na druhou stranu. Strana, která přijímá zprávu, jej přečte a může odpovědět na ni nebo může odeslat další zprávu. Tímto způsobem se mezi oběma stranami vytváří komunikační kanál, přes který mohou obě strany přenášet data nebo informace.}
+        \item \textbf{Jakým způsobem se ukončuje komunikace na rozhraní UART?} \\[0.6em] { Ukončení komunikace na rozhraní UART se obvykle provádí tak, že jedna ze stran odešle zprávu, která oznamuje, že komunikace končí. Druhá strana přečte tuto zprávu a ukončí komunikaci. Je také možné ukončit komunikaci tím, že se fyzicky odpojí spojovací kabel mezi mikrokontrolérem a počítačem.}
+        \item \textbf{Jaký je rozdíl mezi RS232 a UART?} \\[0.6em] { Rozdíl mezi RS232 a UART je v tom, že RS232 je standardem pro sériovou komunikaci, zatímco UART je hardware nebo periférie, která umožňuje sériovou komunikaci.}
+        \item \textbf{Čím je definován harmonický signál?} \\[0.6em] { Harmonický signál je sinusový signál s frekvenčními složkami, které jsou celočíselnými násobky základní frekvence. Například harmonický signál s frekvencí 100 Hz může mít složky s frekvencemi 200 Hz, 300 Hz, 400 Hz atd.}
+        \item \textbf{Jaký je vztah periody a frekvence harmonického signálu?} \\[0.6em] { Vztah mezi periodou a frekvencí harmonického signálu je invertní, což znamená, že čím kratší je perioda, tím vyšší je frekvence a naopak.}
+        \item \textbf{Jak je specifické spektrum harmonického signálu?} \\[0.6em] {Spektrum harmonického signálu je seznam frekvencí všech složek, které tvoří daný harmonický signál. Například harmonický signál s frekvencí 100 Hz a složkami s frekvencemi 200 Hz, 300 Hz, 400 Hz atd. má spektrum tvořené frekvencemi 100 Hz, 200 Hz, 300 Hz, 400 Hz atd.}
+        \item \textbf{Co je spektrum signálu?} \\[0.6em] { Spektrum signálu je seznam všech frekvenčních složek, které tvoří daný signál.}
+        \item \textbf{Co říká vzorkovací teorém?} \\[0.6em] { Vzorkovací teorém říká, že pro zachování všech informací o původním analogovém signálu při jeho digitálním zpracování je nutné vzorkovat signál s frekvencí nejméně dvakrát vyšší než je nejvyšší frekvence.}
+        \item \textbf{Co se stane, porušíme-li při vzorkování signálu vzorkovací podmínku?} \\[0.6em] { Pokud porušíme vzorkovací podmínku při vzorkování signálu, může dojít k chybám při digitálním zpracování signálu. Pokud je vzorkovací frekvence nižší než je nejvyšší frekvence v původním analogovém signálu, může dojít k zkreslení nebo ztrátě informací o vysokých frekvencích v původním signálu.}
+        \item \textbf{K čemu při vzorkování slouží tzv. antialiasingový filtr?} \\[0.6em] { Má za úkol odfiltrovat frekvence vyšší než odpovídají vzorkovacímu teorému. / Slouží k odstranění nebo potlačení vysokých frekvencí v analogovém signálu, které jsou vyšší než je nejvyšší frekvence, kterou lze přesně zachytit při dané vzorkovací frekvenci.}
+        \item \textbf{Na jakou hodnotu kmitočtu nastavíte při vzorkování signálu antialiasingový filtr (vzhledem ke vzorkovací frekvenci)?} \\[0.6em] { Nastavuje na hodnotu kmitočtu, která je nižší než je nejvyšší frekvence, kterou lze přesně zachytit při dané vzorkovací frekvenci. Například pokud se vzorkovací frekvence nastaví na 100 kHz, může být antialiasingový filtr nastaven na kmitočet nižší než 50 kHz, aby se potlačily vysoké frekvence nad 50 kHz.}
+        \item \textbf{Signál obsahuje nejvyšší frekvenční složku o frekvenci 3 kHz. Jakou zvolíte minimální vzorkovací frekvenci?} \\[0.6em] { Na hodnotu minimálně 6 kHz nebo více.}
+        \item \textbf{Jaké nejvyšší frekvenční složky jsou obvykle zastoupeny ve zvukovém projevu? } \\[0.6em] {*\footnote[4]{nejsem si jistý s odpovědí} V zvukovém projevu jsou obvykle zastoupeny nejvyšší frekvenční složky v rozmezí od cca 20 Hz do cca 20 kHz.}
+        \item \textbf{Co je to fotodioda?} \\[0.6em] { Fotodioda je v elektrotechnice typ součástky, která je schopna generovat elektrický proud v závislosti na intenzitě světla, které na ni dopadá.}
+        \item \textbf{V jakých režimech se dá provozovat fotodioda? } \\ [-1.5em]
+        \begin{enumerate}
+            \item {V režimu závěrného směru, kdy je fotodioda zapojena do obvodu tak, že je její anoda spojena s katodou.}
+            \item {V režimu přímého směru, kdy je anoda fotodiody spojena s pozitivním pólem zdroje napětí a katoda je spojena s negativním pólem zdroje napětí. V tomto režimu fotodioda funguje jako součást elektrického obvodu, který je schopen pohlcovat světelnou energii a přeměňovat ji na elektrickou energii.}
+        \end{enumerate}
+        \item \textbf{Jak se chová fotodioda v závěrném směru?} \\[0.6em] { Fotodiodou neprochází proud a chová se jako rezistor citlivý na světlo nebo-li generuje elektrický proud v závislosti na intenzitě světla.}
+        \item \textbf{V jakém směru zapojíte LED tak, aby svítila?} \\[0.6em] { Katodu připojíme na mínus a anodu s přeřadným rezistorem na plus.}
+        \item \textbf{Jak určíte hodnotu předřadného rezistoru LED ?} \\[0.6em] { Hodnotu předřadného rezistoru LED lze určit pomocí ohmova zákona. Je třeba znát napětí na LED, požadovaný proud LED a napětí zdroje. Je třeba udělat rozdíl napětí a vynásobit požadovaným proudem.}
+        \vspace{1cm}
+        \item \textbf{Kde se např. používá infračervená LED?} \\ [-1.5em]
+        \begin{enumerate}
+            \item {V dálkových ovladačích, kde slouží jako zdroj infračerveného světla pro bezdrátový přenos informací mezi ovladačem a zařízením.}
+            \item {V bezdrátových sítích, kde slouží jako zdroj infračerveného světla pro přenos dat mezi zařízeními.}
+            \item {V bezkontaktních senzorech, kde slouží k detekci pohybu nebo přítomnosti předmětů.}
+            \item {V špionážních zařízeních, kde slouží k detekci pohybu nebo tepla.}
+        \end{enumerate}
+        \item \textbf{Co je to modulace?} \\[0.6em] { Modulace je nelineární proces, kterým se mění charakter vhodného nosného signálu pomocí modulujícího signálu.}
+        \item \textbf{Proč se pro přenos signálu často moduluje signál na vyšší kmitočet?} \\[0.6em] { oto se často dělá kvůli lepšímu přenosu signálu přes vzdálenost nebo přes překážky. Vysoké kmitočty se lépe šíří skrz vzduch nebo jiné materiály a jsou méně náchylné na rušení než nižší kmitočty.}
+        \item \textbf{V jakých vlnových délkách se pohybuje rádiové vlnění (např. v pásmu x100 MHz) (řádově - metry, kilometry, ...)? } \\[0.6em] {V řádu metrů.}
+        \item \textbf{V jakých vlnových délkách se pohybuje viditelné světlo (řádově - metry, kilometry, ...)? } \\[0.6em] { Vlnová délka viditelného světla se pohybuje v řádu nanometrů (ve vakuu v rozmezí 380–740 nm).}
+        \item \textbf{Jakou maximální frekvenci může mít harmonická složka signálu, který má být vzorkován vzorkovací frekvencí $f_s$? } \\[0.6em] { Maximálně polovina vzorkovací frekvence, tedy $f_s$/2.}
+        \item \textbf{Jak široké frekvenční pásmo je potřeba pro analogový srozumitelný přenos lidské řeči? } \\[0.6em] { Pro analogový srozumitelný přenos lidské řeči je potřeba široké frekvenční pásmo, obvykle od 300 Hz do 3400 Hz.}
+        \item \textbf{Jestliže máte k dispozici N vzorků signálu, kolik prvků má spektrum signálu vypočtené pomocí FFT?} \\[0.6em] {*\footnote[5]{nejsem si jistý s odpovědí} Pokud máte k dispozici N vzorků signálu, má spektrum signálu vypočtené pomocí FFT N prvků. Spektrum je tedy pole N prvků, které zobrazuje amplitudu jednotlivých frekvenčních složek signálu v závislosti na frekvenci.}
+        \item \textbf{Jestliže máte k dispozici N vzorků signálu získaných vzorkovací frekvencí $f_s$, jaké bude mít spektrum vypočtené pomocí FFT rozlišení?} \\[0.6em] { Rozlišení spektra vypočteného pomocí FFT závisí na počtu vzorků N a na vzorkovací frekvenci $f_s$. Vzorkovací teorém říká, že maximální detekovatelná frekvence je polovina vzorkovací frekvence, tedy $f_s$/2. To znamená, že rozlišení spektra vypočteného pomocí FFT je $f_s$/N. Čím větší je počet vzorků N a vzorkovací frekvence $f_s$, tím menší je rozlišení spektra a tím přesněji může být detekována amplituda jednotlivých frekvenčních složek signálu.}
+        \item \textbf{Jak dlouho potrvá získání N vzorků pomocí vzorkovací frekvence $f_s$?} \\[0.6em] { Doba = N / $f_s$ , kde N je počet vzorků a $f_s$ je vzorkovací frekvence v Hz. Například při vzorkovací frekvenci $f_s$ = 1000 Hz a počtu vzorků N = 1000 bude doba potřebná k získání vzorků 1 sekunda.}
+        \item \textbf{Jaké frekvenci odpovídá první (nultý) koeficient ve spektru signálu vypočteného pomocí FFT?} \\[0.6em] {*\footnote[6]{nejsem si jistý s odpovědí} První (nultý) koeficient ve spektru signálu vypočteného pomocí FFT odpovídá DC složce signálu, tedy průměrné hodnotě signálu. Tato hodnota se používá k určení posunutí signálu vůči nule a obvykle se při zpracování dat přehlíží. Frekvence odpovídající nultému koeficientu je tedy nulová.}
+        \item \textbf{Jaká je vzorkovací perioda vzorkovací frekvence $f_s$?} \\[0.6em] {Vzorkovací perioda vzorkovací frekvence $f_s$ je opačná hodnota vzorkovací frekvence a udává, jak často je signál vzorkován. Vzorkovací perioda je tedy: $T_v$ = 1 / $f_s$ , kde $T_v$ je vzorkovací perioda v sekundách a $f_s$ je vzorkovací frekvence v Hz. Například při vzorkovací frekvenci $f_s$ = 1000 Hz bude vzorkovací perioda $T_v$ = 1/1000 s = 0,001 s.}
+        \item \textbf{Které komponenty obsahuje blokové schéma Dopplerovského radaru?} \\ [-1.5em]
+        \begin{enumerate}
+            \item {Anténu: slouží k odesílání a příjmu radiových vln.}
+            \item {Rádiový přijímač a vysílač: slouží k odesílání radiových vln a k příjmu odrazů od cílového objektu.}
+            \item {Dopplerův detektor: slouží k detekci změn v kmitočtu radiových vln vyvolaných pohybem.}
+        \end{enumerate}
+        \item \textbf{Jak se vypočítá Dopplerovská frekvence $f_D$, když radar vysílá signál o frekvenci f, rychlost cíle je v a rychlost světla je c?} \\[0.6em] ${ f_D = (2v*f)/c}$
+        \item \textbf{Jak se spočítá rychlost cíle v, pokud radar vysílá signál o frekvenci f, změřená Dopplerovská frekvence je $f_D$ a rychlost světla je c?} \\[0.6em] ${ v = (c*f_D)/(2f)}$
+        \item \textbf{Slovně popište, co popisuje efektivní odrazná plocha RCS?} \\[0.6em] { Efektivní odrazná plocha (RCS) popisuje schopnost určitého objektu odrazit radiové vlny. Je vyjadřována v jednotkách plochy a udává, kolik energie radiového vlnění je odrazeno od objektu. Čím je efektivní odrazná plocha větší, tím více energie je odrazeno a tím je objekt snadněji detekovatelný radarem.}
+        \item \textbf{Kolikrát se sníží výkon přijatý přijímačem radaru, pokud dojde ke zdvojnásobení vzdálenosti cíle od radaru?} \\[0.6em] {*\footnote[7]{nejsem si jistý s odpovědí} Pokud dojde ke zdvojnásobení vzdálenosti cíle od radaru, tak se výkon přijatý přijímačem radaru sníží 4x. Tento pokles je dán vztahem $1/d^2$, kde d je vzdálenost cíle od radaru.}
+        \item \textbf{CW radar se používá k detekci statických, nebo pohyblivých cílů?} \\[0.6em] { CW radar (Continuous Wave radar) se používá k detekci pohyblivých cílů. Toto zařízení neustále vysílá radiové vlny a zpětný odraz od cíle se přijímá přijímačem. Dopplerovský efekt způsobený pohybem cíle se projeví jako frekvenční posun vlny, který lze změřit a vyhodnotit. CW radar tedy umožňuje detekci pohybu cíle a jeho rychlosti.}
+        \item \textbf{Jak se spočítá vlnová délka elektromagnetické vlny ve vzduchu?} \\[0.6em] { lambda = c/f , kde lambda je vlnová délka, c je rychlost světla ve vzduchu a f je frekvence elektromagnetické vlny.}
+        \item \textbf{Jaká je vlnová délka elektromagnetické vlny ve vzduchu vysílaná modulem ESP32?} \\[0.6em] {Z předchozího vztahu (lambda = c/f), pro f = 2,45 GHz (najito v podkladech CV12), je vlnová délka lambda rovna 122 mm.}
+        \item \textbf{Kolikrát se v ideálním případě sníží přijatý výkon na přijímači, pokud od sebe antény vzdálíme dvakrát?} \\[0.6em] {Pokud od sebe antény vzdálíme dvakrát, tak se v ideálním případě sníží přijatý výkon na přijímači 4x. Tento pokles je dán vztahem $1/d^2$, kde d je vzdálenost mezi anténami. /obecně s každým zdvojnásobením vzdálenosti přijatý výkon klesne na čtvrtinu/}
+        \item \textbf{Jaká je polarizace vysílané vlny pomocí ground plane antény?} \\[0.6em] { Vyzařovaná vlna z této antény je lineárně polarizovaná s vektorem intenzity elektrického pole E ve směru podél zářiče.}
+        \item \textbf{Dozví se přijímač o korektním příjmu UDP paketu v přijímači?} \\[0.6em] { Přijímač nedozví o korektním příjmu UDP paketu pouze při jeho příjmu, ale musí také odeslat potvrzení o příjmu (ACK - acknowledgement) zpět odesílateli paketu. Teprve pak může odesílatel paketu zjistit, zda byl paket přijat korektně.}
+        \item \textbf{Co znamená zkratka IFTTT?} \\[0.6em] { Zkratka IFTTT je zkratkou pro If This Then That, což je služba, která umožňuje propojovat různé aplikace a služby navzájem.}
+        \item \textbf{K čemu slouží služba IFTTT?} \\[0.6em] { Lze tím automatizovat různé procesy a úlohy, které by jinak vyžadovaly ruční obsluhu. Příklady použití mohou být například automatické zaslání emailu při změně počasí. Služba IFTTT je k dispozici pro široké spektrum aplikací a služeb, včetně sociálních sítí, cloudových úložišť, smart home zařízení, atd.}
+        \item \textbf{K čemu slouží MQTT?} \\[0.6em] { MQTT (Message Queuing Telemetry Transport) je lehký komunikační protokol pro vysílání a přijímání zpráv v síti IoT. Je určen pro přenos krátkých zpráv mezi zařízeními a servery, kde je omezený přenosový kanál nebo jsou požadovány nízké nároky na spotřebu energie.}
+        \item \textbf{Co je to MQTT broker?} \\[0.6em] { MQTT broker je server, který poskytuje služby pro přenos zpráv pomocí protokolu MQTT. Je zodpovědný za přijímání zpráv od odesílatelů a distribuci těchto zpráv předplatitelům. Broker také uchovává zprávy v případě, že předplatitel není k dispozici, aby je mohl obdržet v okamžiku, kdy se opět připojí. Tímto způsobem může MQTT broker sloužit jako prostředník pro komunikaci mezi různými zařízeními v síti IoT.}
+        \item \textbf{Jaké služby se používají při komunikaci s MQTT brokerem?} \\[-1.5em]
+        \begin{enumerate}
+            \item {Publish (publikování) - slouží k odesílání zpráv od klienta k brokerovi}
+            \item {Subscribe (přihlášení) - slouží k přihlášení klienta k tématu (topic) a přijímání zpráv od brokeru}
+            \item {Unsubscribe (odhlášení) - slouží k odhlášení klienta od tématu}
+            \item {Connect (připojení) - slouží k připojení klienta k brokerovi}
+            \item {Disconnect (odpojení) - slouží k odpojení klienta od brokera}
+        \end{enumerate}
+        \item \textbf{K čemu slouží publish funkce v MQTT kontextu?} \\[0.6em] { Publish slouží k odeslání zprávy ze zařízení na MQTT broker. Zpráva je obvykle publikována na určité téma, na které se mohou další zařízení přihlásit jako odběratele. Například může zařízení A publikovat zprávu na téma "teplota" s hodnotou teploty, a zařízení B, které je zaregistrované jako odběratel tohoto tématu, může tuto zprávu přijmout a zobrazit ji na displeji nebo ji nějakým způsobem zpracovat.}
+        \item \textbf{K čemu slouží subscribe funkce v MQTT kontextu?} \\[0.6em] { Subscribe slouží k přihlášení zařízení jako odběratele zpráv na určité téma. Když zařízení odešle subscribe požadavek na MQTT broker, broker zaregistruje zařízení jako odběratele zpráv na dané téma. Následně mohou jiná zařízení, která jsou připojená na MQTT broker a publikují zprávy na toto téma, poslat zprávu přihlášenému zařízení. Subscribe funkce tedy slouží k přijímání zpráv od jiných zařízení pomocí MQTT protokolu.}
+
+    \end{enumerate}
+
+\end{document}
