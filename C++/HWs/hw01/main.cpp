@@ -16,7 +16,6 @@ int main(){
         config = getConfig(line);
         if(config.valid){
            // todo
-
         }
     }
     while(config.valid);
