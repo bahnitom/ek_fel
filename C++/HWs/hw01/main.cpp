@@ -4,7 +4,7 @@
 #include <vector>
 #include <iomanip>
 #include "main.hpp"
-#include "parse.hpp"
+#include "parse.cpp"
 
 int main(){  
     // variable for decoded config
@@ -12,14 +12,16 @@ int main(){
     std::string line;
     do{
         std::getline(std::cin, line);
-
         config = getConfig(line);
         if(config.valid){
-           // todo
-        }
+            // todo
+            std::cout << line << std::endl;
+            }
     }
     while(config.valid);
-    
+
+    std::cout << "\n";
+
     std::vector<std::vector<int>> values;
 
     while(std::getline(std::cin, line)){
@@ -31,22 +33,23 @@ int main(){
         while (std::getline(ss,cell, ';')) {
             try {   // if loaded cell is number
                 number = std::stoi(cell);
+                //std::cout << number;
 				row.push_back(number);
             }
             catch(const std::exception& e){ // if there is a text (SUM?)
-                int sum = 1;
+                int sum = getSum(line, row).value;
                 row.push_back(sum);
             }
         }   
         values.push_back(row);     
     }
-
-    // print out the config - TODO
+    // print out the config - TODO /*config printim na radku 18*/
     
 	// print table
     for (std::size_t i = 0; i < values.size(); i++){
+        std::cout << "+----+-----+-----+" << std::endl;
         for (std::size_t j = 0; j < values[i].size(); j++){
-            std::cout << values[i][j] << " ";
+            std::cout << "| " << values[i][j] << " |";
         }
         std::cout << std::endl;
     }
