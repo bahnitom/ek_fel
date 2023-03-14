@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 #define NO_ERROR 0
 #define ERROR_WRONG_INPUT 100
 #define ERROR_HOUSE_DIM_OUT_OF_RANGE 101
