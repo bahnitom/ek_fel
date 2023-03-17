@@ -8,4 +8,4 @@ add_executable(cpp_labs01
 project(hw01)
 set(CMAKE_CXX_STANDARD 14)
 add_executable(hw_01
-        C++/HWs/hw01/template/main.cpp)
+        C++/HWs/hw01/main.cpp)
