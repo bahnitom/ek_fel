@@ -20,7 +20,7 @@ config_t getConfig(std::string text){
     config.valid = false;
 
     if(std::regex_search(text, fn_match, regexConfig)){
-        if(fn_match[1].compare("config") == 0){
+        if(fn_match[1].compare(CONFIG_PREFIX) == 0){
             config.type = fn_match[2];
             config.value = fn_match[3];
             config.valid = true;
@@ -90,4 +90,17 @@ cfg_values_t setCfgValues(cfg_values_t allCfgValues, const config_t& cfgValue) {
         allCfgValues.align = cfgValue.value;
     }
     return allCfgValues;
+}
+
+void printCfgValue(std::string type, std::string value) {
+    std::cout << CONFIG_PREFIX_DOT + type + EQUAL_SIGN + value;
+    std::cout << "\n";
+}
+
+
+void printCfgValues(cfg_values_t cfgValues) {
+    printCfgValue(MIN_TYPE, std::to_string(cfgValues.min));
+    printCfgValue(MAX_TYPE, std::to_string(cfgValues.max));
+    printCfgValue(WIDTH_TYPE, std::to_string(cfgValues.width));
+    printCfgValue(ALIGN_TYPE, cfgValues.align);
 }

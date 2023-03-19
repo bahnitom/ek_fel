@@ -1,9 +1,6 @@
 #include <iostream>
 #include <string>
-#include <regex>
 #include <vector>
-#include <iomanip>
-#include "main.hpp"
 #include "parse.cpp"
 
 int main(){  
@@ -18,6 +15,8 @@ int main(){
             allCfgValues = setCfgValues(allCfgValues, config);
         }
     } while (config.valid);
+
+    printCfgValues(allCfgValues);
 
     std::cout << "\n";
 

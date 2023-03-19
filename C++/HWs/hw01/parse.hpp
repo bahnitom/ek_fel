@@ -33,13 +33,19 @@ typedef struct {
     std::string align;
 } cfg_values_t;
 
-static const char *const MIN_TYPE = "min";
+static const std::string MIN_TYPE = "min";
 
-static const char *const MAX_TYPE = "max";
+static const std::string MAX_TYPE = "max";
 
-static const char *const WIDTH_TYPE = "width";
+static const std::string WIDTH_TYPE = "width";
 
-static const char *const ALIGN_TYPE = "align";
+static const std::string ALIGN_TYPE = "align";
+
+static const std::string CONFIG_PREFIX = "config";
+
+static const std::string CONFIG_PREFIX_DOT = CONFIG_PREFIX + ".";
+
+static const std::string EQUAL_SIGN = "=";
 
 /**
  *  @brief Parse input string to parse input configuration
@@ -62,6 +68,10 @@ sum_t getSum(std::string text, std::vector<int> numbers);
 
 cfg_values_t getDefaultCfgValues();
 
-cfg_values_t setCfgValues(cfg_values_t allCfgValues, const config_t& cfgValue)
+cfg_values_t setCfgValues(cfg_values_t allCfgValues, const config_t& cfgValue);
+
+void printCfgValue(std::string type, std::string value);
+
+void printCfgValues(cfg_values_t cfgValues);
 
 #endif // __PARSE_HPP_
