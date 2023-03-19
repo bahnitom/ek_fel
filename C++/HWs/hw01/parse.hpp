@@ -26,6 +26,13 @@ typedef struct{
     int width;              /**< Width of the text  */
 }sum_t;
 
+typedef struct {
+    int min;
+    int max;
+    int width;
+    std::string align;
+} cfg_values_t;
+
 /** 
  *  @brief Parse input string to parse input configuration
  * 
@@ -44,5 +51,7 @@ config_t getConfig(std::string text);
  * 
  */
 sum_t getSum(std::string text, std::vector<int> numbers);
+
+cfg_values_t getDefaultCfgValues();
 
 #endif // __PARSE_HPP_
