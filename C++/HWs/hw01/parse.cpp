@@ -75,3 +75,19 @@ cfg_values_t getDefaultCfgValues(){
     cfgValues.align = "left";
     return cfgValues;
 }
+
+cfg_values_t setCfgValues(cfg_values_t allCfgValues, const config_t& cfgValue) {
+    if (cfgValue.type == MIN_TYPE) {
+        allCfgValues.min = std::stoi(cfgValue.value);
+    }
+    if (cfgValue.type == MAX_TYPE) {
+        allCfgValues.max = std::stoi(cfgValue.value);
+    }
+    if (cfgValue.type == WIDTH_TYPE) {
+        allCfgValues.width = std::stoi(cfgValue.value);
+    }
+    if (cfgValue.type == ALIGN_TYPE) {
+        allCfgValues.align = cfgValue.value;
+    }
+    return allCfgValues;
+}

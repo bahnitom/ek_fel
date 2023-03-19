@@ -10,15 +10,14 @@ int main(){
     // variable for decoded config
     config_t config;
     std::string line;
-    do{
+    cfg_values_t allCfgValues = getDefaultCfgValues();
+    do {
         std::getline(std::cin, line);
         config = getConfig(line);
-        if(config.valid){
-            // todo
-            std::cout << line << std::endl;
-            }
-    }
-    while(config.valid);
+        if (config.valid) {
+            allCfgValues = setCfgValues(allCfgValues, config);
+        }
+    } while (config.valid);
 
     std::cout << "\n";
 
