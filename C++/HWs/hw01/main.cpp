@@ -6,51 +6,57 @@
 #include "main.hpp"
 #include "parse.cpp"
 
-int main(){  
+int main() {
     // variable for decoded config
     config_t config;
     std::string line;
-    do{
+    do {
         std::getline(std::cin, line);
         config = getConfig(line);
-        if(config.valid){
+        if (config.valid) {
             // todo
             std::cout << line << std::endl;
-            }
-    }
-    while(config.valid);
+        }
+    } while (config.valid);
 
     std::cout << "\n";
 
     std::vector<std::vector<int>> values;
 
-    while(std::getline(std::cin, line)){
+    while (std::getline(std::cin, line)) {
         std::stringstream ss(line);
         std::vector<int> row;
         std::string cell;
         int number;
 
-        while (std::getline(ss,cell, ';')) {
+        while (std::getline(ss, cell, ';')) {
             try {   // if loaded cell is number
                 number = std::stoi(cell);
                 //std::cout << number;
-				row.push_back(number);
+                row.push_back(number);
             }
-            catch(const std::exception& e){ // if there is a text (SUM?)
+            catch (const std::exception &e) { // if there is a text (SUM?)
                 int sum = getSum(line, row).value;
                 row.push_back(sum);
             }
-        }   
-        values.push_back(row);     
+        }
+        values.push_back(row);
     }
     // print out the config - TODO /*config printim na radku 18*/
-    
-	// print table
-    for (std::size_t i = 0; i < values.size(); i++){
-        std::cout << "+----+-----+-----+" << std::endl;
-        for (std::size_t j = 0; j < values[i].size(); j++){
-            std::cout << "| " << values[i][j] << " |";
+
+    // print table
+    for (std::size_t a = 0; a < 5; a++) {
+        std::cout << "+";
+        for (std::size_t b = 0; b < 5; b++) {
+            std::cout << "-";
         }
+    }
+    std::cout << "+\n";
+    for (std::size_t i = 0; i < values.size(); i++) {
+        for (std::size_t j = 0; j < values[i].size(); j++) {
+            std::cout << "|   " << values[i][j];
+        }
+
         std::cout << std::endl;
     }
     return 0;
