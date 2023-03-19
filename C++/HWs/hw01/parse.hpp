@@ -70,8 +70,8 @@ cfg_values_t getDefaultCfgValues();
 
 cfg_values_t setCfgValues(cfg_values_t allCfgValues, const config_t& cfgValue);
 
-void printCfgValue(std::string type, std::string value);
+void printCfgValue(const std::string& type, const std::string& value);
 
-void printCfgValues(cfg_values_t cfgValues);
+void printCfgValues(const cfg_values_t& cfgValues);
 
 #endif // __PARSE_HPP_

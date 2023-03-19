@@ -92,13 +92,13 @@ cfg_values_t setCfgValues(cfg_values_t allCfgValues, const config_t& cfgValue) {
     return allCfgValues;
 }
 
-void printCfgValue(std::string type, std::string value) {
+void printCfgValue(const std::string& type, const std::string& value) {
     std::cout << CONFIG_PREFIX_DOT + type + EQUAL_SIGN + value;
     std::cout << "\n";
 }
 
 
-void printCfgValues(cfg_values_t cfgValues) {
+void printCfgValues(const cfg_values_t& cfgValues) {
     printCfgValue(MIN_TYPE, std::to_string(cfgValues.min));
     printCfgValue(MAX_TYPE, std::to_string(cfgValues.max));
     printCfgValue(WIDTH_TYPE, std::to_string(cfgValues.width));
