@@ -43,6 +43,22 @@ int checkConfigValues(const cfg_values_t& cfgValues) {
     return 0;
 }
 
+void printTableRows(const cfg_values_t& cfgValues, const std::vector<std::vector<int>>& rows) {
+    std::string number_str;
+    // TODO instead of hard coded N needs calculation based on cfgValues
+    std::string line(18, '-'); // repeat character n times
+    for (const auto & row : rows) {
+        std::cout << line << std::endl;
+        std::string r = "|";
+        for (int number: row) {
+            number_str = std::to_string(number);
+            r.append(" " +number_str + " |");
+        }
+        std::cout << r << std::endl;
+    }
+    std::cout << line << std::endl;
+}
+
 int main() {
     // variable for decoded config
     config_t config;
@@ -91,6 +107,9 @@ int main() {
     if (ret_code != 0) {
         return ret_code;
     }
+
+    printTableRows(allCfgValues, values);
+    return 0;
 
     // print table
     for (std::size_t a = 0; a < 5; a++) {

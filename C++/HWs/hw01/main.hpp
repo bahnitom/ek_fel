@@ -8,4 +8,6 @@ int checkTableRows(const cfg_values_t &cfgValues, const std::vector<std::vector<
 
 int checkConfigValues(const cfg_values_t &cfgValues);
 
+void printTableRows(const cfg_values_t &cfgValues, const std::vector<std::vector<int>> &rows);
+
 #endif
