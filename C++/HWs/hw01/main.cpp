@@ -6,6 +6,31 @@
 #include "main.hpp"
 #include "parse.cpp"
 
+/**
+ * Iterates over all values in table (2d array = vector of vectors)
+ * and checks if the number fit the cell i.e. width of the cell is <= length of all numbers
+ * @param cfgValues test configuration
+ * @param rows 2d array of numbers
+ * @return 103 in case some of the numbers does not fit into cell
+ */
+int checkTableRows(const cfg_values_t& cfgValues, const std::vector<std::vector<int>>& rows) {
+    std::string number_str;
+    for (const auto & row : rows) {
+        for (int number: row) {
+            if (number < cfgValues.min or number > cfgValues.max) {
+                std::cout << "Out of range";
+                return 100;
+            }
+            number_str = std::to_string(number);
+            if (number_str.length() > cfgValues.width) {
+                std::cout << "Cell is too short";
+                return 103;
+            }
+        }
+    }
+    return 0;
+}
+
 int main() {
     // variable for decoded config
     config_t config;
@@ -44,6 +69,13 @@ int main() {
         }
         values.push_back(row);
     }
+    // handle data errors
+    int ret_code;
+    ret_code = checkTableRows(allCfgValues, values);
+    if (ret_code != 0) {
+        return ret_code;
+    }
+
     // print out the config - TODO /*config printim na radku 18*/
 
     // print table
