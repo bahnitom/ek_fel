@@ -4,6 +4,6 @@
 
 #include "parse.hpp"
 
-int checkTableRow(const cfg_values_t &cfgValues, const std::vector<int> &row);
+int checkTableRows(const cfg_values_t& cfgValues, const std::vector<std::vector<int>>& rows);
 
 #endif
