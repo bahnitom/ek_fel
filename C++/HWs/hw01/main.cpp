@@ -6,7 +6,7 @@
 #include "main.hpp"
 #include "parse.cpp"
 
-int main(){  
+int main() {
     // variable for decoded config
     config_t config;
     std::string line;
@@ -25,24 +25,24 @@ int main(){
 
     std::vector<std::vector<int>> values;
 
-    while(std::getline(std::cin, line)){
+    while (std::getline(std::cin, line)) {
         std::stringstream ss(line);
         std::vector<int> row;
         std::string cell;
         int number;
 
-        while (std::getline(ss,cell, ';')) {
+        while (std::getline(ss, cell, ';')) {
             try {   // if loaded cell is number
                 number = std::stoi(cell);
                 //std::cout << number;
-				row.push_back(number);
+                row.push_back(number);
             }
-            catch(const std::exception& e){ // if there is a text (SUM?)
+            catch (const std::exception &e) { // if there is a text (SUM?)
                 int sum = getSum(line, row).value;
                 row.push_back(sum);
             }
-        }   
-        values.push_back(row);     
+        }
+        values.push_back(row);
     }
     // print out the config - TODO /*config printim na radku 18*/
 
