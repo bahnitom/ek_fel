@@ -31,10 +31,23 @@ int checkTableRows(const cfg_values_t& cfgValues, const std::vector<std::vector<
     return 0;
 }
 
+int checkConfigValues(const cfg_values_t& cfgValues) {
+    if (cfgValues.min > cfgValues.max) {
+        std::cout << "Invalid configuration";
+        return 102;
+    }
+    if (cfgValues.width < 0) {
+        std::cout << "Invalid configuration";
+        return 102;
+    }
+    return 0;
+}
+
 int main() {
     // variable for decoded config
     config_t config;
     std::string line;
+    int ret_code;
     cfg_values_t allCfgValues = getDefaultCfgValues();
     do {
         std::getline(std::cin, line);
@@ -43,6 +56,11 @@ int main() {
             allCfgValues = setCfgValues(allCfgValues, config);
         }
     } while (config.valid);
+
+    ret_code = checkConfigValues(allCfgValues);
+    if (ret_code != 0) {
+        return ret_code;
+    }
 
     printCfgValues(allCfgValues);
 
@@ -69,14 +87,10 @@ int main() {
         }
         values.push_back(row);
     }
-    // handle data errors
-    int ret_code;
     ret_code = checkTableRows(allCfgValues, values);
     if (ret_code != 0) {
         return ret_code;
     }
-
-    // print out the config - TODO /*config printim na radku 18*/
 
     // print table
     for (std::size_t a = 0; a < 5; a++) {
