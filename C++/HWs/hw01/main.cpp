@@ -5,10 +5,12 @@
 #include <iomanip>
 #include "main.hpp"
 #include "parse.cpp"
+using namespace std;
 
 // macros
 #define OUT_OF_RANGE 100
 #define INVALID_INPUT 101
+#define INVALID_CONFIGURATION 102
 
 void printRow();
 
@@ -17,6 +19,7 @@ int main() {
     config_t config;
     std::string line;
     cfg_values_t all_cfg_values = get_default_cfg_values();
+    int maxRow = -1;
     do {
         std::getline(std::cin, line);
         config = getConfig(line);
@@ -24,6 +27,11 @@ int main() {
             all_cfg_values = set_cfg_values(all_cfg_values, config);
         }
     } while (config.valid);
+
+    if (all_cfg_values.min > all_cfg_values.max || all_cfg_values.width < 1){
+        std::cerr << "Invalid configuration" << std::endl;
+        return INVALID_CONFIGURATION;
+    }
 
     std::vector<std::vector<int>> values;
 
@@ -57,6 +65,9 @@ int main() {
                 row.push_back(sum);
             }
         }
+        if (static_cast<int>(row.size()) > maxRow){
+            maxRow = static_cast<int>(row.size());
+        }
         values.push_back(row);
     }
     printCfgValues(all_cfg_values);
@@ -64,7 +75,34 @@ int main() {
     // print out the config - TODO /*config printim na radku 18*/
 
     // print table
-    for (std::size_t a = 0; a < 5; a++) {
+    for (std::size_t a = 0; a < maxRow + 1; a++) {
+        std::cout << "+";
+        for (std::size_t b = 0; b < all_cfg_values.width + 2; b++) {
+            std::cout << "-";
+        }
+    }
+    std::cout << "+\n";
+
+    std::cout << "|" << string (all_cfg_values.width+2, 32);
+
+
+
+    for (std::size_t j = 0; j < maxRow; j++) {
+        std::cout << "| ";
+        if(all_cfg_values.align == "right"){
+            std::cout<< string(all_cfg_values.width -1, 32);
+            std::cout<< char(j + 65);
+        }
+        else{
+            std::cout<< char(j + 65);
+            std::cout<< string(all_cfg_values.width -1, 32);
+        }
+        std::cout << " ";
+    }
+    std::cout << "|";
+    std::cout << std::endl;
+
+    for (std::size_t a = 0; a < maxRow + 1; a++) {
         std::cout << "+";
         for (std::size_t b = 0; b < all_cfg_values.width + 2; b++) {
             std::cout << "-";
@@ -73,21 +111,42 @@ int main() {
 
 
     std::cout << "+\n";
-    for (std::size_t a = 0; a < values.at(0).size() + 1; a++) {
-        std::cout << "+";
-        for (std::size_t b = 0; b < all_cfg_values.width + 2; b++) {
-            std::cout << "-";
-        }
-    }
-    std::cout << "+\n";
+
+
     for (std::size_t i = 0; i < values.size(); i++) {
-        std::cout << "|   " << i + 1;
+        std::cout << "| ";
+        if(all_cfg_values.align == "right"){
+            std::cout<< string(all_cfg_values.width -1, 32);
+            std::cout<< i + 1;
+        }
+        else{
+            std::cout<< i + 1;
+            std::cout<< string(all_cfg_values.width -1, 32);
+        }
+        std::cout << " ";
+
         for (std::size_t j = 0; j < values[i].size(); j++) {
-            std::cout << "|   " << values[i][j];
+            std::cout << "| ";
+            int a = values[i][j];
+            stringstream ss;
+            ss << a;
+            int numberOfChars = ss.str().length();
+            if(all_cfg_values.align == "right"){
+                std::cout<< string(all_cfg_values.width - numberOfChars, 32);
+                std::cout<< values[i][j];
+            }
+            else{
+                std::cout<< values[i][j];
+                std::cout<< string(all_cfg_values.width - numberOfChars, 32);
+            }
+            std::cout << " ";
         }
         std::cout << "|";
+        for (std::size_t j = values[i].size(); j < maxRow; j++) {
+            std::cout << string(all_cfg_values.width + 2, 32) << "|";
+        }
         std::cout << std::endl;
-        for (std::size_t a = 0; a < 5; a++) {
+        for (std::size_t a = 0; a < maxRow + 1; a++) {
             std::cout << "+";
             for (std::size_t b = 0; b < all_cfg_values.width + 2; b++) {
                 std::cout << "-";
