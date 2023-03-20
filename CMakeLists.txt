@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(cpp-lab01)
-set(CMAKE_CXX_STANDARD 14)
-add_executable(cpp_labs01
-        C++/labs/01/1.cpp)
+#project(cpp-lab01)
+#set(CMAKE_CXX_STANDARD 14)
+#add_executable(cpp_labs01
+#        C++/labs/01/1.cpp)
 
 project(hw01)
 set(CMAKE_CXX_STANDARD 14)
