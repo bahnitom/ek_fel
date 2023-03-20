@@ -67,16 +67,16 @@ sum_t getSum(std::string text, std::vector<int> numbers){
     return sum;
 }
 
-cfg_values_t getDefaultCfgValues(){
-    cfg_values_t cfgValues;
-    cfgValues.min = -99;
-    cfgValues.max = 100;
-    cfgValues.width = 3;
-    cfgValues.align = "left";
-    return cfgValues;
+cfg_values_t get_default_cfg_values(){
+    cfg_values_t config_val;
+    config_val.min = -99;
+    config_val.max = 100;
+    config_val.width = 3;
+    config_val.align = "left";
+    return config_val;
 }
 
-cfg_values_t setCfgValues(cfg_values_t allCfgValues, const config_t& cfgValue) {
+cfg_values_t set_cfg_values(cfg_values_t allCfgValues, const config_t& cfgValue) {
     if (cfgValue.type == MIN_TYPE) {
         allCfgValues.min = std::stoi(cfgValue.value);
     }

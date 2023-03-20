@@ -66,9 +66,9 @@ config_t getConfig(std::string text);
  */
 sum_t getSum(std::string text, std::vector<int> numbers);
 
-cfg_values_t getDefaultCfgValues();
+cfg_values_t get_default_cfg_values();
 
-cfg_values_t setCfgValues(cfg_values_t allCfgValues, const config_t& cfgValue);
+cfg_values_t set_cfg_values(cfg_values_t allCfgValues, const config_t& cfgValue);
 
 void printCfgValue(std::string type, std::string value);
 
