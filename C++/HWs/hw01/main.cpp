@@ -11,8 +11,7 @@ using namespace std;
 #define OUT_OF_RANGE 100
 #define INVALID_INPUT 101
 #define INVALID_CONFIGURATION 102
-
-void printRow();
+#define CELL_TOO_SHORT 103
 
 int main() {
     // variable for decoded config
@@ -33,6 +32,15 @@ int main() {
         return INVALID_CONFIGURATION;
     }
 
+    int maxNumberLen = all_cfg_values.max;
+    stringstream stringstream1;
+    stringstream1 << maxNumberLen;
+    int numberOfMax = stringstream1.str().length();
+    if (all_cfg_values.width < numberOfMax){
+        std::cerr << "Cell too short" << std::endl;
+        return CELL_TOO_SHORT;
+    }
+
     std::vector<std::vector<int>> values;
 
     while (std::getline(std::cin, line)) {
@@ -51,16 +59,12 @@ int main() {
                 }
                 row.push_back(number);
             }
-//            catch (const char * str){
-//                std::cerr << "Invalid input" << std::endl;
-//                return INVALID_INPUT;
-//            }
             catch (const std::exception &e) { // if there is a text (SUM?)
                 if (cell.find("SUM") != 0) { // something different then number or word SUM
                     std::cerr << "Invalid input" << std::endl;
                     return INVALID_INPUT;
                 }
-                //todo check if SUM is valid
+                // todo check if SUM is valid
                 int sum = getSum(line, row).value;
                 row.push_back(sum);
             }
