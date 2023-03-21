@@ -5,6 +5,7 @@
 #include <iomanip>
 #include "main.hpp"
 #include "parse.cpp"
+
 using namespace std;
 
 // macros
@@ -12,6 +13,10 @@ using namespace std;
 #define INVALID_INPUT 101
 #define INVALID_CONFIGURATION 102
 #define CELL_TOO_SHORT 103
+
+void print_table(const cfg_values_t &all_cfg_values, int maxRow, const vector<std::vector<int>> &values);
+
+int error(int type_of_error);
 
 int main() {
     // variable for decoded config
@@ -27,19 +32,10 @@ int main() {
         }
     } while (config.valid);
 
-    if (all_cfg_values.min > all_cfg_values.max || all_cfg_values.width < 1){
-        std::cerr << "Invalid configuration" << std::endl;
-        return INVALID_CONFIGURATION;
-    }
-
     int maxNumberLen = all_cfg_values.max;
-    stringstream stringstream1;
-    stringstream1 << maxNumberLen;
-    int numberOfMax = stringstream1.str().length();
-    if (all_cfg_values.width < numberOfMax){
-        std::cerr << "Cell too short" << std::endl;
-        return CELL_TOO_SHORT;
-    }
+    stringstream string_stream_1;
+    string_stream_1 << maxNumberLen;
+    int numberOfMax = string_stream_1.str().length();
 
     std::vector<std::vector<int>> values;
 
@@ -52,111 +48,133 @@ int main() {
         while (std::getline(ss, cell, ';')) {
             try {   // if loaded cell is number
                 number = std::stoi(cell);
-                // if number is out of range
-                if ((number < all_cfg_values.min) || (number > all_cfg_values.max)) {
-                    std::cerr << "Out of range" << std::endl;
-                    return OUT_OF_RANGE;
+                if ((number < all_cfg_values.min) || (number > all_cfg_values.max)) { // if number is out of range
+                    error(1);
                 }
                 row.push_back(number);
             }
             catch (const std::exception &e) { // if there is a text (SUM?)
                 if (cell.find("SUM") != 0) { // something different then number or word SUM
-                    std::cerr << "Invalid input" << std::endl;
-                    return INVALID_INPUT;
+                     error(2);
                 }
                 // todo check if SUM is valid
                 int sum = getSum(line, row).value;
                 row.push_back(sum);
             }
         }
-        if (static_cast<int>(row.size()) > maxRow){
+        if (static_cast<int>(row.size()) > maxRow) {
             maxRow = static_cast<int>(row.size());
         }
         values.push_back(row);
     }
-    printCfgValues(all_cfg_values);
+    if (all_cfg_values.min > all_cfg_values.max || all_cfg_values.width < 1) { // min > max or width is negative number
+        error(3);
+    }
+    if (all_cfg_values.width < numberOfMax) { // cell is too small for the number
+        error(4);
+    }
+
+    printCfgValues(all_cfg_values); //printing config
     std::cout << "\n";
-    // print out the config - TODO /*config printim na radku 18*/
 
-    // print table
-    for (std::size_t a = 0; a < maxRow + 1; a++) {
-        std::cout << "+";
-        for (std::size_t b = 0; b < all_cfg_values.width + 2; b++) {
-            std::cout << "-";
+    print_table(all_cfg_values, maxRow, values); // print table
+    return 0;
+}
+
+void print_table(const cfg_values_t &all_cfg_values, int maxRow, const vector<std::vector<int>> &values) {
+    for (size_t a = 0; a < maxRow + 1; a++) {
+        cout << "+";
+        for (size_t b = 0; b < all_cfg_values.width + 2; b++) {
+            cout << "-";
         }
     }
-    std::cout << "+\n";
+    cout << "+\n";
+    cout << "|" << string(all_cfg_values.width + 2, 32);
 
-    std::cout << "|" << string (all_cfg_values.width+2, 32);
-
-
-
-    for (std::size_t j = 0; j < maxRow; j++) {
-        std::cout << "| ";
-        if(all_cfg_values.align == "right"){
-            std::cout<< string(all_cfg_values.width -1, 32);
-            std::cout<< char(j + 65);
+    for (size_t j = 0; j < maxRow; j++) {
+        cout << "| ";
+        if (all_cfg_values.align == "right") {
+            cout << string(all_cfg_values.width - 1, 32);
+            cout << char(j + 65);
+        } else {
+            cout << char(j + 65);
+            cout << string(all_cfg_values.width - 1, 32);
         }
-        else{
-            std::cout<< char(j + 65);
-            std::cout<< string(all_cfg_values.width -1, 32);
-        }
-        std::cout << " ";
+        cout << " ";
     }
-    std::cout << "|";
-    std::cout << std::endl;
+    cout << "|";
+    cout << endl;
 
-    for (std::size_t a = 0; a < maxRow + 1; a++) {
-        std::cout << "+";
-        for (std::size_t b = 0; b < all_cfg_values.width + 2; b++) {
-            std::cout << "-";
+    for (size_t a = 0; a < maxRow + 1; a++) {
+        cout << "+";
+        for (size_t b = 0; b < all_cfg_values.width + 2; b++) {
+            cout << "-";
         }
     }
+    cout << "+\n";
 
-
-    std::cout << "+\n";
-
-
-    for (std::size_t i = 0; i < values.size(); i++) {
-        std::cout << "| ";
-        if(all_cfg_values.align == "right"){
-            std::cout<< string(all_cfg_values.width -1, 32);
-            std::cout<< i + 1;
+    for (size_t i = 0; i < values.size(); i++) {
+        cout << "| ";
+        if (all_cfg_values.align == "right") {
+            cout << string(all_cfg_values.width - 1, 32);
+            cout << i + 1;
+        } else {
+            cout << i + 1;
+            cout << string(all_cfg_values.width - 1, 32);
         }
-        else{
-            std::cout<< i + 1;
-            std::cout<< string(all_cfg_values.width -1, 32);
-        }
-        std::cout << " ";
+        cout << " ";
 
-        for (std::size_t j = 0; j < values[i].size(); j++) {
-            std::cout << "| ";
+        for (size_t j = 0; j < values[i].size(); j++) {
+            cout << "| ";
             int a = values[i][j];
             stringstream ss;
             ss << a;
             int numberOfChars = ss.str().length();
-            if(all_cfg_values.align == "right"){
-                std::cout<< string(all_cfg_values.width - numberOfChars, 32);
-                std::cout<< values[i][j];
+            if (all_cfg_values.align == "right") {
+                cout << string(all_cfg_values.width - numberOfChars, 32);
+                cout << values[i][j];
+            } else {
+                cout << values[i][j];
+                cout << string(all_cfg_values.width - numberOfChars, 32);
             }
-            else{
-                std::cout<< values[i][j];
-                std::cout<< string(all_cfg_values.width - numberOfChars, 32);
-            }
-            std::cout << " ";
+            cout << " ";
         }
-        std::cout << "|";
-        for (std::size_t j = values[i].size(); j < maxRow; j++) {
-            std::cout << string(all_cfg_values.width + 2, 32) << "|";
+        cout << "|";
+        for (size_t j = values[i].size(); j < maxRow; j++) {
+            cout << string(all_cfg_values.width + 2, 32) << "|";
         }
-        std::cout << std::endl;
-        for (std::size_t a = 0; a < maxRow + 1; a++) {
-            std::cout << "+";
-            for (std::size_t b = 0; b < all_cfg_values.width + 2; b++) {
-                std::cout << "-";
+        cout << endl;
+        for (size_t a = 0; a < maxRow + 1; a++) {
+            cout << "+";
+            for (size_t b = 0; b < all_cfg_values.width + 2; b++) {
+                cout << "-";
             }
         }
-        std::cout << "+\n";
+        cout << "+\n";
     }
-    return 0;
+}
+
+int error(int type_of_error) {
+    switch (type_of_error) {
+        case 1:
+            std::cerr << "Out of range" << std::endl;
+//            return OUT_OF_RANGE;
+            exit(OUT_OF_RANGE);
+        case 2:
+            std::cerr << "Invalid input" << std::endl;
+//            return INVALID_INPUT;
+            exit(INVALID_INPUT);
+        case 3:
+            std::cerr << "Invalid configuration" << std::endl;
+//            return INVALID_CONFIGURATION;
+            exit(INVALID_CONFIGURATION);
+        case 4:
+            std::cerr << "Cell too short" << std::endl;
+//            return CELL_TOO_SHORT;
+            exit(CELL_TOO_SHORT);
+        default:
+            std::cerr << "Different error" << std::endl;
+            exit(-1);
+    }
+
 }
