@@ -28,4 +28,14 @@ void printTableRows(const cfg_values_t &cfgValues, const std::vector<std::vector
 
 int loadData(const cfg_values_t &cfgValues, std::vector<std::vector<int>> *values);
 
+typedef struct {
+    int code;
+    std::string message;
+} error_with_msg_t;
+
+static const error_with_msg_t OUT_OFF_RANGE = {OUT_OFF_RANGE_ERROR, OUT_OFF_RANGE_MSG};
+static const error_with_msg_t INVALID_INPUT = {INVALID_INPUT_ERROR, INVALID_INPUT_MSG};
+static const error_with_msg_t CELL_IS_TOO_SHORT = {CELL_IS_TOO_SHORT_ERROR, CELL_IS_TOO_SHORT_MSG};
+static const error_with_msg_t INVALID_CONFIG = {INVALID_CONFIG_ERROR, INVALID_CONFIG_MSG};
+
 #endif
