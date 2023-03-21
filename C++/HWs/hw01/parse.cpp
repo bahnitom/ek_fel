@@ -33,7 +33,7 @@ config_t getConfig(std::string text){
 }
 /**
  * Only regexp
- * SUM([A-Z]:[A-Z]) is valid according to assignment
+ * SUM\(([A-Z]):([A-Z])\) is valid according to assignment
  * @param text
  * @param numbers
  * @return
