@@ -84,7 +84,12 @@ cfg_values_t setCfgValues(cfg_values_t allCfgValues, const config_t& cfgValue) {
         allCfgValues.max = std::stoi(cfgValue.value);
     }
     if (cfgValue.type == WIDTH_TYPE) {
-        allCfgValues.width = std::stoi(cfgValue.value);
+        // width is long unsigned int and width <= 0 is invalid
+        if (std::stoi(cfgValue.value) > 0) {
+            allCfgValues.width = std::stoi(cfgValue.value);
+        } else {
+            allCfgValues.width = 0;
+        }
     }
     if (cfgValue.type == ALIGN_TYPE) {
         allCfgValues.align = cfgValue.value;
@@ -103,4 +108,5 @@ void printCfgValues(const cfg_values_t& cfgValues) {
     printCfgValue(MAX_TYPE, std::to_string(cfgValues.max));
     printCfgValue(WIDTH_TYPE, std::to_string(cfgValues.width));
     printCfgValue(ALIGN_TYPE, cfgValues.align);
+    std::cout << "\n";
 }

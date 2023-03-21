@@ -29,7 +29,8 @@ typedef struct{
 typedef struct {
     int min;
     int max;
-    int width;
+    // to avoid g++ compilation errors width must be that type
+    long unsigned int width;
     std::string align;
 } cfg_values_t;
 
