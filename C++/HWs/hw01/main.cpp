@@ -4,6 +4,11 @@
 #include "main.hpp"
 #include "parse.cpp"
 
+void handleError(const error_with_msg_t &e_w_m) {
+    std::cout << e_w_m.message;
+    exit(e_w_m.code);
+}
+
 
 /**
  * Iterates over all values in table (2d array = vector of vectors)
@@ -17,13 +22,11 @@ int checkTableRows(const cfg_values_t &cfgValues, const std::vector<std::vector<
     for (const auto &row: rows) {
         for (int number: row) {
             if (number < cfgValues.min or number > cfgValues.max) {
-                std::cout << OUT_OFF_RANGE.message;
-                return OUT_OFF_RANGE.code;
+                handleError(OUT_OFF_RANGE);
             }
             number_str = std::to_string(number);
             if (number_str.length() > cfgValues.width) {
-                std::cout << CELL_IS_TOO_SHORT.message;
-                return CELL_IS_TOO_SHORT.code;
+                handleError(CELL_IS_TOO_SHORT);
             }
         }
     }
@@ -33,8 +36,7 @@ int checkTableRows(const cfg_values_t &cfgValues, const std::vector<std::vector<
 int checkConfigValues(const cfg_values_t &cfgValues) {
     // width is long unsigned int and width is set to 0 if not > 0
     if (cfgValues.min > cfgValues.max or cfgValues.width == 0) {
-        std::cout << INVALID_CONFIG.message;
-        return INVALID_CONFIG.code;
+        handleError(INVALID_CONFIG);
     }
     return 0;
 }
@@ -68,19 +70,16 @@ int loadData(const cfg_values_t &cfgValues, std::vector<std::vector<int>> *value
             try {   // if loaded cell is number
                 number = std::stoi(cell);
                 if ((number < cfgValues.min) || (number > cfgValues.max)) { // if number is out of range
-                    std::cout << OUT_OFF_RANGE.message;
-                    return OUT_OFF_RANGE.code;
+                    handleError(OUT_OFF_RANGE);
                 }
                 if (std::to_string(number).length() > cfgValues.width) {
-                    std::cout << CELL_IS_TOO_SHORT.message;
-                    return CELL_IS_TOO_SHORT.code;
+                    handleError(CELL_IS_TOO_SHORT);
                 }
                 row.push_back(number);
             }
             catch (const std::exception &e) { // if there is a text (SUM?)
                 if (cell.find("SUM") != 0) { // something different from number or word SUM
-                    std::cout << INVALID_INPUT.message;
-                    return INVALID_INPUT.code;
+                    handleError(INVALID_INPUT);
                 }
                 int sum = getSum(line, row).value;
                 row.push_back(sum);
