@@ -18,12 +18,15 @@ void print_table(const cfg_values_t &all_cfg_values, int maxRow, const vector<st
 
 int error(int type_of_error);
 
+void print_border(const cfg_values_t &all_cfg_values, int maxRow);
+
 int main() {
     // variable for decoded config
     config_t config;
     std::string line;
     cfg_values_t all_cfg_values = get_default_cfg_values();
-    int maxRow = -1;
+    int maxRow = -1; //todo count of inputs number
+//    int table_width = maxRow + 1;
     do {
         std::getline(std::cin, line);
         config = getConfig(line);
@@ -55,12 +58,13 @@ int main() {
             }
             catch (const std::exception &e) { // if there is a text (SUM?)
                 if (cell.find("SUM") != 0) { // something different then number or word SUM
-                     error(2);
+                    error(2);
                 }
                 // todo check if SUM is valid
                 int sum = getSum(line, row).value;
                 row.push_back(sum);
             }
+
         }
         if (static_cast<int>(row.size()) > maxRow) {
             maxRow = static_cast<int>(row.size());
@@ -77,100 +81,51 @@ int main() {
     printCfgValues(all_cfg_values); //printing config
     std::cout << "\n";
 
-    print_table(all_cfg_values, maxRow, values); // print table
+    //printing table
+    for (int i = 0; i < all_cfg_values.width; ++i) {
+        print_border(all_cfg_values, maxRow);
+        for (int j = 0; j < maxRow; ++j) {
+            std::stringstream inside;
+            inside << "|" << std::setw(all_cfg_values.width+2) << 3;
+            std::cout << inside.str();
+        }
+        std::cout << "|" << std::endl;
+    }
+    print_border(all_cfg_values, maxRow);
+
+    // align left or right
+    if (all_cfg_values.align == "left") {
+        std::cout << std::left;
+    }
+    if (all_cfg_values.align == "right") {
+        std::cout << std::right;
+    }
+
     return 0;
 }
 
-void print_table(const cfg_values_t &all_cfg_values, int maxRow, const vector<std::vector<int>> &values) {
-    for (size_t a = 0; a < maxRow + 1; a++) {
-        cout << "+";
-        for (size_t b = 0; b < all_cfg_values.width + 2; b++) {
-            cout << "-";
-        }
+void print_border(const cfg_values_t &all_cfg_values, int maxRow) {
+    stringstream border;
+    border << "+" << string(all_cfg_values.width + 2, '-');
+    for (int x = 0; x < maxRow; ++x) {
+        cout << border.str();
     }
-    cout << "+\n";
-    cout << "|" << string(all_cfg_values.width + 2, 32);
-
-    for (size_t j = 0; j < maxRow; j++) {
-        cout << "| ";
-        if (all_cfg_values.align == "right") {
-            cout << string(all_cfg_values.width - 1, 32);
-            cout << char(j + 65);
-        } else {
-            cout << char(j + 65);
-            cout << string(all_cfg_values.width - 1, 32);
-        }
-        cout << " ";
-    }
-    cout << "|";
-    cout << endl;
-
-    for (size_t a = 0; a < maxRow + 1; a++) {
-        cout << "+";
-        for (size_t b = 0; b < all_cfg_values.width + 2; b++) {
-            cout << "-";
-        }
-    }
-    cout << "+\n";
-
-    for (size_t i = 0; i < values.size(); i++) {
-        cout << "| ";
-        if (all_cfg_values.align == "right") {
-            cout << string(all_cfg_values.width - 1, 32);
-            cout << i + 1;
-        } else {
-            cout << i + 1;
-            cout << string(all_cfg_values.width - 1, 32);
-        }
-        cout << " ";
-
-        for (size_t j = 0; j < values[i].size(); j++) {
-            cout << "| ";
-            int a = values[i][j];
-            stringstream ss;
-            ss << a;
-            int numberOfChars = ss.str().length();
-            if (all_cfg_values.align == "right") {
-                cout << string(all_cfg_values.width - numberOfChars, 32);
-                cout << values[i][j];
-            } else {
-                cout << values[i][j];
-                cout << string(all_cfg_values.width - numberOfChars, 32);
-            }
-            cout << " ";
-        }
-        cout << "|";
-        for (size_t j = values[i].size(); j < maxRow; j++) {
-            cout << string(all_cfg_values.width + 2, 32) << "|";
-        }
-        cout << endl;
-        for (size_t a = 0; a < maxRow + 1; a++) {
-            cout << "+";
-            for (size_t b = 0; b < all_cfg_values.width + 2; b++) {
-                cout << "-";
-            }
-        }
-        cout << "+\n";
-    }
+    std::cout << "+\n";
 }
 
 int error(int type_of_error) {
     switch (type_of_error) {
         case 1:
             std::cerr << "Out of range" << std::endl;
-//            return OUT_OF_RANGE;
             exit(OUT_OF_RANGE);
         case 2:
             std::cerr << "Invalid input" << std::endl;
-//            return INVALID_INPUT;
             exit(INVALID_INPUT);
         case 3:
             std::cerr << "Invalid configuration" << std::endl;
-//            return INVALID_CONFIGURATION;
             exit(INVALID_CONFIGURATION);
         case 4:
             std::cerr << "Cell too short" << std::endl;
-//            return CELL_TOO_SHORT;
             exit(CELL_TOO_SHORT);
         default:
             std::cerr << "Different error" << std::endl;
@@ -178,3 +133,4 @@ int error(int type_of_error) {
     }
 
 }
+
