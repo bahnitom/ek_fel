@@ -4,6 +4,8 @@
 #include "main.hpp"
 #include "parse.cpp"
 
+using namespace std;
+
 void handleError(const error_with_msg_t &e_w_m) {
     std::cout << e_w_m.message;
     exit(e_w_m.code);
@@ -105,6 +107,80 @@ void printTableRows(const cfg_values_t &cfgValues, const std::vector<std::vector
     std::cout << line << std::endl;
 }
 
+void print_table(const cfg_values_t &all_cfg_values, const vector<std::vector<int>> &values) {
+    std::vector<int>::size_type max_row_length = maxRowLength(values);
+    for (size_t a = 0; a < max_row_length + 1; a++) {
+        cout << "+";
+        for (size_t b = 0; b < all_cfg_values.width + 2; b++) {
+            cout << "-";
+        }
+    }
+    cout << "+\n";
+    cout << "|" << string(all_cfg_values.width + 2, 32);
+
+    for (size_t j = 0; j < max_row_length; j++) {
+        cout << "| ";
+        if (all_cfg_values.align == "right") {
+            cout << string(all_cfg_values.width - 1, 32);
+            cout << char(j + 65);
+        } else {
+            cout << char(j + 65);
+            cout << string(all_cfg_values.width - 1, 32);
+        }
+        cout << " ";
+    }
+    cout << "|";
+    cout << endl;
+
+    for (size_t a = 0; a < max_row_length + 1; a++) {
+        cout << "+";
+        for (size_t b = 0; b < all_cfg_values.width + 2; b++) {
+            cout << "-";
+        }
+    }
+    cout << "+\n";
+
+    for (size_t i = 0; i < values.size(); i++) {
+        cout << "| ";
+        if (all_cfg_values.align == "right") {
+            cout << string(all_cfg_values.width - 1, 32);
+            cout << i + 1;
+        } else {
+            cout << i + 1;
+            cout << string(all_cfg_values.width - 1, 32);
+        }
+        cout << " ";
+
+        for (size_t j = 0; j < values[i].size(); j++) {
+            cout << "| ";
+            int a = values[i][j];
+            stringstream ss;
+            ss << a;
+            int numberOfChars = ss.str().length();
+            if (all_cfg_values.align == "right") {
+                cout << string(all_cfg_values.width - numberOfChars, 32);
+                cout << values[i][j];
+            } else {
+                cout << values[i][j];
+                cout << string(all_cfg_values.width - numberOfChars, 32);
+            }
+            cout << " ";
+        }
+        cout << "|";
+        for (size_t j = values[i].size(); j < max_row_length; j++) {
+            cout << string(all_cfg_values.width + 2, 32) << "|";
+        }
+        cout << endl;
+        for (size_t a = 0; a < max_row_length + 1; a++) {
+            cout << "+";
+            for (size_t b = 0; b < all_cfg_values.width + 2; b++) {
+                cout << "-";
+            }
+        }
+        cout << "+\n";
+    }
+}
+
 int main() {
     // variable for decoded config
     config_t config;
@@ -121,6 +197,7 @@ int main() {
     printConfigValues(allCfgValues);
     std::vector<std::vector<int>> values;
     loadData(allCfgValues, &values);
-    printTableRows(allCfgValues, values);
+//    printTableRows(allCfgValues, values);
+    print_table(allCfgValues, values);
     return 0;
 }
