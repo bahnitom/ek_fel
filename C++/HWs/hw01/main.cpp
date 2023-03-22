@@ -151,17 +151,17 @@ void print_table(const cfg_values_t &all_cfg_values, const vector<std::vector<in
         }
         cout << " ";
 
-        for (size_t j = 0; j < values[i].size(); j++) {
+        for (int value : values[i]) {
             cout << "| ";
-            int a = values[i][j];
+            int a = value;
             stringstream ss;
             ss << a;
-            int numberOfChars = ss.str().length();
+            unsigned long numberOfChars = ss.str().length();
             if (all_cfg_values.align == "right") {
                 cout << string(all_cfg_values.width - numberOfChars, 32);
-                cout << values[i][j];
+                cout << value;
             } else {
-                cout << values[i][j];
+                cout << value;
                 cout << string(all_cfg_values.width - numberOfChars, 32);
             }
             cout << " ";
@@ -197,7 +197,6 @@ int main() {
     printConfigValues(allCfgValues);
     std::vector<std::vector<int>> values;
     loadData(allCfgValues, &values);
-//    printTableRows(allCfgValues, values);
     print_table(allCfgValues, values);
     return 0;
 }
