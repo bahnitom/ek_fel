@@ -33,12 +33,11 @@ int checkTableRows(const cfg_values_t &cfgValues, const std::vector<std::vector<
     return 0;
 }
 
-int checkConfigValues(const cfg_values_t &cfgValues) {
+void checkConfigValues(const cfg_values_t &cfgValues) {
     // width is long unsigned int and width is set to 0 if not > 0
     if (cfgValues.min > cfgValues.max or cfgValues.width == 0) {
         handleError(INVALID_CONFIG);
     }
-    return 0;
 }
 
 /**
@@ -58,7 +57,7 @@ std::vector<int>::size_type maxRowLength(const std::vector<std::vector<int>> &ro
  * @param values load data to this 2d array
  * @return 2d array of loaded data
  */
-int loadData(const cfg_values_t &cfgValues, std::vector<std::vector<int>> *values) {
+void loadData(const cfg_values_t &cfgValues, std::vector<std::vector<int>> *values) {
     std::string line;
     while (std::getline(std::cin, line)) {
         std::stringstream ss(line);
@@ -87,7 +86,6 @@ int loadData(const cfg_values_t &cfgValues, std::vector<std::vector<int>> *value
         }
         values->push_back(row);
     }
-    return 0;
 }
 
 void printTableRows(const cfg_values_t &cfgValues, const std::vector<std::vector<int>> &rows) {
@@ -111,7 +109,6 @@ int main() {
     // variable for decoded config
     config_t config;
     std::string line;
-    int ret_code;
     cfg_values_t allCfgValues = getDefaultCfgValues();
     do {
         std::getline(std::cin, line);
@@ -120,16 +117,10 @@ int main() {
             allCfgValues = setCfgValues(allCfgValues, config);
         }
     } while (config.valid);
-
-    ret_code = checkConfigValues(allCfgValues);
-    if (ret_code != 0) { return ret_code; }
-
-    printCfgValues(allCfgValues);
-
+    checkConfigValues(allCfgValues);
+    printConfigValues(allCfgValues);
     std::vector<std::vector<int>> values;
-    ret_code = loadData(allCfgValues, &values);
-    if (ret_code != 0) { return ret_code; }
-
+    loadData(allCfgValues, &values);
     printTableRows(allCfgValues, values);
     return 0;
 }

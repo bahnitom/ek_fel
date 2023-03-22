@@ -103,7 +103,7 @@ void printCfgValue(const std::string& type, const std::string& value) {
 }
 
 
-void printCfgValues(const cfg_values_t& cfgValues) {
+void printConfigValues(const cfg_values_t& cfgValues) {
     printCfgValue(MIN_TYPE, std::to_string(cfgValues.min));
     printCfgValue(MAX_TYPE, std::to_string(cfgValues.max));
     printCfgValue(WIDTH_TYPE, std::to_string(cfgValues.width));
