@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <iomanip>
+#include <valarray>
 #include "parse.cpp"
 
 // macros
@@ -13,6 +14,12 @@
 int error(int type_of_error);
 
 void print_border(const cfg_values_t &all_cfg_values, int table_width, int header);
+
+void print_config(cfg_values_t &all_cfg_values);
+
+unsigned long max_number_digits(const cfg_values_t &all_cfg_values);
+
+unsigned GetNumberOfDigits (int i);
 
 int main() {
     // variable for decoded config
@@ -28,10 +35,7 @@ int main() {
         }
     } while (config.valid);
 
-    int max_number = all_cfg_values.max;
-    std::stringstream max_numb_in_str;
-    max_numb_in_str << max_number;
-    unsigned long numberOfMax = max_numb_in_str.str().length(); //maximalni pocet cifer
+    unsigned long numberOfMax = max_number_digits(all_cfg_values);
 
     std::vector<std::vector<int>> values;
 
@@ -70,34 +74,30 @@ int main() {
     if (all_cfg_values.min > all_cfg_values.max || all_cfg_values.width < 1) { // min > max or width is negative number
         error(3);
     }
-    if (all_cfg_values.width < numberOfMax) { // cell is too small for the number
+    if ((all_cfg_values.width < numberOfMax) && (all_cfg_values.stretch == -1)) { // cell is too small for the number
         error(4);
     }
 
-    printCfgValues(all_cfg_values); //printing config
-    if (all_cfg_values.header != 1){
-        printCfgValue(HEADER_TYPE, std::to_string(all_cfg_values.header));
-    }
-    if (all_cfg_values.stretch != -1){
-        printCfgValue(STRETCH_TYPE, std::to_string(all_cfg_values.stretch));
-    }
-    std::cout << "\n";
+    print_config(all_cfg_values);
 
     //printing table
-    int table_high = count; //high of table
-    int table_width = maxRow + 1;
+    unsigned int table_high = count; //high of table
+    unsigned int table_width = maxRow + 1;
     int header = 0;
     std::string letter{
             "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z"};
-    if (all_cfg_values.header == 0){
+    if (all_cfg_values.header == 0) {
         header = 1;
-        table_width --;
-        table_high --;
+        table_width--;
+        table_high--;
+    }
+    if (all_cfg_values.stretch == 1){
+        all_cfg_values.width = numberOfMax;
     }
 
-    for (int i = 0; i < table_high + 1; ++i) {
+    for (unsigned int i = 0; i < table_high + 1; ++i) {
         print_border(all_cfg_values, maxRow, header);
-        for (int j = 0; j < table_width; ++j) {
+        for (unsigned int j = 0; j < table_width; ++j) {
             // print values
             std::stringstream inside;
             if ((i == 0) && (j == 0) && (all_cfg_values.header == 1)) { // left up place
@@ -111,9 +111,20 @@ int main() {
                 std::cout << inside.str();
             } else {
                 if (j > values[i - 1 + header].size()) {
-                    inside << "| " << std::setw(all_cfg_values.width + 1) << " "; // if in row is not another values ---> blank space
-                } else {
-                    inside << "| " << std::setw(all_cfg_values.width) << values[i - 1 + header][j - 1 + header] << " ";
+                    inside << "| " << std::setw(all_cfg_values.width + 1)
+                           << " "; // if in row is not another values ---> blank space
+                } else { //printing numbers
+                    if (all_cfg_values.stretch == 1) {
+                        inside << "| " << std::setw(all_cfg_values.width) << values[i - 1 + header][j - 1 + header]
+                               << " ";
+                    }
+                    else if ((all_cfg_values.stretch == 0) && (GetNumberOfDigits(values[i-1][j-1]) > all_cfg_values.width)) {
+                        inside << "| " << std::setw(all_cfg_values.width) << std::string(all_cfg_values.width,'#') << " ";
+                    }
+                    else {
+                        inside << "| " << std::setw(all_cfg_values.width) << values[i - 1 + header][j - 1 + header]
+                               << " ";
+                    }
                 }
                 std::cout << inside.str();
             }
@@ -131,6 +142,31 @@ int main() {
     }
 
     return 0;
+}
+
+unsigned GetNumberOfDigits (int i)
+{
+    return i > 0 ? (int) log10 ((double) i) + 1 : 1;
+}
+
+unsigned long max_number_digits(const cfg_values_t &all_cfg_values) {
+    int max_number = all_cfg_values.max;
+    std::stringstream max_numb_in_str;
+    max_numb_in_str << max_number;
+    unsigned long numberOfMax = max_numb_in_str.str().length(); //max number od digits
+
+    return numberOfMax;
+}
+
+void print_config(cfg_values_t &all_cfg_values) {
+    printCfgValues(all_cfg_values); //printing config
+    if (all_cfg_values.header != 1) {
+        printCfgValue(HEADER_TYPE, std::to_string(all_cfg_values.header));
+    }
+    if (all_cfg_values.stretch != -1) {
+        printCfgValue(STRETCH_TYPE, std::to_string(all_cfg_values.stretch));
+    }
+    std::cout << "\n";
 }
 
 void print_border(const cfg_values_t &all_cfg_values, int table_width, int header) {
