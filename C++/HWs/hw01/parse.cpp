@@ -1,4 +1,4 @@
-
+#include <iostream>
 #include <string>
 #include <regex>
 #include <vector>
@@ -111,6 +111,4 @@ void printCfgValues(cfg_values_t cfgValues) {
     printCfgValue(MAX_TYPE, std::to_string(cfgValues.max));
     printCfgValue(WIDTH_TYPE, std::to_string(cfgValues.width));
     printCfgValue(ALIGN_TYPE, cfgValues.align);
-//    if (cfgValues.stretch != -1) { printCfgValue(STRETCH_TYPE, std::to_string(cfgValues.stretch)); }
-//    if (cfgValues.stretch == 0) { printCfgValue(HEADER_TYPE, std::to_string(cfgValues.header)); }
 }
