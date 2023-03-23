@@ -10,6 +10,9 @@ CmdOutput = collections.namedtuple('CmdOutput', ['ret_code', 's_out', 's_err'])
 
 CLANG_OPTIONS = ["-pedantic", "-Wall", "-Werror", "-std=c99", "-O3", "-lm"]
 VALGRIND_OPTIONS = ["--leak-check=full", "--leak-resolution=med", "--track-origins=yes", "--vgdb=no"]
+# official compilation options g++ -pedantic -Wall -Werror -std=c++17
+# -Werror checks int types
+GPP_OPTION = ["-pedantic", "-Wall", "-std=c++17"]
 
 
 def list_files(folder: Path, ends_with: str = '.txt') -> List[Path]:
@@ -38,8 +41,9 @@ def compile_project(folder: Path, files: List[str], output_file: Path) -> CmdOut
     print(f"\n{'=' * 5} Compile project {'=' * 5}")
     # project files as list of strings
     prj_files: List[str] = [str(Path(folder, f)) for f in files]
-    clang_cmd = ['clang'] + CLANG_OPTIONS
-    cmd: List[str] = clang_cmd + prj_files + ['-o', output_file]
+    # compile_cmd = ['clang'] + CLANG_OPTIONS
+    compile_cmd = ['g++'] + GPP_OPTION
+    cmd: List[str] = compile_cmd + prj_files + ['-o', str(output_file)]
     return run_cmd(cmd=cmd)
 
 
@@ -116,15 +120,20 @@ def run_mem_test(test_files, bin_file):
 
 
 MAIN_C = ['main.c']
+MAIN_CPP = ['main.cpp']
 
 if __name__ == "__main__":
-    # folder with main.c and other project files
+    # folder with main.c/main.cpp and other project files
     # and data sub folder with in/out/err test files
+    #  example for C++
+    # in ek_fel/C++ folder
+    # ./../../test_all.py hw01
     project_folder: Path = Path(sys.argv[1])
-    # all project file, if there is only one main.c is default
-    project_files: List[str] = sys.argv[2:] if len(sys.argv) > 2 else MAIN_C
+    # all project file, if there is only one main.c/main.cpp is default
+    project_files: List[str] = sys.argv[2:] if len(sys.argv) > 2 else MAIN_CPP
     # path to complied bin file
-    project_bin_file = Path(project_folder, 'data', f"main_{project_folder}")
+    main_suffix = str(project_folder).replace("/", "_")
+    project_bin_file = Path(project_folder, 'data', f"main_{main_suffix}")
     if project_bin_file.is_file():
         # delete binary file
         print(f"remove {project_bin_file}")
