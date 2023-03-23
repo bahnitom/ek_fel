@@ -1,12 +1,8 @@
 #include <iostream>
 #include <string>
-#include <regex>
 #include <vector>
 #include <iomanip>
-#include "main.hpp"
 #include "parse.cpp"
-
-using namespace std;
 
 // macros
 #define OUT_OF_RANGE 100
@@ -14,19 +10,16 @@ using namespace std;
 #define INVALID_CONFIGURATION 102
 #define CELL_TOO_SHORT 103
 
-void print_table(const cfg_values_t &all_cfg_values, int maxRow, const vector<std::vector<int>> &values);
-
 int error(int type_of_error);
 
-void print_border(const cfg_values_t &all_cfg_values, int maxRow);
+void print_border(const cfg_values_t &all_cfg_values, int table_width);
 
 int main() {
     // variable for decoded config
     config_t config;
     std::string line;
     cfg_values_t all_cfg_values = get_default_cfg_values();
-    int maxRow = -1; //todo count of inputs number
-//    int table_width = maxRow + 1;
+    int maxRow = -1;
     do {
         std::getline(std::cin, line);
         config = getConfig(line);
@@ -36,13 +29,15 @@ int main() {
     } while (config.valid);
 
     int maxNumberLen = all_cfg_values.max;
-    stringstream string_stream_1;
+    std::stringstream string_stream_1;
     string_stream_1 << maxNumberLen;
-    int numberOfMax = string_stream_1.str().length();
+    unsigned long numberOfMax = string_stream_1.str().length(); //maximalni pocet cifer
 
     std::vector<std::vector<int>> values;
 
+    int count = 0;
     while (std::getline(std::cin, line)) {
+        count++;
         std::stringstream ss(line);
         std::vector<int> row;
         std::string cell;
@@ -57,10 +52,10 @@ int main() {
                 row.push_back(number);
             }
             catch (const std::exception &e) { // if there is a text (SUM?)
-                if (cell.find("SUM") != 0) { // something different then number or word SUM
+                if ((cell.find("SUM") != 0) ||
+                    (getSum(line, row).valid == 0)) { // something different then number or word SUM and SUM is invalid
                     error(2);
                 }
-                // todo check if SUM is valid
                 int sum = getSum(line, row).value;
                 row.push_back(sum);
             }
@@ -71,6 +66,9 @@ int main() {
         }
         values.push_back(row);
     }
+    int table_high = count; //high of table
+    int table_width = maxRow + 1;
+
     if (all_cfg_values.min > all_cfg_values.max || all_cfg_values.width < 1) { // min > max or width is negative number
         error(3);
     }
@@ -82,12 +80,30 @@ int main() {
     std::cout << "\n";
 
     //printing table
-    for (int i = 0; i < all_cfg_values.width; ++i) {
+    std::string letter{
+            "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z"};
+    for (int i = 0; i < table_high + 1; ++i) {
         print_border(all_cfg_values, maxRow);
-        for (int j = 0; j < maxRow; ++j) {
+        for (int j = 0; j < table_width; ++j) {
+            // print values
             std::stringstream inside;
-            inside << "|" << std::setw(all_cfg_values.width+2) << 3;
-            std::cout << inside.str();
+            if ((i == 0) && (j == 0)) { // left up place
+                inside << "| " << std::setw(all_cfg_values.width + 1) << " ";
+                std::cout << inside.str();
+            } else if (i == 0) { //first row
+                inside << "| " << std::setw(all_cfg_values.width) << letter[j - 1] << " ";
+                std::cout << inside.str();
+            } else if (j == 0) { //first colum
+                inside << "| " << std::setw(all_cfg_values.width) << i << " ";
+                std::cout << inside.str();
+            } else {
+                if (j > values[i - 1].size()) {
+                    inside << "| " << std::setw(all_cfg_values.width + 1) << " "; // if in row is not another values ---> blank space
+                } else {
+                    inside << "| " << std::setw(all_cfg_values.width) << values[i - 1][j - 1] << " ";
+                }
+                std::cout << inside.str();
+            }
         }
         std::cout << "|" << std::endl;
     }
@@ -104,11 +120,11 @@ int main() {
     return 0;
 }
 
-void print_border(const cfg_values_t &all_cfg_values, int maxRow) {
-    stringstream border;
-    border << "+" << string(all_cfg_values.width + 2, '-');
-    for (int x = 0; x < maxRow; ++x) {
-        cout << border.str();
+void print_border(const cfg_values_t &all_cfg_values, int table_width) {
+    std::stringstream border;
+    border << "+" << std::string(all_cfg_values.width + 2, '-');
+    for (int x = 0; x < table_width + 1; ++x) {
+        std::cout << border.str();
     }
     std::cout << "+\n";
 }
