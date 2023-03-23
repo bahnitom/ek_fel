@@ -12,7 +12,7 @@ CLANG_OPTIONS = ["-pedantic", "-Wall", "-Werror", "-std=c99", "-O3", "-lm"]
 VALGRIND_OPTIONS = ["--leak-check=full", "--leak-resolution=med", "--track-origins=yes", "--vgdb=no"]
 # official compilation options g++ -pedantic -Wall -Werror -std=c++17
 # -Werror checks int types
-GPP_OPTION = ["-pedantic", "-Wall", "-std=c++17"]
+GPP_OPTION = ["-pedantic", "-Wall", "-Werror", "-std=c++17"]
 
 
 def list_files(folder: Path, ends_with: str = '.txt') -> List[Path]:
