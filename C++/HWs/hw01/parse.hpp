@@ -31,6 +31,8 @@ typedef struct {
     int max;
     int width;
     std::string align;
+    int stretch;
+    int header;
 } cfg_values_t;
 
 static const std::string MIN_TYPE = "min";
@@ -40,6 +42,10 @@ static const std::string MAX_TYPE = "max";
 static const std::string WIDTH_TYPE = "width";
 
 static const std::string ALIGN_TYPE = "align";
+
+static const std::string STRETCH_TYPE = "stretch";
+
+static const std::string HEADER_TYPE = "header";
 
 static const std::string CONFIG_PREFIX = "config";
 

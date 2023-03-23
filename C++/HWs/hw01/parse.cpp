@@ -3,6 +3,7 @@
 #include <regex>
 #include <vector>
 #include "parse.hpp"
+
 /**
  * according to assignment config section follows pattern
  * 1. starts with config.
@@ -13,24 +14,24 @@
  * @param text
  * @return
  */
-config_t getConfig(std::string text){
+config_t getConfig(std::string text) {
     config_t config;
     std::regex regexConfig(R"((\w+).(\w+)=([\w-]+))");
     std::smatch fn_match;
     config.valid = false;
 
-    if(std::regex_search(text, fn_match, regexConfig)){
-        if(fn_match[1].compare(CONFIG_PREFIX) == 0){
+    if (std::regex_search(text, fn_match, regexConfig)) {
+        if (fn_match[1].compare(CONFIG_PREFIX) == 0) {
             config.type = fn_match[2];
             config.value = fn_match[3];
             config.valid = true;
-        }
-        else{
+        } else {
             config.type = "not config";
         }
     }
     return config;
 }
+
 /**
  * Only regexp
  * SUM([A-Z]:[A-Z]) is valid according to assignment
@@ -38,28 +39,27 @@ config_t getConfig(std::string text){
  * @param numbers
  * @return
  */
-sum_t getSum(std::string text, std::vector<int> numbers){
+sum_t getSum(std::string text, std::vector<int> numbers) {
     sum_t sum;
     std::regex regexConfig(R"((\w+)\((\w):(\w)\))");
     std::smatch fn_match;
     sum.valid = false;
     sum.value = 0;
 
-    if(std::regex_search(text, fn_match, regexConfig)){
-        if(fn_match[1].compare("SUM") == 0){
+    if (std::regex_search(text, fn_match, regexConfig)) {
+        if (fn_match[1].compare("SUM") == 0) {
             std::string temp = fn_match[2];
             int from = temp[0] - 'A';
             temp = fn_match[3];
             int to = temp[0] - 'A';
 
-            if(to < (int)numbers.size()){
-                for(int i=from; i<=to; i++){
+            if (to < (int) numbers.size()) {
+                for (int i = from; i <= to; i++) {
                     sum.value += numbers[i];
                 }
                 sum.valid = true;
                 sum.width = std::to_string(sum.value).size();
-            }
-            else{
+            } else {
                 sum.valid = false;
             }
         }
@@ -67,16 +67,18 @@ sum_t getSum(std::string text, std::vector<int> numbers){
     return sum;
 }
 
-cfg_values_t get_default_cfg_values(){
+cfg_values_t get_default_cfg_values() {
     cfg_values_t config_val;
     config_val.min = -99;
     config_val.max = 100;
     config_val.width = 3;
     config_val.align = "left";
+    config_val.stretch = -1;
+    config_val.header = 1;
     return config_val;
 }
 
-cfg_values_t set_cfg_values(cfg_values_t allCfgValues, const config_t& cfgValue) {
+cfg_values_t set_cfg_values(cfg_values_t allCfgValues, const config_t &cfgValue) {
     if (cfgValue.type == MIN_TYPE) {
         allCfgValues.min = std::stoi(cfgValue.value);
     }
@@ -88,6 +90,12 @@ cfg_values_t set_cfg_values(cfg_values_t allCfgValues, const config_t& cfgValue)
     }
     if (cfgValue.type == ALIGN_TYPE) {
         allCfgValues.align = cfgValue.value;
+    }
+    if (cfgValue.type == STRETCH_TYPE) {
+        allCfgValues.stretch = std::stoi(cfgValue.value);
+    }
+    if (cfgValue.type == HEADER_TYPE) {
+        allCfgValues.header = std::stoi(cfgValue.value);
     }
     return allCfgValues;
 }
@@ -103,4 +111,6 @@ void printCfgValues(cfg_values_t cfgValues) {
     printCfgValue(MAX_TYPE, std::to_string(cfgValues.max));
     printCfgValue(WIDTH_TYPE, std::to_string(cfgValues.width));
     printCfgValue(ALIGN_TYPE, cfgValues.align);
+//    if (cfgValues.stretch != -1) { printCfgValue(STRETCH_TYPE, std::to_string(cfgValues.stretch)); }
+//    if (cfgValues.stretch == 0) { printCfgValue(HEADER_TYPE, std::to_string(cfgValues.header)); }
 }
