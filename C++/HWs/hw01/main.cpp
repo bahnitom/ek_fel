@@ -3,7 +3,7 @@
 #include <vector>
 #include <iomanip>
 #include <valarray>
-#include "parse.cpp"
+#include "parse.hpp"
 
 // macros
 #define OUT_OF_RANGE 100
@@ -52,6 +52,7 @@ int main() {
         std::vector<int> row;
         std::string cell;
         int number;
+        int add_sum = 0;
 
         while (std::getline(ss, cell, ';')) {
             try {   // if loaded cell is number
@@ -67,7 +68,8 @@ int main() {
                     error(2);
                 }
                 int sum = getSum(line, row).value;
-                row.push_back(sum);
+                row.push_back(sum + add_sum);
+                add_sum = sum; // add_sum is for multiple SUM in one line
             }
 
         }
@@ -77,29 +79,33 @@ int main() {
         values.push_back(row);
     }
 
-    if ((all_cfg_values.min > all_cfg_values.max) || (all_cfg_values.width < 1)) { // min > max or width is negative number
+    if ((all_cfg_values.min > all_cfg_values.max) ||
+        (all_cfg_values.width < 1)) { // min > max or width is negative number
         error(3);
     }
     if ((all_cfg_values.width < numberOfMax) && (all_cfg_values.stretch == -1)) { // cell is too small for the number
         error(4);
+    }
+    if (all_cfg_values.stretch == 1) {
+        all_cfg_values.width = numberOfMax; // set config.width to stretched value
     }
 
     print_config(all_cfg_values);
 
     //printing table
     int header;
-    // align left or right
-    if (all_cfg_values.align == "left") {
+    if (all_cfg_values.align == "left") { // align left
         print_table_left(maxRow, numberOfMax, values, count, all_cfg_values, header);
     }
-    if (all_cfg_values.align == "right") {
+    if (all_cfg_values.align == "right") { //align right
         print_table_right(maxRow, numberOfMax, values, count, all_cfg_values, header);
     }
     print_border(all_cfg_values, maxRow, header);
     return 0;
 }
+
 void print_table_left(int maxRow, unsigned long numberOfMax, const std::vector<std::vector<int>> &values, int count,
-                       cfg_values_t &all_cfg_values, int &header) {
+                      cfg_values_t &all_cfg_values, int &header) {
     header = 0;
     unsigned int table_high = count; //high of table
     unsigned int table_width = maxRow + 1;
@@ -134,14 +140,17 @@ void print_table_left(int maxRow, unsigned long numberOfMax, const std::vector<s
                            << " "; // if in row is not another values ---> blank space
                 } else { //printing numbers
                     if (all_cfg_values.stretch == 1) {
-                        inside << "| " << std::setw(all_cfg_values.width) << std::left << values[i - 1 + header][j - 1 + header]
+                        inside << "| " << std::setw(all_cfg_values.width) << std::left
+                               << values[i - 1 + header][j - 1 + header]
                                << " ";
                     } else if ((all_cfg_values.stretch == 0) &&
                                (GetNumberOfDigits(values[i - 1][j - 1]) > all_cfg_values.width)) {
-                        inside << "| " << std::setw(all_cfg_values.width) << std::left << std::string(all_cfg_values.width, '#')
+                        inside << "| " << std::setw(all_cfg_values.width) << std::left
+                               << std::string(all_cfg_values.width, '#')
                                << " ";
                     } else {
-                        inside << "| " << std::setw(all_cfg_values.width) << std::left << values[i - 1 + header][j - 1 + header]
+                        inside << "| " << std::setw(all_cfg_values.width) << std::left
+                               << values[i - 1 + header][j - 1 + header]
                                << " ";
                     }
                 }
@@ -250,7 +259,7 @@ int error(int type_of_error) {
             std::cerr << "Invalid configuration" << std::endl;
             exit(INVALID_CONFIGURATION);
         case 4:
-            std::cerr << "Cell too short" << std::endl;
+            std::cerr << "Cell is too short" << std::endl;
             exit(CELL_TOO_SHORT);
         default:
             std::cerr << "Different error" << std::endl;
