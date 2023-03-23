@@ -3,7 +3,7 @@
 #include <vector>
 #include <iomanip>
 #include <valarray>
-#include "parse.hpp"
+#include "parse.cpp"
 
 // macros
 #define OUT_OF_RANGE 100
