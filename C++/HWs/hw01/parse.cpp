@@ -9,8 +9,8 @@
  * 1. starts with config.
  * 2. allowed values are min, max, width, align
  * so the regexp can be narrowed to
- * config\.(min|max|width|align)=(\d+|left|right)
- * which simplifies these functions +2b
+ * config\.(min|max|width|align|stretch|header)=([-+]?\d+|left|right)
+ * where [-+]? mean 0 or 1 sign \d+ at least one numer
  * @param text
  * @return
  */
