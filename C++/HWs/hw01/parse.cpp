@@ -24,8 +24,6 @@ config_t getConfig(const std::string &text) {
         config.type = fn_match[1];
         config.value = fn_match[2];
         config.valid = true;
-    } else {
-        config.valid = false;
     }
     return config;
 }
