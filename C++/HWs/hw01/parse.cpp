@@ -7,10 +7,10 @@
 /**
  * according to assignment config section follows pattern
  * 1. starts with config.
- * 2. allowed values are min, max, width, align
+ * 2. allowed values are min, max, width, align, stretch, header
  * so the regexp can be narrowed to
  * config\.(min|max|width|align|stretch|header)=([-+]?\d+|left|right)
- * where [-+]? mean 0 or 1 sign \d+ at least one numer
+ * where [-+]? means 0 or 1 sign,  \d+ at least one number
  * @param text
  * @return
  */
