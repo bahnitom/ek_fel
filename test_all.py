@@ -26,7 +26,7 @@ def list_files(folder: Path, ends_with: str = '.txt') -> List[Path]:
     return file_type_files
 
 
-def run_cmd(cmd: List[str], stdin_path: Path = None) -> CmdOutput:
+def run_cmd(cmd: List[str], stdin_path: Path = None, show_stderr: bool = False) -> CmdOutput:
     m = f"Running cmd line: {cmd} < {stdin_path}"
     print(m)
     test_data = open(stdin_path) if stdin_path else subprocess.DEVNULL
@@ -34,6 +34,8 @@ def run_cmd(cmd: List[str], stdin_path: Path = None) -> CmdOutput:
     return_code = p.returncode
     std_out = p.stdout.decode('utf-8')
     std_err = p.stderr.decode('utf-8')
+    if show_stderr:
+        print(std_err)
     return CmdOutput(ret_code=return_code, s_out=std_out, s_err=std_err)
 
 
@@ -44,7 +46,7 @@ def compile_project(folder: Path, files: List[str], output_file: Path) -> CmdOut
     # compile_cmd = ['clang'] + CLANG_OPTIONS
     compile_cmd = ['g++'] + GPP_OPTION
     cmd: List[str] = compile_cmd + prj_files + ['-o', str(output_file)]
-    return run_cmd(cmd=cmd)
+    return run_cmd(cmd=cmd, show_stderr=True)
 
 
 def read_test_files(folder: Path):
@@ -123,11 +125,9 @@ MAIN_C = ['main.c']
 MAIN_CPP = ['main.cpp']
 
 if __name__ == "__main__":
-    # folder with main.c/main.cpp and other project files
-    # and data sub folder with in/out/err test files
-    #  example for C++
-    # in ek_fel/C++ folder
-    # ./../../test_all.py hw01
+    # example for C++ in ek_fel/C++/HWs folder
+    # run ./../../test_all.py hw01 : adds only main.cpp from hw01 folder
+    # run ./../../test_all.py hw01 main.cpp main.hpp parse.hpp parse.cpp: adds all listed files from hw01 folder
     project_folder: Path = Path(sys.argv[1])
     # all project file, if there is only one main.c/main.cpp is default
     project_files: List[str] = sys.argv[2:] if len(sys.argv) > 2 else MAIN_CPP
