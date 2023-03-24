@@ -60,7 +60,7 @@ static const std::string EQUAL_SIGN = "=";
  *  @retval Configuration struct (config_t) with parsed values
  * 
  */
-config_t getConfig(std::string text);
+config_t getConfig(const std::string& text);
 
 /** 
  *  @brief Parse sum cell and return value and its validity
@@ -70,14 +70,14 @@ config_t getConfig(std::string text);
  *  @retval sum_t struct with the value, text width and valid information
  * 
  */
-sum_t getSum(std::string text, std::vector<int> numbers);
+sum_t getSum(const std::string& text, std::vector<int> numbers);
 
 cfg_values_t get_default_cfg_values();
 
 cfg_values_t set_cfg_values(cfg_values_t allCfgValues, const config_t& cfgValue);
 
-void printCfgValue(std::string type, std::string value);
+void printCfgValue(const std::string& type, const std::string& value);
 
-void printCfgValues(cfg_values_t cfgValues);
+void printCfgValues(const cfg_values_t& cfgValues);
 
 #endif // __PARSE_HPP_
