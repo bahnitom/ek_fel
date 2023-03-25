@@ -65,7 +65,7 @@ config_t getConfig(std::string text);
  *  @retval sum_t struct with the value, text width and valid information
  * 
  */
-sum_t getSum(std::string text, std::vector<int> numbers);
+sum_t getSum(const std::string& text, std::vector<int> numbers);
 
 cfg_values_t getDefaultCfgValues();
 
