@@ -2,9 +2,8 @@
 #include <string>
 #include <vector>
 #include "main.hpp"
-#include "parse.cpp"
+#include "parse.hpp"
 
-using namespace std;
 
 void handleError(const error_with_msg_t &e_w_m) {
     std::cout << e_w_m.message;
@@ -59,7 +58,7 @@ std::vector<int>::size_type maxRowLength(const std::vector<std::vector<int>> &ro
  * @param values load data to this 2d array
  * @return 2d array of loaded data
  */
-void loadData(const cfg_values_t &cfgValues, std::vector<std::vector<int>>& values) {
+void loadData(const cfg_values_t &cfgValues, std::vector<std::vector<int>> &values) {
     std::string line;
     while (std::getline(std::cin, line)) {
         std::stringstream ss(line);
@@ -107,77 +106,77 @@ void printTableRows(const cfg_values_t &cfgValues, const std::vector<std::vector
     std::cout << line << std::endl;
 }
 
-void print_table(const cfg_values_t &all_cfg_values, const vector<std::vector<int>> &values) {
+void print_table(const cfg_values_t &all_cfg_values, const vector <std::vector<int>> &values) {
     std::vector<int>::size_type max_row_length = maxRowLength(values);
     for (size_t a = 0; a < max_row_length + 1; a++) {
-        cout << "+";
+        std::cout << "+";
         for (size_t b = 0; b < all_cfg_values.width + 2; b++) {
-            cout << "-";
+            std::cout << "-";
         }
     }
-    cout << "+\n";
-    cout << "|" << string(all_cfg_values.width + 2, 32);
+    std::cout << "+\n";
+    std::cout << "|" << string(all_cfg_values.width + 2, 32);
 
     for (size_t j = 0; j < max_row_length; j++) {
-        cout << "| ";
+        std::cout << "| ";
         if (all_cfg_values.align == "right") {
-            cout << string(all_cfg_values.width - 1, 32);
-            cout << char(j + 65);
+            std::cout << string(all_cfg_values.width - 1, 32);
+            std::cout << char(j + 65);
         } else {
-            cout << char(j + 65);
-            cout << string(all_cfg_values.width - 1, 32);
+            std::cout << char(j + 65);
+            std::cout << std::string(all_cfg_values.width - 1, 32);
         }
-        cout << " ";
+        std::cout << " ";
     }
-    cout << "|";
-    cout << endl;
+    std::cout << "|";
+    std::cout << std::endl;
 
     for (size_t a = 0; a < max_row_length + 1; a++) {
         cout << "+";
         for (size_t b = 0; b < all_cfg_values.width + 2; b++) {
-            cout << "-";
+            std::cout << "-";
         }
     }
-    cout << "+\n";
+    std::cout << "+\n";
 
     for (size_t i = 0; i < values.size(); i++) {
-        cout << "| ";
+        std::cout << "| ";
         if (all_cfg_values.align == "right") {
-            cout << string(all_cfg_values.width - 1, 32);
-            cout << i + 1;
+            std::cout << std::string(all_cfg_values.width - 1, 32);
+            std::cout << i + 1;
         } else {
-            cout << i + 1;
-            cout << string(all_cfg_values.width - 1, 32);
+            std::cout << i + 1;
+            std::cout << std::string(all_cfg_values.width - 1, 32);
         }
-        cout << " ";
+        std::cout << " ";
 
-        for (int value : values[i]) {
+        for (int value: values[i]) {
             cout << "| ";
             int a = value;
-            stringstream ss;
+            std::stringstream ss;
             ss << a;
             unsigned long numberOfChars = ss.str().length();
             if (all_cfg_values.align == "right") {
-                cout << string(all_cfg_values.width - numberOfChars, 32);
-                cout << value;
+                std::cout << std::string(all_cfg_values.width - numberOfChars, 32);
+                std::cout << value;
             } else {
-                cout << value;
-                cout << string(all_cfg_values.width - numberOfChars, 32);
+                std::cout << value;
+                std::cout << std::string(all_cfg_values.width - numberOfChars, 32);
             }
-            cout << " ";
+            std::cout << " ";
         }
-        cout << "|";
+        std::cout << "|";
         for (size_t j = values[i].size(); j < max_row_length; j++) {
-            cout << string(all_cfg_values.width + 2, 32) << "|";
+            std::cout << std::string(all_cfg_values.width + 2, 32) << "|";
         }
-        cout << endl;
+        std::cout << std::endl;
         for (size_t a = 0; a < max_row_length + 1; a++) {
-            cout << "+";
+            std::cout << "+";
             for (size_t b = 0; b < all_cfg_values.width + 2; b++) {
-                cout << "-";
+                std::cout << "-";
             }
         }
-        cout << "+\n";
+        std::cout << "+\n";
     }
 }
 
