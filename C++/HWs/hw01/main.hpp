@@ -16,7 +16,7 @@ void checkConfigValues(const cfg_values_t &cfgValues);
 
 void printTableRows(const cfg_values_t &cfgValues, const std::vector<std::vector<int>> &rows);
 
-void loadData(const cfg_values_t &cfgValues, std::vector<std::vector<int>> *values);
+void loadData(const cfg_values_t &cfgValues, std::vector<std::vector<int>>& values);
 
 void handleError(const error_with_msg_t &e_w_m);
 

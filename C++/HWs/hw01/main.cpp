@@ -59,7 +59,7 @@ std::vector<int>::size_type maxRowLength(const std::vector<std::vector<int>> &ro
  * @param values load data to this 2d array
  * @return 2d array of loaded data
  */
-void loadData(const cfg_values_t &cfgValues, std::vector<std::vector<int>> *values) {
+void loadData(const cfg_values_t &cfgValues, std::vector<std::vector<int>>& values) {
     std::string line;
     while (std::getline(std::cin, line)) {
         std::stringstream ss(line);
@@ -86,7 +86,7 @@ void loadData(const cfg_values_t &cfgValues, std::vector<std::vector<int>> *valu
                 row.push_back(sum);
             }
         }
-        values->push_back(row);
+        values.push_back(row);
     }
 }
 
@@ -196,7 +196,7 @@ int main() {
     checkConfigValues(allCfgValues);
     printConfigValues(allCfgValues);
     std::vector<std::vector<int>> values;
-    loadData(allCfgValues, &values);
+    loadData(allCfgValues, values);
     print_table(allCfgValues, values);
     return 0;
 }
