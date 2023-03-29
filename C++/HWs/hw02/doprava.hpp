@@ -9,7 +9,6 @@
 #include <fstream>
 #include <sstream>
 
-using namespace std;
 
 // exception for read file - do not modify
 struct file_corrupt : public std::exception
@@ -71,9 +70,9 @@ struct Depart
 // Driver structure
 struct Driver
 {
-    string name;
+    std::string name;
     // Constructors
-    Driver(string name_in = "");
+    Driver(std::string name_in = "");
     Driver(const Driver &drv);
     // Assign
     Driver &operator=(const Driver &drv);
@@ -82,13 +81,13 @@ struct Driver
 };
 
 // list of drivers - std::list with ability to read from file.
-struct DriverList : list<Driver>
+struct DriverList : std::list<Driver>
 {
-    void loadFromFile(string filename);
+    void loadFromFile(std::string filename);
 };
 
 // Timetable for one connection
-struct PlanConn : public vector<Depart>
+struct PlanConn : public std::vector<Depart>
 {
     Driver drv; // driver of the connection
 
@@ -103,9 +102,9 @@ struct PlanConn : public vector<Depart>
 // Structure of a single line
 struct Line
 {
-    vector<string> stops; // stops on the line in forward order
-    vector<PlanConn> conns_fwd; // all connections of the line going forward
-    vector<PlanConn> conns_bwd; // all connections of the line going backward
+    std::vector<std::string> stops; // stops on the line in forward order
+    std::vector<PlanConn> conns_fwd; // all connections of the line going forward
+    std::vector<PlanConn> conns_bwd; // all connections of the line going backward
 
     Line() : stops({}), conns_fwd({}), conns_bwd({}){}; // Implicit constructor
     Line(const Line &orig);                             // Copy constructor
@@ -117,12 +116,12 @@ struct Line
 class Network
 {
 protected:
-    vector<Line> lines;
+    std::vector<Line> lines;
 public:
     Line getLine(int ln) const; // returns line with number ln
     int nlines() const; // maximal number of lines
     Line operator()(int ln) const { return getLine(ln); } // Alias For getLine
-    void loadFromFile(string filename); 
+    void loadFromFile(std::string filename);
 };
 
 

@@ -1,5 +1,4 @@
 #include "doprava.hpp"
-using namespace std;
 
 Time::Time(int ss) : seconds(ss) {} // initialize by seconds after midnight: seconds(ss){};
 
@@ -57,7 +56,7 @@ PlanConn &PlanConn::operator=(const PlanConn &orig)
     return *this;
 }
 
-Driver::Driver(string name_in) : name(name_in) {}
+Driver::Driver(std::string name_in) : name(name_in) {}
 
 Driver::Driver(const Driver &drv) : name(drv.name) {}
 
@@ -77,21 +76,21 @@ bool Driver::operator!=(const Driver &drv) const
     return name.compare(drv.name);
 }
 
-void DriverList::loadFromFile(string filename)
+void DriverList::loadFromFile(std::string filename)
 {
-    string tmpstr;
+    std::string tmpstr;
     int drivercount;
-    ifstream infile(filename);
+    std::ifstream infile(filename);
     if (infile.is_open())
     {
         for (drivercount = 0; getline(infile, tmpstr); drivercount++)
             this->push_back(Driver(tmpstr));
-        cout << "Loaded " << drivercount << " names from " << filename << ".\n";
+        std::cout << "Loaded " << drivercount << " names from " << filename << ".\n";
         infile.close();
     }
     else
     {
-        cout << "Could not open " << filename << ". Driver List not loaded." << endl;
+        std::cout << "Could not open " << filename << ". Driver List not loaded." << "\n";
     }
 }
 
@@ -108,7 +107,7 @@ Line &Line::operator=(const Line &orig)
 Line Network::getLine(int ln) const
 {
     if (ln < 0 || (unsigned)ln >= this->lines.size())
-        throw out_of_range("Line number out of range.");
+        throw std::out_of_range("Line number out of range.");
     else
         return lines[ln];
 }
@@ -118,7 +117,7 @@ int Network::nlines() const
     return this->lines.size();
 }
 
-void Network::loadFromFile(string filename)
+void Network::loadFromFile(std::string filename)
 {
 
     Line tmpL;
@@ -126,9 +125,9 @@ void Network::loadFromFile(string filename)
     PlanConn tmpC;
     Lndir tmpdir;
 
-    string tmpstr;
+    std::string tmpstr;
 
-    ifstream infile(filename);
+    std::ifstream infile(filename);
     if (infile.is_open())
     {
         while (getline(infile, tmpstr))
@@ -136,11 +135,11 @@ void Network::loadFromFile(string filename)
             if (tmpstr.rfind("{", 0) == 0) //if dbegin with "{", create new line
             {
                 tmpC.clear();
-                istringstream ss(tmpstr);
+                std::istringstream ss(tmpstr);
                 char ch;
                 int sec;
 
-                string token;
+                std::string token;
                 ss >> ch;
                 if (ch != '{' || !ss.good())
                 {
@@ -197,8 +196,8 @@ void Network::loadFromFile(string filename)
                 tmpL.stops.clear();
                 tmpL.conns_fwd.clear();
                 tmpL.conns_bwd.clear();
-                istringstream ss(tmpstr);
-                string token;
+                std::istringstream ss(tmpstr);
+                std::string token;
                 while (getline(ss, token, ';'))
                 {
                     // cout<< token<< endl;
@@ -212,7 +211,7 @@ void Network::loadFromFile(string filename)
     }
     else
     {
-        std::cout << "Could not open " << filename << ". Network not loaded." << endl;
+        std::cout << "Could not open " << filename << ". Network not loaded." << "\n";
     }
 }
 

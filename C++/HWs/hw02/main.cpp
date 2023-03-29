@@ -6,7 +6,6 @@
 // and add the includes here. e.g.:
 //#include "solution.hpp"
 
-using namespace std;
 
 int main(int argc, char** argv) {
 
@@ -18,14 +17,14 @@ int main(int argc, char** argv) {
     net.loadFromFile("network.txt");
 
     // variables for argument decoding
-    string flag_in;
-    list<string> stop_in;
+    std::string flag_in;
+    std::list<std::string> stop_in;
 
     if (argc > 1)
-        flag_in = string(argv[1]);
+        flag_in = std::string(argv[1]);
     else
     {
-        cerr << "Missing argument. Terminating." << endl;
+        std::cerr << "Missing argument. Terminating." << "\n";
         return 1;
     }
 
@@ -36,14 +35,14 @@ int main(int argc, char** argv) {
         {
             for (int i = 2; i < argc; i++)
             {
-                string temp = argv[i];
+                std::string temp = argv[i];
                 replace(temp.begin(), temp.end(), '_', ' ');
                 stop_in.push_back(temp);
             }
         }
         else
         {
-            cerr << "Missing stop name. Terminating." << endl;
+            std::cerr << "Missing stop name. Terminating." << "\n";
             return 2;
         }
         // end of input check
@@ -52,7 +51,7 @@ int main(int argc, char** argv) {
         /* stop_in contains names of stops, for which the timetable is to be printed. */
         
         // This is an example, how it can be done using lambda-function
-        for_each(stop_in.begin(), stop_in.end(), [&] (string stop_name) {print_timetable(net,stop_name);} );
+//        for_each(stop_in.begin(), stop_in.end(), [&] (std::string stop_name) {print_timetable(net,stop_name);} );
         // This is an example, how it can be done using for-loop 
         // for( auto iter = stop_in.begin(); iter != stop_in.end(); iter++) print_timetable(net,*iter);
 
@@ -78,7 +77,7 @@ int main(int argc, char** argv) {
     }
     else
     {
-        cout << "Flag not recognized, terminating." << endl;
+        std::cout << "Flag not recognized, terminating." << "\n";
     }
     
     return 0;
