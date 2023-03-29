@@ -12,3 +12,9 @@ add_executable(hw_01
         C++/HWs/hw01/main.hpp
         C++/HWs/hw01/parse.hpp
         C++/HWs/hw01/parse.cpp)
+
+project(hw02)
+set(CMAKE_CXX_STANDARD 14)
+add_executable(hw_02
+        C++/HWs/hw02/main.cpp
+        C++/HWs/hw02/doprava.cpp)
