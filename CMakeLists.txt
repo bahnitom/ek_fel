@@ -17,4 +17,5 @@ project(hw02)
 set(CMAKE_CXX_STANDARD 14)
 add_executable(hw_02
         C++/HWs/hw02/main.cpp
-        C++/HWs/hw02/doprava.cpp)
+        C++/HWs/hw02/doprava.cpp
+        C++/HWs/hw02/doprava.hpp)
