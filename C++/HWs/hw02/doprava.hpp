@@ -124,5 +124,13 @@ public:
     void loadFromFile(std::string filename);
 };
 
+typedef struct {
+    unsigned int seconds;
+    unsigned int minutes;
+    unsigned int hours;
+    unsigned int tmp_hours;
+    unsigned int counter;
+} Time_table;
+
 
 #endif

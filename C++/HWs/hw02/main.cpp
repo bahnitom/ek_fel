@@ -8,6 +8,10 @@
 //#include "solution.hpp"
 
 
+void print_header(Line &tmp_line, const std::string &stop, int j);
+
+Time_table &print_time(Time_table &time);
+
 int main(int argc, char **argv) {
 
     // Load files:
@@ -41,60 +45,100 @@ int main(int argc, char **argv) {
             return 2;
         }
         // end of input check
+
         std::cout << "\n";
+        Time_table time; // time struct
         Line tmp_line;
         int nmb_of_lines = net.nlines(); // number of lines
-        for (unsigned long i = 0; i < stop_in.size(); ++i) {
-            auto first = stop_in.begin();
-            std::advance(first, i);
+        for (std::string stop: stop_in) {
             for (int j = 0; j < nmb_of_lines; ++j) {
                 tmp_line = net.getLine(j);
                 auto find_stop = std::find(tmp_line.stops.begin(), tmp_line.stops.end(),
-                                           *first); // try to find input stop in current line
+                                           stop); // try to find input stop in current line
                 if (find_stop != tmp_line.stops.end()) { // if our stop is in current line
-                    std::cout << "For stop: " << *first << "\nFirst stop: " << tmp_line.stops[0] << "\nLast stop: "
-                              << tmp_line.stops.back()
-                              << "\n\n"; // print first and last stop in curren line
-                    // TODO print table
+                    print_header(tmp_line, stop, j); // printing header
+
+                    time.counter = 0;
+                    char oldFill = std::cout.fill(' '); // default fill
+                    auto index = std::distance(tmp_line.stops.begin(), find_stop); // get index of our station
+                    for (unsigned int k = 0; k < net.getLine(j).conns_fwd.size(); ++k) {
+                        auto time_def = net.getLine(j).conns_fwd[k];
+                        time.seconds = time_def.at(index).ti.gets();
+                        time.hours = time.seconds / 3600;
+                        time.minutes = (time.seconds % 3600) / 60;
+                        if ((time.counter < time.hours) && (k == 0)){ // print rest of time in begin
+                            for (unsigned int t = 0; t < time.hours; ++t){
+                                std::cout << "\n| " << std::setw(2) << std::setfill('0') << t << " |";
+                                time.counter ++;
+                            }
+                        }
+                        time = print_time(time);
+                    }
+
+                    time.counter = time.hours;
+                    if (time.counter < 23){ // print rest of time in end
+                        for (unsigned int t = time.counter + 1; t <= 23; ++t){
+                            std::cout << "\n| " << std::setw(2) << std::setfill('0') << t << " |";
+                            time.counter ++;
+                        }
+                    }
+                    std::cout.fill(oldFill); // set fill to default
+                    std::cout << "\n";
                 }
-                tmp_line.stops.clear(); // clear tmp_line, it is not mandatory
+                //tmp_line.stops.clear(); // clear tmp_line, it is not mandatory
             }
         }
 
 
-
-//        unsigned int stops_cnt = stop_in.size();
-//        for (std::string stop : stop_in){
-//            std::cout << "+------------------------------------------------------------------------------+\n";
-//            std::cout << "| " << stop << std::setw(79-stop.size()) << "Line: L |\n";
-//        }
 
         /* here should start the code for printing timetables*/
         /* stop_in contains names of stops, for which the timetable is to be printed. */
 
         // This is an example, how it can be done using lambda-function
 //        for_each(stop_in.begin(), stop_in.end(), [&] (std::string stop_name) {print_timetable(net,stop_name);} );
-        // This is an example, how it can be done using for-loop 
+        // This is an example, how it can be done using for-loop
         // for( auto iter = stop_in.begin(); iter != stop_in.end(); iter++) print_timetable(net,*iter);
 
         /* here should end the code for printing timetables*/
     } else if ((!flag_in.compare("--line-routing"))) {
 
-        /* here should start the code for printing line routes without stats*/
+/* here should start the code for printing line routes without stats*/
 
 
 
-        /* here should end the code for printing line routes without stats*/
+/* here should end the code for printing line routes without stats*/
     } else if ((!flag_in.compare("--driver-stops"))) {
 
-        /* here should start the code for stops statistics for drivers */
+/* here should start the code for stops statistics for drivers */
 
 
 
-        /* here should end the code for stops statistics for drivers */
+/* here should end the code for stops statistics for drivers */
     } else {
         std::cout << "Flag not recognized, terminating." << "\n";
     }
 
     return 0;
+}
+
+Time_table &print_time(Time_table &time) {
+    if (time.tmp_hours != time.hours) {
+        std::cout << "\n| " << std::setw(2) << std::setfill('0') << time.hours << " | " << std::setw(2) << std::setfill('0') << time.minutes;
+    }
+    else if (time.tmp_hours == time.hours) {
+        std::cout << " " << std::setw(2) << std::setfill('0') << time.minutes;
+    }
+    time.tmp_hours = time.hours;
+    return time;
+}
+
+void print_header(Line &tmp_line, const std::string &stop, int j) {
+    std::cout << "+------------------------------------------------------------------------------+\n";
+    std::cout << "| " << stop << std::setw(76 - stop.size()) << "Line: " << j << "|\n";
+    std::cout << "+--------------------------------------++--------------------------------------+\n";
+    std::string last_stop = tmp_line.stops.back().erase(tmp_line.stops.back().find("\r"),
+                                                        2); // remove \r symbol
+    std::cout << "| To: " << last_stop << std::setw(40 - last_stop.length()) << "|| To: "
+              << tmp_line.stops[0] << std::setw(35 - tmp_line.stops[0].size()) << "|\n";
+    std::cout << "+----+---------------------------------++----+---------------------------------+";
 }
