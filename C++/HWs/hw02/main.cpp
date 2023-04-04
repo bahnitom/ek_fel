@@ -10,7 +10,11 @@
 
 void print_header(Line &tmp_line, const std::string &stop, int j);
 
-Time_table &print_time(Time_table &time);
+Time_table &print_time_departs(Time_table &time);
+
+Time_table &times_without_drivers_begin(Time_table &time);
+
+Time_table &times_without_drivers_end(Time_table &time);
 
 int main(int argc, char **argv) {
 
@@ -63,27 +67,21 @@ int main(int argc, char **argv) {
                     auto index = std::distance(tmp_line.stops.begin(), find_stop); // get index of our station
                     for (unsigned int k = 0; k < net.getLine(j).conns_fwd.size(); ++k) {
                         auto time_def = net.getLine(j).conns_fwd[k];
+                        //todo - if change conns_fwd to conns_bwd ---> print right values
+                        //todo - solve printing righting colum
                         time.seconds = time_def.at(index).ti.gets();
                         time.hours = time.seconds / 3600;
                         time.minutes = (time.seconds % 3600) / 60;
-                        if ((time.counter < time.hours) && (k == 0)){ // print rest of time in begin
-                            for (unsigned int t = 0; t < time.hours; ++t){
-                                std::cout << "\n| " << std::setw(2) << std::setfill('0') << t << " |";
-                                time.counter ++;
-                            }
+                        if (k == 0) {
+                            time = times_without_drivers_begin(time);
                         }
-                        time = print_time(time);
+                        time = print_time_departs(time);
                     }
 
                     time.counter = time.hours;
-                    if (time.counter < 23){ // print rest of time in end
-                        for (unsigned int t = time.counter + 1; t <= 23; ++t){
-                            std::cout << "\n| " << std::setw(2) << std::setfill('0') << t << " |";
-                            time.counter ++;
-                        }
-                    }
+                    time = times_without_drivers_end(time);
                     std::cout.fill(oldFill); // set fill to default
-                    std::cout << "\n";
+                    std::cout << "\n+----+---------------------------------++----+---------------------------------+\n";
                 }
                 //tmp_line.stops.clear(); // clear tmp_line, it is not mandatory
             }
@@ -121,7 +119,27 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-Time_table &print_time(Time_table &time) {
+Time_table &times_without_drivers_end(Time_table &time) {
+    if (time.counter < 23){ // print rest of time in end
+        for (unsigned int t = time.counter + 1; t <= 23; ++t){
+            std::cout << "\n| " << std::setw(2) << std::setfill('0') << t << " |";
+            time.counter ++;
+        }
+    }
+    return time;
+}
+
+Time_table &times_without_drivers_begin(Time_table &time) {
+    if (time.counter < time.hours){ // print rest of time in begin
+        for (unsigned int t = 0; t < time.hours; ++t){
+            std::cout << "\n| " << std::setw(2) << std::setfill('0') << t << " |";
+            time.counter ++;
+        }
+    }
+    return time;
+}
+
+Time_table &print_time_departs(Time_table &time) {
     if (time.tmp_hours != time.hours) {
         std::cout << "\n| " << std::setw(2) << std::setfill('0') << time.hours << " | " << std::setw(2) << std::setfill('0') << time.minutes;
     }
