@@ -1,0 +1,1 @@
+Ukládní dat k bakalářce.
